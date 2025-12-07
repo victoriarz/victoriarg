@@ -1,1 +1,60 @@
+/* ------------------------------------------- */
+/* 1. Global Reset and Base Styles */
+/* ------------------------------------------- */
 
+body {
+    /* Sets a clean, standard font */
+    font-family: Arial, sans-serif; 
+    margin: 0; /* Removes default browser margin */
+    padding: 0;
+    line-height: 1.6; /* Improves readability */
+    color: #333; /* Default text color */
+}
+
+/* ------------------------------------------- */
+/* 2. Navigation Bar Styles */
+/* ------------------------------------------- */
+
+nav {
+    display: flex; /* Aligns items horizontally */
+    justify-content: space-between; /* Puts name on left, links on right */
+    align-items: center;
+    padding: 15px 5%; 
+    background-color: #f4f4f4; /* Light gray background */
+}
+
+nav h1 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none; /* Removes bullet points */
+    display: flex;
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none; /* Removes underline from links */
+    color: #333;
+    padding: 0 15px;
+}
+
+/* ------------------------------------------- */
+/* 3. CTA Button Styles */
+/* ------------------------------------------- */
+
+.cta-button {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #007bff; /* Primary brand color (Blue) */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+.cta-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
