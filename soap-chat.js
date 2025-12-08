@@ -1,5 +1,36 @@
 // Saponify AI - Soap Making Chat Assistant
 
+// SAP values for common oils (NaOH per oz of oil)
+const sapValues = {
+    'olive': 0.135,
+    'coconut': 0.184,
+    'palm': 0.141,
+    'castor': 0.129,
+    'sweet almond': 0.134,
+    'avocado': 0.137,
+    'shea butter': 0.128,
+    'cocoa butter': 0.137,
+    'sunflower': 0.136,
+    'grapeseed': 0.135,
+    'jojoba': 0.065,
+    'hemp': 0.138,
+    'apricot kernel': 0.135,
+    'canola': 0.123,
+    'lard': 0.138,
+    'tallow': 0.14,
+    'babassu': 0.179,
+    'mango butter': 0.138,
+    'rice bran': 0.135
+};
+
+// Conversation state for recipe building
+let recipeState = {
+    active: false,
+    batchSizeGrams: 0,
+    oils: [],
+    superfat: 5
+};
+
 // Knowledge base for soap making
 const soapKnowledge = {
     'saponification': {
@@ -131,9 +162,176 @@ function removeTypingIndicator() {
     }
 }
 
+// Calculate recipe from user inputs
+function calculateRecipe(batchSizeGrams, oils, superfatPercent = 5) {
+    // Convert grams to ounces for SAP calculation
+    const gramsToOz = 0.035274;
+
+    let totalLyeOz = 0;
+    let oilDetails = [];
+
+    // Calculate lye needed for each oil
+    for (const oil of oils) {
+        const oilOz = oil.grams * gramsToOz;
+        const lyeNeeded = oilOz * oil.sapValue;
+        totalLyeOz += lyeNeeded;
+        oilDetails.push({
+            name: oil.name,
+            grams: oil.grams,
+            ounces: oilOz.toFixed(2),
+            lyeNeeded: lyeNeeded.toFixed(3)
+        });
+    }
+
+    // Apply superfat discount
+    const superfatMultiplier = 1 - (superfatPercent / 100);
+    const adjustedLyeOz = totalLyeOz * superfatMultiplier;
+    const lyeGrams = adjustedLyeOz / gramsToOz;
+
+    // Water calculation (typically 38% water to oil ratio, or 2.5:1 water to lye)
+    const waterGrams = lyeGrams * 2.5;
+
+    return {
+        oils: oilDetails,
+        totalOilGrams: batchSizeGrams,
+        lyeGrams: lyeGrams.toFixed(1),
+        lyeOunces: adjustedLyeOz.toFixed(2),
+        waterGrams: waterGrams.toFixed(1),
+        waterOunces: (waterGrams * gramsToOz).toFixed(2),
+        superfat: superfatPercent
+    };
+}
+
+// Find oil SAP value from user input
+function findOilSapValue(oilName) {
+    const normalized = oilName.toLowerCase().trim();
+    for (const [key, value] of Object.entries(sapValues)) {
+        if (normalized.includes(key) || key.includes(normalized)) {
+            return { oil: key, sapValue: value };
+        }
+    }
+    return null;
+}
+
 // Find matching response based on keywords
 function findResponse(userInput) {
     const input = userInput.toLowerCase();
+
+    // Check for recipe calculation keywords
+    if (input.includes('calculate') || input.includes('recipe calculator') ||
+        input.includes('make recipe') || input.includes('create recipe') ||
+        input.includes('help me calculate')) {
+        recipeState.active = true;
+        recipeState.oils = [];
+        recipeState.batchSizeGrams = 0;
+        return {
+            response: "Great! I'll help you calculate a safe soap recipe. First, how many grams of soap do you want to make? (For example: 500 grams, 1000 grams, etc.)",
+            category: 'recipe'
+        };
+    }
+
+    // Handle recipe building conversation
+    if (recipeState.active) {
+        // Check for batch size
+        const gramsMatch = input.match(/(\d+)\s*(grams?|g\b)/i);
+        if (gramsMatch && recipeState.batchSizeGrams === 0) {
+            recipeState.batchSizeGrams = parseInt(gramsMatch[1]);
+            const availableOils = Object.keys(sapValues).slice(0, 10).join(', ');
+            return {
+                response: `Perfect! You want to make ${recipeState.batchSizeGrams}g of soap. Now, tell me what oils you have and how many grams of each. For example: "300g olive oil, 150g coconut oil, 50g castor oil". Available oils include: ${availableOils}, and more. What oils do you have?`,
+                category: 'recipe'
+            };
+        }
+
+        // Check for oil inputs
+        if (recipeState.batchSizeGrams > 0 && recipeState.oils.length === 0) {
+            const oilMatches = input.match(/(\d+)\s*g?\s*([\w\s]+?)(?:,|and|$)/gi);
+            if (oilMatches) {
+                let totalGrams = 0;
+                let unknownOils = [];
+
+                for (const match of oilMatches) {
+                    const parts = match.match(/(\d+)\s*g?\s*([\w\s]+)/i);
+                    if (parts) {
+                        const grams = parseInt(parts[1]);
+                        const oilName = parts[2].trim().replace(/,/g, '');
+                        const oilData = findOilSapValue(oilName);
+
+                        if (oilData) {
+                            recipeState.oils.push({
+                                name: oilData.oil,
+                                grams: grams,
+                                sapValue: oilData.sapValue
+                            });
+                            totalGrams += grams;
+                        } else {
+                            unknownOils.push(oilName);
+                        }
+                    }
+                }
+
+                if (unknownOils.length > 0) {
+                    return {
+                        response: `I don't have SAP values for: ${unknownOils.join(', ')}. Available oils include: ${Object.keys(sapValues).join(', ')}. Please try again with oils from this list.`,
+                        category: 'recipe'
+                    };
+                }
+
+                if (totalGrams !== recipeState.batchSizeGrams) {
+                    return {
+                        response: `Note: Your oils total ${totalGrams}g, but you wanted ${recipeState.batchSizeGrams}g. That's okay! I'll calculate based on ${totalGrams}g. Would you like to change the superfat percentage? (Default is 5%, recommended range is 5-8%. Type "calculate" to proceed with 5% superfat, or specify like "7% superfat")`,
+                        category: 'recipe'
+                    };
+                }
+
+                return {
+                    response: `Perfect! Your oils total ${totalGrams}g. Would you like to change the superfat percentage? (Default is 5%, recommended range is 5-8%. Type "calculate" to proceed with 5% superfat, or specify like "7% superfat")`,
+                    category: 'recipe'
+                };
+            }
+        }
+
+        // Check for superfat adjustment or final calculation
+        if (recipeState.oils.length > 0) {
+            const superfatMatch = input.match(/(\d+)%?\s*superfat/i);
+            if (superfatMatch) {
+                recipeState.superfat = parseInt(superfatMatch[1]);
+            }
+
+            if (input.includes('calculate') || input.includes('yes') || superfatMatch) {
+                const recipe = calculateRecipe(
+                    recipeState.oils.reduce((sum, oil) => sum + oil.grams, 0),
+                    recipeState.oils,
+                    recipeState.superfat
+                );
+
+                let response = `🧼 **Your Soap Recipe** (${recipeState.superfat}% superfat)\n\n`;
+                response += `**Oils:**\n`;
+                for (const oil of recipe.oils) {
+                    response += `• ${oil.name}: ${oil.grams}g (${oil.ounces}oz)\n`;
+                }
+                response += `\n**Lye (NaOH):** ${recipe.lyeGrams}g (${recipe.lyeOunces}oz)\n`;
+                response += `**Water:** ${recipe.waterGrams}g (${recipe.waterOunces}oz)\n\n`;
+                response += `⚠️ **Safety Reminder:**\n`;
+                response += `• Always add lye to water (never water to lye)\n`;
+                response += `• Wear safety goggles and gloves\n`;
+                response += `• Work in a well-ventilated area\n`;
+                response += `• Double-check your measurements\n`;
+                response += `• Cure for 4-6 weeks before use\n\n`;
+                response += `Need another recipe? Just say "calculate recipe"!`;
+
+                // Reset state
+                recipeState = {
+                    active: false,
+                    batchSizeGrams: 0,
+                    oils: [],
+                    superfat: 5
+                };
+
+                return { response: response, category: 'recipe' };
+            }
+        }
+    }
 
     // Check each knowledge category
     for (const [category, data] of Object.entries(soapKnowledge)) {
@@ -144,7 +342,7 @@ function findResponse(userInput) {
 
     // Default response if no match found
     return {
-        response: "That's a great question about soap making! While I have information about saponification, oils, essential oils, cold/hot process, troubleshooting, recipes, curing, and colorants, I didn't quite understand your specific question. Could you try asking in a different way? For example: 'What is saponification?' or 'How do I make my first batch?'",
+        response: "That's a great question about soap making! I can help you with:\n• Calculating a custom soap recipe (say 'calculate recipe')\n• Saponification process\n• Oils and ingredients\n• Cold/hot process techniques\n• Troubleshooting\n• Essential oils and colorants\n\nTry asking: 'Calculate a recipe' or 'What is saponification?'",
         category: null
     };
 }
