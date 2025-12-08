@@ -96,6 +96,42 @@
             <p>Saponify AI demonstrates the transformative power of AI-first engineering, showcasing how intelligent orchestration of multiple AI models can dramatically accelerate development workflows and enable rapid concept-to-deployment cycles. This project exemplifies modern AI engineering practices and the future of software development.</p>
         </section>
 
+        <section id="soap-chat-demo">
+            <h2>Try the Soap Making Assistant</h2>
+            <p class="chat-intro">Ask me anything about natural soap making! I can help with recipes, techniques, ingredients, and troubleshooting.</p>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <strong>Saponify AI:</strong> Hello! I'm your natural soap making assistant. Ask me about soap recipes, ingredients, the saponification process, cold process vs. hot process, essential oils, troubleshooting, or anything else related to handmade soap! 🧼
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <input
+                        type="text"
+                        id="chatInput"
+                        class="chat-input"
+                        placeholder="Ask about soap making (e.g., 'How do I make lavender soap?')"
+                        autocomplete="off"
+                    />
+                    <button id="sendButton" class="chat-send-button">Send</button>
+                </div>
+
+                <div class="chat-suggestions">
+                    <p>Try asking:</p>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" data-question="What is the saponification process?">Saponification process</button>
+                        <button class="suggestion-btn" data-question="How do I make my first batch of soap?">First batch guide</button>
+                        <button class="suggestion-btn" data-question="What oils are best for soap making?">Best oils</button>
+                        <button class="suggestion-btn" data-question="Cold process vs hot process?">CP vs HP</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="project-cta">
             <div class="project-cta-content">
                 <h2>Interested in Learning More?</h2>
@@ -111,5 +147,7 @@
     <footer>
         <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
     </footer>
+
+    <script src="soap-chat.js"></script>
 </body>
 </html>
