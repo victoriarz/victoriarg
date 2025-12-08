@@ -114,7 +114,7 @@ async function callGemini(messages) {
                 contents: contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 800
+                    maxOutputTokens: 400  // Reduced from 800 to encourage shorter responses
                 }
             })
         }
