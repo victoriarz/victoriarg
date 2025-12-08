@@ -50,23 +50,85 @@ const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
 const suggestionButtons = document.querySelectorAll('.suggestion-btn');
 
-// Add user message to chat
-function addMessage(message, isBot = false) {
+// Add user message to chat with animation
+function addMessage(message, isBot = false, category = null) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isBot ? 'bot-message' : 'user-message'}`;
+    messageDiv.style.opacity = '0';
+    messageDiv.style.transform = 'translateY(20px)';
 
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
 
     if (isBot) {
-        contentDiv.innerHTML = `<strong>Saponify AI:</strong> ${message}`;
+        const icon = '<span class="bot-icon">🧼</span>';
+        let categoryBadge = '';
+        if (category) {
+            categoryBadge = `<span class="topic-badge ${category}">${getCategoryLabel(category)}</span>`;
+        }
+        contentDiv.innerHTML = `${icon}<div class="bot-text">${categoryBadge}${message}</div>`;
     } else {
-        contentDiv.innerHTML = `<strong>You:</strong> ${message}`;
+        contentDiv.innerHTML = message;
     }
 
     messageDiv.appendChild(contentDiv);
     chatMessages.appendChild(messageDiv);
+
+    // Trigger fade-in animation
+    setTimeout(() => {
+        messageDiv.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        messageDiv.style.opacity = '1';
+        messageDiv.style.transform = 'translateY(0)';
+    }, 10);
+
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Get category label for badge
+function getCategoryLabel(category) {
+    const labels = {
+        'saponification': 'Chemistry',
+        'cold_process': 'Technique',
+        'first_batch': 'Getting Started',
+        'oils': 'Ingredients',
+        'essential_oils': 'Fragrance',
+        'lye': 'Safety',
+        'troubleshooting': 'Help',
+        'recipe': 'Recipe',
+        'curing': 'Process',
+        'colorants': 'Design'
+    };
+    return labels[category] || 'Info';
+}
+
+// Show typing indicator
+function showTypingIndicator() {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message bot-message typing-indicator';
+    typingDiv.id = 'typingIndicator';
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.innerHTML = `
+        <span class="bot-icon">🧼</span>
+        <div class="typing-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    `;
+
+    typingDiv.appendChild(contentDiv);
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Remove typing indicator
+function removeTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) {
+        indicator.remove();
+    }
 }
 
 // Find matching response based on keywords
@@ -76,12 +138,15 @@ function findResponse(userInput) {
     // Check each knowledge category
     for (const [category, data] of Object.entries(soapKnowledge)) {
         if (data.keywords.some(keyword => input.includes(keyword.toLowerCase()))) {
-            return data.response;
+            return { response: data.response, category: category };
         }
     }
 
     // Default response if no match found
-    return "That's a great question about soap making! While I have information about saponification, oils, essential oils, cold/hot process, troubleshooting, recipes, curing, and colorants, I didn't quite understand your specific question. Could you try asking in a different way? For example: 'What is saponification?' or 'How do I make my first batch?'";
+    return {
+        response: "That's a great question about soap making! While I have information about saponification, oils, essential oils, cold/hot process, troubleshooting, recipes, curing, and colorants, I didn't quite understand your specific question. Could you try asking in a different way? For example: 'What is saponification?' or 'How do I make my first batch?'",
+        category: null
+    };
 }
 
 // Handle sending messages
@@ -96,11 +161,23 @@ function sendMessage() {
     // Clear input
     chatInput.value = '';
 
+    // Disable input while processing
+    chatInput.disabled = true;
+    sendButton.disabled = true;
+
     // Show typing indicator
+    showTypingIndicator();
+
     setTimeout(() => {
-        const response = findResponse(userMessage);
-        addMessage(response, true);
-    }, 500);
+        removeTypingIndicator();
+        const result = findResponse(userMessage);
+        addMessage(result.response, true, result.category);
+
+        // Re-enable input
+        chatInput.disabled = false;
+        sendButton.disabled = false;
+        chatInput.focus();
+    }, 800);
 }
 
 // Event listeners
