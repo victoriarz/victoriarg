@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saponify AI Chat - Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1><a href="index.html">Victoria Ruiz Griffith</a></h1>
+            <ul>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="project-detail-hero">
+            <h1>Saponify AI - Test Chat</h1>
+            <p class="project-tagline">Testing with Pre-configured API Key</p>
+        </section>
+
+        <section id="soap-chat-demo">
+            <div class="chat-header-controls">
+                <div>
+                    <h2>Try the Soap Making Assistant</h2>
+                    <p class="chat-intro">Chat is pre-configured with your Gemini API key. Ask about soap making!</p>
+                </div>
+                <div class="ai-controls">
+                    <span id="aiStatusBadge" class="ai-status-badge active">🤖 AI: Gemini (FREE)</span>
+                    <button id="aiSettingsButton" class="settings-button">⚙️ AI Settings</button>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <span class="bot-icon">🧼</span>
+                            <div class="bot-text">
+                                Hello! I'm your natural soap making assistant powered by Google Gemini 2.5 Flash. I can calculate custom soap recipes, answer questions about saponification, oils, techniques, troubleshooting, and more. What would you like to know?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <input
+                        type="text"
+                        id="chatInput"
+                        class="chat-input"
+                        placeholder="Ask about soap making (e.g., 'How do I make lavender soap?')"
+                        autocomplete="off"
+                    />
+                    <button id="sendButton" class="chat-send-button">Send</button>
+                </div>
+
+                <div class="chat-suggestions">
+                    <p>Try asking:</p>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" data-question="What is the saponification process?">Saponification process</button>
+                        <button class="suggestion-btn" data-question="How do I make my first batch of soap?">First batch guide</button>
+                        <button class="suggestion-btn" data-question="What oils are best for soap making?">Best oils</button>
+                        <button class="suggestion-btn" data-question="Why does my soap have white powder on it?">Troubleshooting</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
+    </footer>
+
+    <!-- AI Settings Modal -->
+    <div id="aiSettingsModal" class="ai-settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>AI Settings</h3>
+                <button id="closeAISettings" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="settings-info">Your API key is pre-configured for testing.</p>
+
+                <div class="form-group">
+                    <label for="geminiApiKey">Google Gemini API Key</label>
+                    <input type="password" id="geminiApiKey" placeholder="AIza..." class="api-key-input" value="AIzaSyC9Ry9EC_bCd9GXmdF3N_acg_uGBVEsN8o">
+                    <small>Key is already configured and ready to use!</small>
+                </div>
+
+                <div class="gemini-benefits">
+                    <h4>✨ Status</h4>
+                    <ul>
+                        <li>✅ <strong>API Key Loaded</strong></li>
+                        <li>✅ <strong>Gemini 2.5 Flash Ready</strong></li>
+                        <li>✅ <strong>100% FREE Tier Active</strong></li>
+                        <li>✅ <strong>Chat Ready to Use</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="clearAPIKeys" class="clear-button">Clear Key</button>
+                <button id="saveAISettings" class="save-button">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="ai-config.js"></script>
+    <script src="soap-chat.js"></script>
+    <script>
+        // Auto-configure the API key when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a moment for aiConfig to initialize
+            setTimeout(function() {
+                // Set the API key
+                const apiKey = 'AIzaSyC9Ry9EC_bCd9GXmdF3N_acg_uGBVEsN8o';
+                aiConfig.saveKey(apiKey);
+
+                // Update the status badge
+                updateAIStatus();
+
+                console.log('✅ Gemini API key auto-configured!');
+                console.log('🤖 Chat is ready with Gemini 2.5 Flash');
+            }, 100);
+        });
+    </script>
+</body>
+</html>

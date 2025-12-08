@@ -1,4 +1,8 @@
-// Saponify AI - Soap Making Chat Assistant
+// Saponify AI - Soap Making Chat Assistant with LLM Integration
+
+// Initialize AI configuration
+let aiConfig;
+let conversationHistory = [];
 
 // SAP values for common oils (NaOH per oz of oil)
 const sapValues = {
@@ -74,6 +78,98 @@ const soapKnowledge = {
         response: "Natural colorants: Clays (white, pink, green), Activated charcoal (black/gray), Turmeric (yellow/gold), Paprika (peach/coral), Spirulina (green), Cocoa powder (brown), Alkanet root (purple). Micas and oxides give vibrant, stable colors. Add at trace and mix well. Natural colorants may fade or morph - test small batches first. Titanium dioxide creates white and brightens colors. For swirls, divide your batter and color each portion separately!"
     }
 };
+
+// LLM API Integration Functions
+
+// Call Gemini API
+async function callGemini(messages) {
+    // Convert messages to Gemini format
+    const contents = [];
+
+    for (let i = 0; i < messages.length; i++) {
+        const msg = messages[i];
+        if (msg.role === 'system') {
+            // Gemini doesn't have system role, prepend to first user message
+            continue;
+        }
+        contents.push({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+        });
+    }
+
+    // Prepend system message to first user message
+    if (contents.length > 0 && messages[0].role === 'system') {
+        contents[0].parts[0].text = messages[0].content + '\n\n' + contents[0].parts[0].text;
+    }
+
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.geminiModel}:generateContent?key=${aiConfig.geminiKey}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: contents,
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 800
+                }
+            })
+        }
+    );
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Gemini API error: ${response.status} - ${errorData.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Handle Gemini 2.5 response format (may not have parts in some responses)
+    if (data.candidates && data.candidates[0]) {
+        const candidate = data.candidates[0];
+
+        // Try to get text from parts array
+        if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {
+            return candidate.content.parts[0].text;
+        }
+
+        // Fallback: check if there's text directly in content
+        if (candidate.content && candidate.content.text) {
+            return candidate.content.text;
+        }
+
+        // If no text found, throw error
+        throw new Error('No text content in Gemini response');
+    }
+
+    throw new Error('Invalid response format from Gemini API');
+}
+
+// Main LLM call with fallback to local knowledge base
+async function getLLMResponse(userMessage) {
+    // Build conversation history
+    const messages = [
+        { role: 'system', content: aiConfig.getSystemPrompt() },
+        ...conversationHistory,
+        { role: 'user', content: userMessage }
+    ];
+
+    // Try Gemini API
+    try {
+        if (aiConfig.geminiKey) {
+            const response = await callGemini(messages);
+            return { response, provider: 'Gemini 2.5 Flash' };
+        }
+    } catch (error) {
+        console.error('Gemini API failed:', error);
+    }
+
+    // If Gemini fails, use local knowledge base
+    return { response: findResponse(userMessage).response, provider: 'Local Knowledge Base' };
+}
 
 // DOM elements
 const chatMessages = document.getElementById('chatMessages');
@@ -348,7 +444,7 @@ function findResponse(userInput) {
 }
 
 // Handle sending messages
-function sendMessage() {
+async function sendMessage() {
     const userMessage = chatInput.value.trim();
 
     if (userMessage === '') return;
@@ -366,16 +462,43 @@ function sendMessage() {
     // Show typing indicator
     showTypingIndicator();
 
-    setTimeout(() => {
-        removeTypingIndicator();
-        const result = findResponse(userMessage);
-        addMessage(result.response, true, result.category);
+    try {
+        // Check if AI is configured
+        if (aiConfig && aiConfig.hasValidKey()) {
+            // Use LLM
+            const result = await getLLMResponse(userMessage);
 
+            removeTypingIndicator();
+
+            // Add response with provider badge
+            const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>${result.response}`;
+            addMessage(responseWithBadge, true);
+
+            // Update conversation history (keep last 10 messages for context)
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'assistant', content: result.response });
+
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+        } else {
+            // Use local knowledge base
+            setTimeout(() => {
+                removeTypingIndicator();
+                const result = findResponse(userMessage);
+                addMessage(result.response, true, result.category);
+            }, 800);
+        }
+    } catch (error) {
+        console.error('Error getting response:', error);
+        removeTypingIndicator();
+        addMessage('Sorry, I encountered an error. Please check your API keys and try again. You can also use the local knowledge base by clearing your API keys.', true);
+    } finally {
         // Re-enable input
         chatInput.disabled = false;
         sendButton.disabled = false;
         chatInput.focus();
-    }, 800);
+    }
 }
 
 // Event listeners
@@ -395,3 +518,95 @@ suggestionButtons.forEach(button => {
         sendMessage();
     });
 });
+
+// Initialize AI configuration on page load
+document.addEventListener('DOMContentLoaded', () => {
+    aiConfig = new AIConfig();
+
+    // Check if API settings modal exists
+    const settingsButton = document.getElementById('aiSettingsButton');
+    if (settingsButton) {
+        settingsButton.addEventListener('click', openAISettings);
+    }
+
+    // Load settings modal handlers
+    const saveSettingsButton = document.getElementById('saveAISettings');
+    if (saveSettingsButton) {
+        saveSettingsButton.addEventListener('click', saveAISettings);
+    }
+
+    const closeSettingsButton = document.getElementById('closeAISettings');
+    if (closeSettingsButton) {
+        closeSettingsButton.addEventListener('click', closeAISettings);
+    }
+
+    const clearKeysButton = document.getElementById('clearAPIKeys');
+    if (clearKeysButton) {
+        clearKeysButton.addEventListener('click', clearAPIKeys);
+    }
+
+    // Update status badge
+    updateAIStatus();
+});
+
+// Open AI settings modal
+function openAISettings() {
+    const modal = document.getElementById('aiSettingsModal');
+    if (modal) {
+        // Pre-fill with current value
+        document.getElementById('geminiApiKey').value = aiConfig.geminiKey;
+
+        modal.style.display = 'flex';
+    }
+}
+
+// Close AI settings modal
+function closeAISettings() {
+    const modal = document.getElementById('aiSettingsModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Save AI settings
+function saveAISettings() {
+    const geminiKey = document.getElementById('geminiApiKey').value.trim();
+
+    aiConfig.saveKey(geminiKey);
+
+    // Reset conversation history when changing settings
+    conversationHistory = [];
+
+    updateAIStatus();
+    closeAISettings();
+
+    // Show confirmation
+    addMessage('AI settings updated! Your conversation will now use Google Gemini 2.5 Flash (FREE tier). 🎉', true);
+}
+
+// Clear API key
+function clearAPIKeys() {
+    if (confirm('Are you sure you want to clear your API key? The chat will use the local knowledge base.')) {
+        aiConfig.clearKey();
+        conversationHistory = [];
+        document.getElementById('geminiApiKey').value = '';
+        updateAIStatus();
+        closeAISettings();
+
+        addMessage('API key cleared. Chat is now using the local knowledge base.', true);
+    }
+}
+
+// Update AI status badge
+function updateAIStatus() {
+    const statusBadge = document.getElementById('aiStatusBadge');
+    if (statusBadge) {
+        if (aiConfig.hasValidKey()) {
+            statusBadge.textContent = '🤖 AI: Gemini (FREE)';
+            statusBadge.className = 'ai-status-badge active';
+        } else {
+            statusBadge.textContent = '🤖 AI: Local Mode';
+            statusBadge.className = 'ai-status-badge';
+        }
+    }
+}
