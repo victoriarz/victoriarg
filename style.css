@@ -24,6 +24,78 @@ main {
 }
 
 /* ------------------------------------------- */
+/* 1.5. Info Banner Styles */
+/* ------------------------------------------- */
+
+.info-banner {
+    background-color: #f5ede3; /* Light beige background */
+    border-bottom: 1px solid #e8dfd2;
+    padding: 12px 0;
+    font-size: 0.9rem;
+}
+
+.info-banner-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.info-left {
+    display: flex;
+    align-items: center;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-banner .icon {
+    font-size: 1rem;
+}
+
+.text-primary {
+    color: #3d2e1f; /* Deep warm brown */
+    font-weight: 600;
+}
+
+.separator {
+    color: #9b8b7e;
+    margin: 0 8px;
+}
+
+.text-secondary {
+    color: #6b5d52; /* Medium brown */
+    font-weight: 400;
+}
+
+.info-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.info-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #d97642; /* Earthy orange */
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.info-link:hover {
+    color: #c26534; /* Darker orange on hover */
+}
+
+/* ------------------------------------------- */
 /* 2. Navigation Bar Styles */
 /* ------------------------------------------- */
 
@@ -924,6 +996,28 @@ footer p {
 /* ------------------------------------------- */
 
 @media (max-width: 768px) {
+    .info-banner {
+        font-size: 0.8rem;
+        padding: 10px 0;
+    }
+
+    .info-banner-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .info-item {
+        flex-wrap: wrap;
+    }
+
+    .info-right {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+    }
+
     nav {
         flex-direction: column;
         gap: 20px;
