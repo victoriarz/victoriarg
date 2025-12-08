@@ -962,7 +962,7 @@ footer p {
 /* ------------------------------------------- */
 
 #project-detail-hero {
-    padding: 60px 0 40px;
+    padding: 60px 0 20px;
     text-align: center;
 }
 
@@ -1098,11 +1098,10 @@ footer p {
 /* ------------------------------------------- */
 
 #soap-chat-demo {
-    padding: 60px 0;
     background-color: #faf7f2;
     border-radius: 20px;
-    padding: 50px 40px;
-    margin-top: 40px;
+    padding: 40px;
+    margin-top: 20px;
 }
 
 #soap-chat-demo h2 {
