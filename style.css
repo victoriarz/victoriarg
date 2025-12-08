@@ -374,33 +374,9 @@ footer p {
     background-color: #ffffff;
     padding: 35px;
     border-radius: 16px;
-    transition: all 0.3s ease;
     border: 2px solid #e8dfd2;
     position: relative;
     overflow: hidden;
-    cursor: pointer; /* Show pointer cursor on hover */
-}
-
-.project-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, #d97642 0%, #7fa563 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.project-card-link:hover .project-card {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(61, 46, 31, 0.1);
-    border-color: #d97642;
-}
-
-.project-card-link:hover .project-card::before {
-    opacity: 1;
 }
 
 .project-card h2 {
@@ -439,13 +415,7 @@ footer p {
     color: #d97642;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: all 0.3s ease;
-    display: inline-block; /* Changed from inline-flex since it's now a span */
-}
-
-/* Arrow animation on card hover */
-.project-card-link:hover .project-link {
-    color: #c26534;
+    display: inline-block;
 }
 
 /* ------------------------------------------- */
