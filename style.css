@@ -992,7 +992,143 @@ footer p {
 }
 
 /* ------------------------------------------- */
-/* 9. Responsive Design */
+/* 10. Project Detail Page Styles */
+/* ------------------------------------------- */
+
+#project-detail-hero {
+    padding: 60px 0 40px;
+    text-align: center;
+}
+
+#project-detail-hero h1 {
+    font-size: 3.5rem;
+    color: #3d2e1f;
+    margin-bottom: 15px;
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+.project-tagline {
+    font-size: 1.3rem;
+    color: #6b5d52;
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+#project-detail-hero .project-tech {
+    justify-content: center;
+}
+
+#project-overview,
+#project-features,
+#project-tech-stack,
+#project-impact {
+    padding: 40px 0;
+}
+
+#project-overview h2,
+#project-features h2,
+#project-tech-stack h2,
+#project-impact h2 {
+    color: #3d2e1f;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+#project-overview p,
+#project-impact p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #6b5d52;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.feature-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    border: 2px solid #e8dfd2;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(127, 165, 99, 0.15);
+    border-color: #7fa563;
+}
+
+.feature-card h3 {
+    color: #d97642;
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.feature-card p {
+    color: #6b5d52;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.tech-stack-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.tech-stack-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #e8dfd2;
+    color: #6b5d52;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.tech-stack-list li:last-child {
+    border-bottom: none;
+}
+
+.tech-stack-list strong {
+    color: #3d2e1f;
+    font-weight: 600;
+}
+
+#project-cta {
+    padding: 60px 0 40px;
+    margin-top: 40px;
+}
+
+.project-cta-content {
+    background: linear-gradient(135deg, #f5ede3 0%, #faf7f2 100%);
+    padding: 50px 40px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.project-cta-content h2 {
+    color: #3d2e1f;
+    margin-bottom: 15px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.project-cta-content p {
+    color: #6b5d52;
+    font-size: 1.15rem;
+    margin-bottom: 30px;
+}
+
+/* ------------------------------------------- */
+/* 11. Responsive Design */
 /* ------------------------------------------- */
 
 @media (max-width: 768px) {
@@ -1127,5 +1263,26 @@ footer p {
         width: 100%;
         max-width: 300px;
         text-align: center;
+    }
+
+    #project-detail-hero h1 {
+        font-size: 2.5rem;
+        letter-spacing: -1.5px;
+    }
+
+    .project-tagline {
+        font-size: 1.1rem;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-cta-content {
+        padding: 40px 25px;
+    }
+
+    .project-cta-content h2 {
+        font-size: 1.8rem;
     }
 }
