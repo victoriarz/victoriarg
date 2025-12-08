@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Favicon</title>
+</head>
+<body>
+    <h2>Favicon Generator</h2>
+    <p>Right-click the canvas below and "Save Image As..." to save as favicon.png</p>
+    <canvas id="favicon" width="512" height="512"></canvas>
+
+    <script>
+        const canvas = document.getElementById('favicon');
+        const ctx = canvas.getContext('2d');
+
+        // Beige background
+        ctx.fillStyle = '#f5ede3';
+        ctx.fillRect(0, 0, 512, 512);
+
+        // VG text in warm brown
+        ctx.fillStyle = '#3d2e1f';
+        ctx.font = 'bold 280px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('VG', 256, 256);
+    </script>
+
+    <h3>Instructions:</h3>
+    <ol>
+        <li>Right-click on the canvas above</li>
+        <li>Select "Save Image As..."</li>
+        <li>Save it as "favicon.png" in your project directory</li>
+        <li>Delete this file after saving the favicon</li>
+    </ol>
+</body>
+</html>

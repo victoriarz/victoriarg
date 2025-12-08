@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Beige background -->
+  <rect width="512" height="512" fill="#f5ede3"/>
+
+  <!-- VG text in warm brown -->
+  <text
+    x="256"
+    y="320"
+    font-family="Arial, sans-serif"
+    font-size="280"
+    font-weight="bold"
+    fill="#3d2e1f"
+    text-anchor="middle">VG</text>
+</svg>
