@@ -158,11 +158,12 @@ nav ul li a.active {
 }
 
 .hero-meta .location {
-    background-color: #f5ede3;
+    background-color: #e8f0e3; /* Light sage green background */
     padding: 8px 16px;
     border-radius: 25px;
     color: #6b5d52;
     font-weight: 500;
+    border: 1px solid #7fa563; /* Sage green border */
 }
 
 .hero-meta .contact-quick a {
@@ -352,7 +353,7 @@ footer p {
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 500;
-    border: 1px solid #e8dfd2;
+    border: 1px solid #7fa563; /* Sage green border */
 }
 
 .project-link {
@@ -403,9 +404,10 @@ footer p {
     font-weight: 400;
     display: inline-block;
     padding: 5px 15px;
-    background-color: #f5ede3;
+    background-color: #e8f0e3; /* Light sage green background */
     border-radius: 20px;
     margin-top: 10px;
+    border: 1px solid #7fa563; /* Sage green border */
 }
 
 #about-bio {
@@ -456,11 +458,11 @@ footer p {
     background-color: #f5ede3;
     padding: 30px;
     border-radius: 16px;
-    border: 2px solid #e8dfd2;
+    border: 2px solid #7fa563; /* Sage green border */
 }
 
 .skill-category h3 {
-    color: #d97642;
+    color: #7fa563; /* Sage green */
     margin-bottom: 15px;
     font-size: 1.3rem;
     font-weight: 700;
@@ -628,7 +630,7 @@ footer p {
 }
 
 .certifications h3 {
-    color: #d97642;
+    color: #7fa563; /* Sage green */
     margin-bottom: 15px;
     font-size: 1.25rem;
     font-weight: 700;
@@ -703,12 +705,12 @@ footer p {
 
 .contact-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(61, 46, 31, 0.1);
-    border-color: #d97642;
+    box-shadow: 0 8px 20px rgba(127, 165, 99, 0.2); /* Sage green shadow */
+    border-color: #7fa563; /* Sage green border on hover */
 }
 
 .contact-card h2 {
-    color: #d97642;
+    color: #7fa563; /* Sage green */
     margin-bottom: 10px;
     font-size: 0.9rem;
     font-weight: 700;
@@ -768,8 +770,8 @@ footer p {
 
 .social-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(61, 46, 31, 0.1);
-    border-color: #d97642;
+    box-shadow: 0 12px 30px rgba(127, 165, 99, 0.2); /* Sage green shadow */
+    border-color: #7fa563; /* Sage green border on hover */
 }
 
 .social-card h3 {
@@ -875,7 +877,7 @@ footer p {
 }
 
 .certifications-home h4 {
-    color: #d97642;
+    color: #7fa563; /* Sage green */
     margin-bottom: 15px;
     font-size: 1.2rem;
     font-weight: 700;
