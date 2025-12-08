@@ -989,7 +989,7 @@ footer p {
 #project-features,
 #project-tech-stack,
 #project-impact {
-    padding: 40px 0;
+    padding: 25px 0;
 }
 
 #project-overview h2,
@@ -997,7 +997,7 @@ footer p {
 #project-tech-stack h2,
 #project-impact h2 {
     color: #3d2e1f;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     font-size: 1.8rem;
     font-weight: 700;
     letter-spacing: -0.5px;
@@ -1006,7 +1006,7 @@ footer p {
 #project-overview p,
 #project-impact p {
     font-size: 1.1rem;
-    line-height: 1.8;
+    line-height: 1.7;
     color: #6b5d52;
 }
 
@@ -1047,15 +1047,15 @@ footer p {
 .tech-stack-list {
     list-style: none;
     padding: 0;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .tech-stack-list li {
-    padding: 15px 0;
+    padding: 10px 0;
     border-bottom: 1px solid #e8dfd2;
     color: #6b5d52;
     font-size: 1.05rem;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .tech-stack-list li:last-child {
@@ -1068,8 +1068,8 @@ footer p {
 }
 
 #project-cta {
-    padding: 60px 0 40px;
-    margin-top: 40px;
+    padding: 40px 0 30px;
+    margin-top: 30px;
 }
 
 .project-cta-content {
