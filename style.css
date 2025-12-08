@@ -13,8 +13,8 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
-    color: #3d2e1f; /* Deep warm brown */
-    background-color: #faf7f2; /* Warm cream */
+    color: #2a2a2a;
+    background-color: #ffffff;
 }
 
 main {
@@ -28,8 +28,8 @@ main {
 /* ------------------------------------------- */
 
 .info-banner {
-    background-color: #f5ede3; /* Light beige background */
-    border-bottom: 1px solid #e8dfd2;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
     padding: 12px 0;
     font-size: 0.9rem;
 }
@@ -118,12 +118,12 @@ nav h1 {
 
 nav h1 a {
     text-decoration: none;
-    color: #3d2e1f;
+    color: #2a2a2a;
     transition: color 0.3s ease;
 }
 
 nav h1 a:hover {
-    color: #d97642; /* Earthy orange */
+    color: #4a4a4a;
 }
 
 nav ul {
@@ -135,7 +135,7 @@ nav ul {
 
 nav ul li a {
     text-decoration: none;
-    color: #6b5d52;
+    color: #6a6a6a;
     font-size: 1rem;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -144,11 +144,11 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #d97642;
+    color: #2a2a2a;
 }
 
 nav ul li a.active {
-    color: #d97642;
+    color: #2a2a2a;
     font-weight: 600;
 }
 
@@ -161,65 +161,28 @@ nav ul li a.active {
     max-width: 1100px;
     margin: 0 auto;
     position: relative;
-    background: linear-gradient(135deg, #f5ede3 0%, #faf7f2 100%);
-    border-radius: 20px;
     margin-top: 20px;
 }
 
 #hero h1 {
-    font-size: 4.5rem;
-    color: #3d2e1f;
-    margin-bottom: 25px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -2.5px;
+    font-size: 3.8rem;
+    color: #2a2a2a;
+    margin-bottom: 20px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
 }
 
-#hero h1::after {
-    content: '✨';
-    margin-left: 15px;
-}
 
 #hero h2 {
-    font-size: 1.5rem;
-    color: #6b5d52;
+    font-size: 1.3rem;
+    color: #6a6a6a;
     font-weight: 400;
     margin-bottom: 40px;
-    line-height: 1.7;
-    max-width: 650px;
+    line-height: 1.6;
+    max-width: 600px;
 }
 
-/* Decorative elements */
-#hero::before {
-    content: '';
-    position: absolute;
-    top: 50px;
-    right: 80px;
-    width: 150px;
-    height: 150px;
-    background: linear-gradient(135deg, #d97642 0%, #e8a76f 100%);
-    border-radius: 50%;
-    opacity: 0.15;
-    z-index: 0;
-}
-
-#hero::after {
-    content: '';
-    position: absolute;
-    bottom: 60px;
-    right: 40px;
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, #7fa563 0%, #a8c68f 100%);
-    border-radius: 50%;
-    opacity: 0.2;
-    z-index: 0;
-}
-
-#hero > * {
-    position: relative;
-    z-index: 1;
-}
 
 .hero-meta {
     display: flex;
@@ -254,41 +217,37 @@ nav ul li a.active {
 
 .cta-button {
     display: inline-block;
-    padding: 16px 36px;
-    background-color: #d97642; /* Earthy orange */
+    padding: 14px 32px;
+    background-color: #2a2a2a;
     color: #ffffff;
     text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
     border: none;
-    box-shadow: 0 4px 15px rgba(217, 118, 66, 0.3);
 }
 
 .cta-button:hover {
-    background-color: #c26534;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(217, 118, 66, 0.4);
+    background-color: #3a3a3a;
 }
 
 .cta-button-secondary {
     display: inline-block;
-    padding: 16px 36px;
+    padding: 14px 32px;
     background-color: transparent;
-    color: #d97642;
+    color: #4a4a4a;
     text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    border: 2px solid #d97642;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border: 1px solid #d0d0d0;
 }
 
 .cta-button-secondary:hover {
-    background-color: #d97642;
-    color: #ffffff;
-    transform: translateY(-2px);
+    border-color: #4a4a4a;
+    color: #2a2a2a;
 }
 
 .cta-buttons {
@@ -322,10 +281,8 @@ footer {
     padding: 50px 6% 40px;
     max-width: 1100px;
     margin: 60px auto 0;
-    border-top: 2px solid #e8dfd2;
-    color: #9b8b7e;
-    background-color: #f5ede3;
-    border-radius: 20px 20px 0 0;
+    border-top: 1px solid #e5e5e5;
+    color: #8a8a8a;
 }
 
 footer p {
@@ -372,9 +329,9 @@ footer p {
 
 .project-card {
     background-color: #ffffff;
-    padding: 35px;
-    border-radius: 16px;
-    border: 2px solid #e8dfd2;
+    padding: 32px;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
     position: relative;
     overflow: hidden;
 }
