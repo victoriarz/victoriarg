@@ -149,6 +149,32 @@ nav ul li a.active {
     z-index: 1;
 }
 
+.hero-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.hero-meta .location {
+    background-color: #f5ede3;
+    padding: 8px 16px;
+    border-radius: 25px;
+    color: #6b5d52;
+    font-weight: 500;
+}
+
+.hero-meta .contact-quick a {
+    color: #d97642;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.hero-meta .contact-quick a:hover {
+    color: #c26534;
+}
+
 /* ------------------------------------------- */
 /* 4. CTA Button Styles */
 /* ------------------------------------------- */
@@ -171,6 +197,47 @@ nav ul li a.active {
     background-color: #c26534;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(217, 118, 66, 0.4);
+}
+
+.cta-button-secondary {
+    display: inline-block;
+    padding: 16px 36px;
+    background-color: transparent;
+    color: #d97642;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid #d97642;
+}
+
+.cta-button-secondary:hover {
+    background-color: #d97642;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.text-link {
+    color: #d97642;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.text-link:hover {
+    color: #c26534;
 }
 
 /* ------------------------------------------- */
@@ -741,6 +808,116 @@ footer p {
 }
 
 /* ------------------------------------------- */
+/* 10. Home Page Specific Styles */
+/* ------------------------------------------- */
+
+#featured-projects {
+    padding: 60px 0;
+}
+
+#featured-projects h2,
+#experience-highlights h2,
+#education-home h2,
+#cta-home h2 {
+    color: #3d2e1f;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    text-align: center;
+}
+
+.projects-grid-home {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.projects-grid-home .project-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.view-all-projects,
+.view-all-experience {
+    text-align: center;
+    margin-top: 30px;
+}
+
+#experience-highlights {
+    padding: 60px 0;
+    background-color: #f5ede3;
+    border-radius: 20px;
+    padding: 50px 40px;
+}
+
+#education-home {
+    padding: 60px 0;
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+#education-home .education-item {
+    margin-bottom: 0;
+}
+
+.certifications-home {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    border: 2px solid #e8dfd2;
+}
+
+.certifications-home h4 {
+    color: #d97642;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.certifications-home ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.certifications-home ul li {
+    color: #6b5d52;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 25px;
+    font-size: 0.95rem;
+}
+
+.certifications-home ul li::before {
+    content: '✓';
+    color: #7fa563;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    font-size: 1.2em;
+}
+
+#cta-home {
+    text-align: center;
+    padding: 60px 6%;
+    margin: 60px 0 40px;
+    background: linear-gradient(135deg, #f5ede3 0%, #faf7f2 100%);
+    border-radius: 20px;
+}
+
+#cta-home p {
+    color: #6b5d52;
+    font-size: 1.15rem;
+    margin-bottom: 30px;
+}
+
+/* ------------------------------------------- */
 /* 9. Responsive Design */
 /* ------------------------------------------- */
 
@@ -825,5 +1002,34 @@ footer p {
 
     .experience-item {
         padding: 25px;
+    }
+
+    .hero-meta {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .projects-grid-home {
+        grid-template-columns: 1fr;
+    }
+
+    #experience-highlights {
+        padding: 40px 25px;
+    }
+
+    .education-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cta-button,
+    .cta-button-secondary {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
     }
 }
