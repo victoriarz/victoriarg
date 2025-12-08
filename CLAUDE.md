@@ -55,24 +55,27 @@ victoriarg/
    ```
 
 4. **Spacing**: Consistent spacing between selectors and properties
-5. **Color Scheme**:
-   - Primary brand color: `#007bff` (Blue)
-   - Hover state: `#0056b3` (Darker blue)
-   - Text color: `#333` (Dark gray)
-   - Background: `#f4f4f4` (Light gray)
+5. **Color Scheme** (Earthy Tones):
+   - Primary brand color: `#d4a574` (Earthy orange-tan)
+   - Hover state: `#c89563` (Darker orange)
+   - Text color: `#4a3f35` (Warm brown)
+   - Background: `#f5ebe0` (Beige) and `#faf8f5` (Off-white)
+   - Accent green: `#8fa888` (Soft green for success indicators)
 
 ### Design Patterns
 
 1. **Navigation**: Flexbox-based horizontal navigation with:
-   - Name on the left (`h1`)
+   - Name on the left (`h1`) with clickable link to home
    - Navigation links on the right (`ul li`)
-   - Light gray background
+   - Warm beige background with subtle border
+   - Active state highlighting for current page
 
 2. **CTA Buttons**: Standardized call-to-action button style with:
    - Inline-block display
-   - Blue background color
-   - Smooth hover transitions
+   - Earthy orange-tan background color (#d4a574)
+   - Smooth hover transitions with transform effect
    - Border radius for rounded corners
+   - Subtle box shadows for depth
 
 3. **Responsive Design**: Viewport meta tag included for mobile responsiveness
 
@@ -205,18 +208,28 @@ When making changes, verify:
 | Purpose | File | Description |
 |---------|------|-------------|
 | Landing page | index.html | Main entry point with hero section |
+| Projects showcase | projects.html | Portfolio projects with tech tags |
+| About page | about.html | Bio, experience, education, skills |
+| Contact page | contact.html | Contact info and social links |
 | Styling | style.css | All CSS styles, organized by component |
 | Domain config | CNAME | GitHub Pages custom domain |
+| AI Guide | CLAUDE.md | Documentation for AI assistants |
 
-### Color Palette
+### Color Palette (Earthy Tones)
 
 | Color | Hex Code | Usage |
 |-------|----------|-------|
-| Primary Blue | #007bff | CTA buttons, primary actions |
-| Hover Blue | #0056b3 | Button hover states |
-| Text Gray | #333 | Main text, links |
-| Light Gray | #f4f4f4 | Navigation background |
-| White | #fff | Button text, backgrounds |
+| Warm Brown | #4a3f35 | Main text, headings |
+| Dark Brown | #2c1f15 | Dark accents, button text |
+| Beige | #f5ebe0 | Navigation background, cards |
+| Light Beige | #e3d5ca | Borders, subtle dividers |
+| Earthy Orange | #d4a574 | CTA buttons, primary accents, links |
+| Hover Orange | #c89563 | Button/link hover states |
+| Medium Brown | #6b5d52 | Secondary text, descriptions |
+| Light Brown | #7a6a5a | Meta text, subtitles |
+| Soft Green | #8fa888 | Certification checkmarks, success |
+| Off-White | #faf8f5 | Body background |
+| Pure White | #ffffff | Card backgrounds |
 
 ### Common Commands
 
