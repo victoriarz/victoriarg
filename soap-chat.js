@@ -177,6 +177,28 @@ const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
 const suggestionButtons = document.querySelectorAll('.suggestion-btn');
 
+// Configure marked for better markdown rendering
+if (typeof marked !== 'undefined') {
+    marked.setOptions({
+        breaks: true, // Convert \n to <br>
+        gfm: true, // GitHub Flavored Markdown
+        headerIds: false,
+        mangle: false
+    });
+}
+
+// Render markdown to HTML
+function renderMarkdown(text) {
+    if (typeof marked !== 'undefined') {
+        return marked.parse(text);
+    }
+    // Fallback: simple replacements if marked is not available
+    return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+}
+
 // Add user message to chat with animation
 function addMessage(message, isBot = false, category = null) {
     const messageDiv = document.createElement('div');
@@ -193,9 +215,12 @@ function addMessage(message, isBot = false, category = null) {
         if (category) {
             categoryBadge = `<span class="topic-badge ${category}">${getCategoryLabel(category)}</span>`;
         }
-        contentDiv.innerHTML = `${icon}<div class="bot-text">${categoryBadge}${message}</div>`;
+        // Render markdown for bot messages
+        const renderedMessage = renderMarkdown(message);
+        contentDiv.innerHTML = `${icon}<div class="bot-text markdown-content">${categoryBadge}${renderedMessage}</div>`;
     } else {
-        contentDiv.innerHTML = message;
+        // User messages don't need markdown
+        contentDiv.textContent = message;
     }
 
     messageDiv.appendChild(contentDiv);
