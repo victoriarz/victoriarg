@@ -61,8 +61,7 @@
                     <p class="chat-intro">Calculate custom soap recipes or ask about natural soap making! I can help with recipe calculations, techniques, ingredients, and troubleshooting.</p>
                 </div>
                 <div class="ai-controls">
-                    <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Local Mode</span>
-                    <button id="aiSettingsButton" class="settings-button">⚙️ AI Settings</button>
+                    <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
                 </div>
             </div>
 
@@ -136,43 +135,6 @@
     <footer>
         <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
     </footer>
-
-    <!-- AI Settings Modal -->
-    <div id="aiSettingsModal" class="ai-settings-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>AI Settings</h3>
-                <button id="closeAISettings" class="close-button">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p class="settings-info">Configure your Google Gemini API key to enable AI-powered chat responses. Gemini 2.5 Flash has a generous FREE tier!</p>
-
-                <div class="form-group">
-                    <label for="geminiApiKey">Google Gemini API Key</label>
-                    <input type="password" id="geminiApiKey" placeholder="AIza..." class="api-key-input">
-                    <small>Get your FREE key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></small>
-                </div>
-
-                <div class="gemini-benefits">
-                    <h4>✨ Why Gemini?</h4>
-                    <ul>
-                        <li>💰 <strong>100% FREE</strong> - 15 requests/min, 1M tokens/day</li>
-                        <li>⚡ <strong>Fast</strong> - 2.5 Flash is optimized for speed</li>
-                        <li>🧠 <strong>Smarter</strong> - Latest model with enhanced reasoning</li>
-                        <li>💬 <strong>Conversational</strong> - Remembers chat context</li>
-                    </ul>
-                </div>
-
-                <div class="settings-note">
-                    <strong>ℹ️ Note:</strong> Your API key is stored locally in your browser only. For production apps, use a secure backend server.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="clearAPIKeys" class="clear-button">Clear Key</button>
-                <button id="saveAISettings" class="save-button">Save Settings</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Markdown parser for formatting AI responses -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

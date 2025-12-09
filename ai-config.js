@@ -1,10 +1,12 @@
 // AI Configuration for Saponify AI Chat
-// This file manages API keys and LLM provider settings
+// This file manages backend API configuration
 
 class AIConfig {
     constructor() {
-        // Load API key from localStorage
-        this.geminiKey = localStorage.getItem('saponify_gemini_key') || '';
+        // Backend proxy URL - update this after deploying your backend
+        // For local development: 'http://localhost:3000'
+        // For production: 'https://your-app.onrender.com' or your deployed URL
+        this.backendUrl = 'http://localhost:3000';
 
         // Model settings
         this.geminiModel = 'gemini-2.5-flash'; // Latest Flash model - Fast, efficient, and FREE!
@@ -63,28 +65,25 @@ Common SAP Values (NaOH per oz of oil):
 `;
     }
 
-    // Save API key to localStorage
-    saveKey(geminiKey) {
-        if (geminiKey) {
-            this.geminiKey = geminiKey;
-            localStorage.setItem('saponify_gemini_key', geminiKey);
-        }
-    }
-
-    // Check if API key is configured
-    hasValidKey() {
-        return this.geminiKey.length > 0;
-    }
-
     // Get the system prompt with SAP values
     getSystemPrompt() {
         return this.systemPrompt + '\n\n' + this.sapValuesReference;
     }
 
-    // Clear stored key
-    clearKey() {
-        this.geminiKey = '';
-        localStorage.removeItem('saponify_gemini_key');
+    // Get backend URL
+    getBackendUrl() {
+        return this.backendUrl;
+    }
+
+    // Check if backend is available
+    async checkBackendHealth() {
+        try {
+            const response = await fetch(`${this.backendUrl}/health`);
+            return response.ok;
+        } catch (error) {
+            console.error('Backend health check failed:', error);
+            return false;
+        }
     }
 }
 

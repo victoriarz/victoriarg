@@ -81,7 +81,7 @@ const soapKnowledge = {
 
 // LLM API Integration Functions
 
-// Call Gemini API
+// Call backend proxy which handles Gemini API
 async function callGemini(messages) {
     // Convert messages to Gemini format
     const contents = [];
@@ -103,8 +103,9 @@ async function callGemini(messages) {
         contents[0].parts[0].text = messages[0].content + '\n\n' + contents[0].parts[0].text;
     }
 
+    // Call backend proxy instead of Gemini directly
     const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${aiConfig.geminiModel}:generateContent?key=${aiConfig.geminiKey}`,
+        `${aiConfig.getBackendUrl()}/api/chat`,
         {
             method: 'POST',
             headers: {
@@ -122,7 +123,7 @@ async function callGemini(messages) {
 
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(`Gemini API error: ${response.status} - ${errorData.error?.message || response.statusText}`);
+        throw new Error(`Backend API error: ${response.status} - ${errorData.error || response.statusText}`);
     }
 
     const data = await response.json();
@@ -148,7 +149,7 @@ async function callGemini(messages) {
     throw new Error('Invalid response format from Gemini API');
 }
 
-// Main LLM call with fallback to local knowledge base
+// Main LLM call via backend proxy
 async function getLLMResponse(userMessage) {
     // Build conversation history
     const messages = [
@@ -157,18 +158,9 @@ async function getLLMResponse(userMessage) {
         { role: 'user', content: userMessage }
     ];
 
-    // Try Gemini API
-    try {
-        if (aiConfig.geminiKey) {
-            const response = await callGemini(messages);
-            return { response, provider: 'Gemini 2.5 Flash' };
-        }
-    } catch (error) {
-        console.error('Gemini API failed:', error);
-    }
-
-    // If Gemini fails, use local knowledge base
-    return { response: findResponse(userMessage).response, provider: 'Local Knowledge Base' };
+    // Call backend proxy (which securely handles the API key)
+    const response = await callGemini(messages);
+    return { response, provider: 'Gemini 2.5 Flash' };
 }
 
 // DOM elements
@@ -488,36 +480,29 @@ async function sendMessage() {
     showTypingIndicator();
 
     try {
-        // Check if AI is configured
-        if (aiConfig && aiConfig.hasValidKey()) {
-            // Use LLM
-            const result = await getLLMResponse(userMessage);
+        // Always try to use the backend AI
+        const result = await getLLMResponse(userMessage);
 
-            removeTypingIndicator();
+        removeTypingIndicator();
 
-            // Add response with provider badge
-            const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>${result.response}`;
-            addMessage(responseWithBadge, true);
+        // Add response with provider badge
+        const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>${result.response}`;
+        addMessage(responseWithBadge, true);
 
-            // Update conversation history (keep last 10 messages for context)
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: result.response });
+        // Update conversation history (keep last 10 messages for context)
+        conversationHistory.push({ role: 'user', content: userMessage });
+        conversationHistory.push({ role: 'assistant', content: result.response });
 
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
-        } else {
-            // Use local knowledge base
-            setTimeout(() => {
-                removeTypingIndicator();
-                const result = findResponse(userMessage);
-                addMessage(result.response, true, result.category);
-            }, 800);
+        if (conversationHistory.length > 20) {
+            conversationHistory = conversationHistory.slice(-20);
         }
     } catch (error) {
         console.error('Error getting response:', error);
         removeTypingIndicator();
-        addMessage('Sorry, I encountered an error. Please check your API keys and try again. You can also use the local knowledge base by clearing your API keys.', true);
+
+        // Fallback to local knowledge base if backend fails
+        const result = findResponse(userMessage);
+        addMessage(`<span class="ai-provider-badge">Local Knowledge Base</span>${result.response}`, true, result.category);
     } finally {
         // Re-enable input
         chatInput.disabled = false;
@@ -545,92 +530,23 @@ suggestionButtons.forEach(button => {
 });
 
 // Initialize AI configuration on page load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     aiConfig = new AIConfig();
 
-    // Check if API settings modal exists
-    const settingsButton = document.getElementById('aiSettingsButton');
-    if (settingsButton) {
-        settingsButton.addEventListener('click', openAISettings);
-    }
-
-    // Load settings modal handlers
-    const saveSettingsButton = document.getElementById('saveAISettings');
-    if (saveSettingsButton) {
-        saveSettingsButton.addEventListener('click', saveAISettings);
-    }
-
-    const closeSettingsButton = document.getElementById('closeAISettings');
-    if (closeSettingsButton) {
-        closeSettingsButton.addEventListener('click', closeAISettings);
-    }
-
-    const clearKeysButton = document.getElementById('clearAPIKeys');
-    if (clearKeysButton) {
-        clearKeysButton.addEventListener('click', clearAPIKeys);
-    }
-
-    // Update status badge
-    updateAIStatus();
+    // Check backend health
+    const isHealthy = await aiConfig.checkBackendHealth();
+    updateAIStatus(isHealthy);
 });
 
-// Open AI settings modal
-function openAISettings() {
-    const modal = document.getElementById('aiSettingsModal');
-    if (modal) {
-        // Pre-fill with current value
-        document.getElementById('geminiApiKey').value = aiConfig.geminiKey;
-
-        modal.style.display = 'flex';
-    }
-}
-
-// Close AI settings modal
-function closeAISettings() {
-    const modal = document.getElementById('aiSettingsModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Save AI settings
-function saveAISettings() {
-    const geminiKey = document.getElementById('geminiApiKey').value.trim();
-
-    aiConfig.saveKey(geminiKey);
-
-    // Reset conversation history when changing settings
-    conversationHistory = [];
-
-    updateAIStatus();
-    closeAISettings();
-
-    // Show confirmation
-    addMessage('AI settings updated! Your conversation will now use Google Gemini 2.5 Flash (FREE tier). 🎉', true);
-}
-
-// Clear API key
-function clearAPIKeys() {
-    if (confirm('Are you sure you want to clear your API key? The chat will use the local knowledge base.')) {
-        aiConfig.clearKey();
-        conversationHistory = [];
-        document.getElementById('geminiApiKey').value = '';
-        updateAIStatus();
-        closeAISettings();
-
-        addMessage('API key cleared. Chat is now using the local knowledge base.', true);
-    }
-}
-
 // Update AI status badge
-function updateAIStatus() {
+function updateAIStatus(isBackendHealthy) {
     const statusBadge = document.getElementById('aiStatusBadge');
     if (statusBadge) {
-        if (aiConfig.hasValidKey()) {
-            statusBadge.textContent = '🤖 AI: Gemini (FREE)';
+        if (isBackendHealthy) {
+            statusBadge.textContent = '🤖 AI: Gemini (Active)';
             statusBadge.className = 'ai-status-badge active';
         } else {
-            statusBadge.textContent = '🤖 AI: Local Mode';
+            statusBadge.textContent = '🤖 AI: Offline (Local Mode)';
             statusBadge.className = 'ai-status-badge';
         }
     }
