@@ -6,7 +6,7 @@ class AIConfig {
         // Backend proxy URL - update this after deploying your backend
         // For local development: 'http://localhost:3000'
         // For production: 'https://your-app.onrender.com' or your deployed URL
-        this.backendUrl = 'http://localhost:3000';
+        this.backendUrl = 'https://saponify-ai-backend.onrender.com';
 
         // Model settings
         this.geminiModel = 'gemini-2.5-flash'; // Latest Flash model - Fast, efficient, and FREE!
