@@ -44,6 +44,11 @@
     function findSubstitutes(ingredient) {
         const normalizedIngredient = normalizeIngredient(ingredient);
 
+        // Reveal the ingredient in the knowledge graph
+        if (typeof window.revealIngredientInGraph === 'function') {
+            window.revealIngredientInGraph(normalizedIngredient);
+        }
+
         // Check if we have substitution rules for this ingredient
         if (substitutionRules[normalizedIngredient]) {
             displaySubstitutionResults(normalizedIngredient, substitutionRules[normalizedIngredient]);

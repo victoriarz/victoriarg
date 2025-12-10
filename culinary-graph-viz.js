@@ -12,6 +12,17 @@
 
     let cy; // Cytoscape instance
 
+    // Define 20 main cooking ingredients to show by default
+    const mainIngredients = [
+        'butter', 'eggs', 'milk', 'flour', 'sugar', 'salt', 'black-pepper',
+        'garlic', 'onion', 'tomato', 'chicken-breast', 'ground-beef', 'rice',
+        'pasta', 'olive-oil', 'cheese-parmesan', 'basil', 'lemon-juice',
+        'soy-sauce', 'honey'
+    ];
+
+    // Track which ingredients have been revealed through searches
+    let revealedIngredients = new Set(mainIngredients);
+
     function initializeGraph() {
         // Check if required dependencies are loaded
         if (typeof cytoscape === 'undefined') {
@@ -140,6 +151,9 @@
         });
 
             console.log('Graph initialized successfully with', cy.nodes().length, 'nodes');
+
+            // Apply initial filter to show only main ingredients
+            applyMainIngredientsFilter();
 
             // Node click event
             cy.on('tap', 'node', function(evt) {
@@ -474,5 +488,91 @@
         removeHighlights();
         cy.fit();
     }
+
+    function applyMainIngredientsFilter() {
+        if (!cy) return;
+
+        // Hide all nodes first
+        cy.nodes().hide();
+
+        // Show only main ingredients
+        mainIngredients.forEach(ingredientId => {
+            const node = cy.getElementById(ingredientId);
+            if (node.length > 0) {
+                node.show();
+            }
+        });
+
+        // Show only edges between visible nodes
+        cy.edges().forEach(edge => {
+            if (edge.source().visible() && edge.target().visible()) {
+                edge.show();
+            } else {
+                edge.hide();
+            }
+        });
+
+        cy.fit();
+        console.log('Applied main ingredients filter. Showing', mainIngredients.length, 'main ingredients');
+    }
+
+    function revealIngredientInGraph(ingredientId) {
+        if (!cy) return;
+
+        const normalizedId = ingredientId.toLowerCase().trim();
+
+        // Check if ingredient already revealed
+        if (revealedIngredients.has(normalizedId)) {
+            console.log('Ingredient already visible:', normalizedId);
+            // Focus on the ingredient
+            const node = cy.getElementById(normalizedId);
+            if (node.length > 0) {
+                cy.animate({
+                    center: { eles: node },
+                    zoom: 1.5,
+                    duration: 500
+                });
+            }
+            return;
+        }
+
+        // Find the node
+        const node = cy.getElementById(normalizedId);
+        if (node.length === 0) {
+            console.log('Ingredient not found in graph:', normalizedId);
+            return;
+        }
+
+        // Show the searched ingredient
+        node.show();
+        revealedIngredients.add(normalizedId);
+
+        // Get all connected nodes and show them
+        const connectedNodes = node.neighborhood('node');
+        connectedNodes.forEach(connectedNode => {
+            connectedNode.show();
+            revealedIngredients.add(connectedNode.id());
+        });
+
+        // Show edges between visible nodes
+        const connectedEdges = node.connectedEdges();
+        connectedEdges.forEach(edge => {
+            if (edge.source().visible() && edge.target().visible()) {
+                edge.show();
+            }
+        });
+
+        // Animate to focus on the newly revealed ingredient
+        cy.animate({
+            center: { eles: node },
+            zoom: 1.5,
+            duration: 500
+        });
+
+        console.log('Revealed ingredient and connections:', normalizedId);
+    }
+
+    // Expose function globally for substitution finder to call
+    window.revealIngredientInGraph = revealIngredientInGraph;
 
 })();
