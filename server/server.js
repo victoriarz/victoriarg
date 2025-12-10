@@ -53,7 +53,7 @@ app.post('/api/chat', async (req, res) => {
                 contents,
                 generationConfig: generationConfig || {
                     temperature: 0.7,
-                    maxOutputTokens: 400
+                    maxOutputTokens: 2048  // Increased default for full recipe outputs
                 }
             })
         });
