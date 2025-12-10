@@ -13,8 +13,24 @@
     let cy; // Cytoscape instance
 
     function initializeGraph() {
+        // Check if required dependencies are loaded
+        if (typeof cytoscape === 'undefined') {
+            console.error('Cytoscape.js library not loaded');
+            showError('Failed to load graph library. Please refresh the page.');
+            return;
+        }
+
+        if (typeof culinaryGraphData === 'undefined') {
+            console.error('Culinary graph data not loaded');
+            showError('Failed to load graph data. Please refresh the page.');
+            return;
+        }
+
+        console.log('Initializing graph with', culinaryGraphData.nodes.length, 'nodes and', culinaryGraphData.edges.length, 'edges');
+
         // Transform data into Cytoscape format
         const elements = transformDataToCytoscape(culinaryGraphData);
+        console.log('Transformed elements:', elements.length);
 
         // Hide loading spinner
         const loadingEl = document.querySelector('.graph-loading');
@@ -23,10 +39,11 @@
         }
 
         // Initialize Cytoscape
-        cy = cytoscape({
-            container: document.getElementById('graphContainer'),
+        try {
+            cy = cytoscape({
+                container: document.getElementById('graphContainer'),
 
-            elements: elements,
+                elements: elements,
 
             style: [
                 // Node styles
@@ -122,20 +139,39 @@
             wheelSensitivity: 0.2
         });
 
-        // Node click event
-        cy.on('tap', 'node', function(evt) {
-            const node = evt.target;
-            showNodeInfo(node);
-            highlightConnections(node);
-        });
+            console.log('Graph initialized successfully with', cy.nodes().length, 'nodes');
 
-        // Background click event (deselect)
-        cy.on('tap', function(evt) {
-            if (evt.target === cy) {
-                hideNodeInfo();
-                removeHighlights();
-            }
-        });
+            // Node click event
+            cy.on('tap', 'node', function(evt) {
+                const node = evt.target;
+                showNodeInfo(node);
+                highlightConnections(node);
+            });
+
+            // Background click event (deselect)
+            cy.on('tap', function(evt) {
+                if (evt.target === cy) {
+                    hideNodeInfo();
+                    removeHighlights();
+                }
+            });
+
+        } catch (error) {
+            console.error('Error initializing graph:', error);
+            showError('Failed to initialize graph visualization: ' + error.message);
+        }
+    }
+
+    function showError(message) {
+        const loadingEl = document.querySelector('.graph-loading');
+        if (loadingEl) {
+            loadingEl.innerHTML = `
+                <div style="color: #d97642; padding: 20px;">
+                    <p style="font-weight: bold;">⚠️ Error Loading Graph</p>
+                    <p style="font-size: 14px;">${message}</p>
+                </div>
+            `;
+        }
     }
 
     function transformDataToCytoscape(data) {
