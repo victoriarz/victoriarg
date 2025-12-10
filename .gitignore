@@ -15,3 +15,4 @@ npm-debug.log*
 .vscode/
 *.swp
 *.swo
+style.css.backup

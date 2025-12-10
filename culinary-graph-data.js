@@ -1,3 +1,4 @@
+
 // Culinary Knowledge Graph Data
 // Represents ingredients, their relationships, and substitution rules
 
