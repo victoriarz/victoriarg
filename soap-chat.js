@@ -3,6 +3,7 @@
 // Initialize AI configuration
 let aiConfig;
 let conversationHistory = [];
+let soapCalculator = null;  // Will be initialized when SoapCalculator loads
 
 // SAP values for common oils (NaOH per oz of oil)
 const sapValues = {
@@ -529,9 +530,79 @@ suggestionButtons.forEach(button => {
     });
 });
 
+// Format recipe results from SoapCalculator for display
+function formatCalculatedRecipe(result) {
+    let output = `## 🧼 Your Custom Soap Recipe\n\n`;
+
+    // Oils section
+    output += `### Oils & Fats (${result.totalBatchSize.grams}g total)\n`;
+    result.oils.forEach(oil => {
+        output += `- **${oil.name}**: \`${oil.grams}g\` (\`${oil.ounces}oz\`) - ${oil.percent}%\n`;
+    });
+
+    // Lye section
+    output += `\n### Lye Solution\n`;
+    output += `- **${result.lye.type}**: \`${result.lye.grams}g\` (\`${result.lye.ounces}oz\`)\n`;
+    output += `- **Water**: \`${result.water.grams}g\` (\`${result.water.ounces}oz\`)`;
+    if (result.water.concentration) {
+        output += ` (${result.water.concentration}% lye concentration)`;
+    } else if (result.water.ratio) {
+        output += ` (${result.water.ratio}:1 water:lye ratio)`;
+    }
+    output += `\n- **Superfat**: ${result.superfat}%\n`;
+
+    // Fragrance if applicable
+    if (result.fragrance) {
+        output += `\n### Fragrance/Essential Oils\n`;
+        output += `- \`${result.fragrance.grams}g\` (\`${result.fragrance.ounces}oz\`)\n`;
+    }
+
+    // Soap properties
+    output += `\n### Soap Properties\n`;
+    const props = result.properties;
+    output += `| Property | Value | Typical Range | Status |\n`;
+    output += `|----------|-------|---------------|--------|\n`;
+    output += `| **Hardness** | ${props.hardness.value} | ${props.hardness.range} | ${getStatusEmoji(props.hardness.status)} |\n`;
+    output += `| **Cleansing** | ${props.cleansing.value} | ${props.cleansing.range} | ${getStatusEmoji(props.cleansing.status)} |\n`;
+    output += `| **Conditioning** | ${props.conditioning.value} | ${props.conditioning.range} | ${getStatusEmoji(props.conditioning.status)} |\n`;
+    output += `| **Bubbly Lather** | ${props.bubbly.value} | ${props.bubbly.range} | ${getStatusEmoji(props.bubbly.status)} |\n`;
+    output += `| **Creamy Lather** | ${props.creamy.value} | ${props.creamy.range} | ${getStatusEmoji(props.creamy.status)} |\n`;
+    output += `| **Iodine** | ${props.iodine.value} | ${props.iodine.range} | ${getStatusEmoji(props.iodine.status)} |\n`;
+    output += `| **INS** | ${props.ins.value} | ${props.ins.range} | ${getStatusEmoji(props.ins.status)} |\n`;
+
+    // Safety warnings
+    output += `\n> ### ⚠️ SAFETY REMINDERS\n`;
+    output += `> - **Always add lye to water**, never water to lye (risk of explosive boiling)\n`;
+    output += `> - Wear **safety goggles and gloves** at all times\n`;
+    output += `> - Work in a **well-ventilated area**\n`;
+    output += `> - **Double-check all measurements** before mixing\n`;
+    output += `> - Cure for **4-6 weeks** before use\n`;
+    output += `> - Keep lye and raw soap away from children and pets\n`;
+
+    return output;
+}
+
+// Get status emoji for property ranges
+function getStatusEmoji(status) {
+    switch(status) {
+        case 'good': return '✅ Good';
+        case 'low': return '⬇️ Low';
+        case 'high': return '⬆️ High';
+        default: return '—';
+    }
+}
+
 // Initialize AI configuration on page load
 document.addEventListener('DOMContentLoaded', async () => {
     aiConfig = new AIConfig();
+
+    // Initialize SoapCalculator if available
+    if (typeof SoapCalculator !== 'undefined') {
+        soapCalculator = new SoapCalculator();
+        console.log('SoapCalculator initialized successfully');
+    } else {
+        console.warn('SoapCalculator not loaded - recipe calculations may be limited');
+    }
 
     // Check backend health
     const isHealthy = await aiConfig.checkBackendHealth();

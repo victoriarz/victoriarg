@@ -58,7 +58,7 @@
             <div class="chat-header-controls">
                 <div>
                     <h2>Try the Soap Making Assistant</h2>
-                    <p class="chat-intro">Calculate custom soap recipes or ask about natural soap making! I can help with recipe calculations, techniques, ingredients, and troubleshooting.</p>
+                    <p class="chat-intro">Get accurate, SAFE soap recipes with a built-in calculator! Request custom recipes and I'll calculate exact lye amounts, water, and show you detailed soap properties (hardness, cleansing, conditioning, lather) just like SoapCalc. Also ask about techniques, ingredients, and troubleshooting.</p>
                 </div>
                 <div class="ai-controls">
                     <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
@@ -71,7 +71,7 @@
                         <div class="message-content">
                             <span class="bot-icon">🧼</span>
                             <div class="bot-text">
-                                Hello! I'm your natural soap making assistant. I can calculate custom soap recipes based on your ingredients (just say "calculate recipe"), or answer questions about saponification, oils, techniques, troubleshooting, and more!
+                                Hello! I'm your soap making assistant with a built-in SoapCalc-style calculator. I can create <strong>accurate, safe recipes</strong> with exact lye calculations and detailed soap properties. Just tell me what oils you want to use or ask for a recipe recommendation. I also answer questions about saponification, techniques, and troubleshooting!
                             </div>
                         </div>
                     </div>
@@ -91,10 +91,10 @@
                 <div class="chat-suggestions">
                     <p>Try asking:</p>
                     <div class="suggestion-buttons">
-                        <button class="suggestion-btn" data-question="Calculate recipe">Calculate Recipe 🧮</button>
-                        <button class="suggestion-btn" data-question="What is the saponification process?">Saponification process</button>
-                        <button class="suggestion-btn" data-question="How do I make my first batch of soap?">First batch guide</button>
-                        <button class="suggestion-btn" data-question="What oils are best for soap making?">Best oils</button>
+                        <button class="suggestion-btn" data-question="Create a beginner soap recipe for 500g batch">Calculate Recipe 🧮</button>
+                        <button class="suggestion-btn" data-question="What oils are available in your database?">Available Oils 🌿</button>
+                        <button class="suggestion-btn" data-question="What do the soap properties mean?">Soap Properties 📊</button>
+                        <button class="suggestion-btn" data-question="Make me a conditioning soap recipe">Conditioning Recipe 💧</button>
                     </div>
                 </div>
             </div>
@@ -139,6 +139,10 @@
     <!-- Markdown parser for formatting AI responses -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+    <!-- Soap Calculator Engine -->
+    <script src="soap-calculator.js"></script>
+
+    <!-- AI Configuration and Chat -->
     <script src="ai-config.js"></script>
     <script src="soap-chat.js"></script>
 </body>
