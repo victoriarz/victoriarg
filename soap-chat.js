@@ -104,11 +104,6 @@ async function callGemini(messages) {
         contents[0].parts[0].text = messages[0].content + '\n\n' + contents[0].parts[0].text;
     }
 
-    // Check if user wants detailed responses
-    const detailedToggle = document.getElementById('detailedResponseToggle');
-    const isDetailed = detailedToggle && detailedToggle.checked;
-    const maxTokens = isDetailed ? 8192 : 800;
-
     // Call backend proxy instead of Gemini directly
     const response = await fetch(
         `${aiConfig.getBackendUrl()}/api/chat`,
@@ -121,7 +116,7 @@ async function callGemini(messages) {
                 contents: contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: maxTokens  // 800 for concise, 8192 for detailed
+                    maxOutputTokens: 800  // Reduced for more concise responses (allows full recipe outputs but limits explanations)
                 }
             })
         }
@@ -157,23 +152,9 @@ async function callGemini(messages) {
 
 // Main LLM call via backend proxy
 async function getLLMResponse(userMessage) {
-    // Check if user wants detailed responses
-    const detailedToggle = document.getElementById('detailedResponseToggle');
-    const isDetailed = detailedToggle && detailedToggle.checked;
-
-    // Modify system prompt based on response length preference
-    let systemPrompt = aiConfig.getSystemPrompt();
-    if (isDetailed) {
-        // Remove conciseness rules for detailed mode
-        systemPrompt = systemPrompt.replace(
-            /\*\*RESPONSE LENGTH RULES\*\* \(STRICTLY ENFORCED\):[^*]+/,
-            '**RESPONSE LENGTH RULES**: Provide detailed, comprehensive responses with thorough explanations. Use multiple paragraphs when helpful.'
-        );
-    }
-
     // Build conversation history
     const messages = [
-        { role: 'system', content: systemPrompt },
+        { role: 'system', content: aiConfig.getSystemPrompt() },
         ...conversationHistory,
         { role: 'user', content: userMessage }
     ];
