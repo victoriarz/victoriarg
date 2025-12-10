@@ -374,6 +374,15 @@
             filterByDietary(e.target.value);
         });
 
+        // Zoom controls
+        document.getElementById('zoomIn').addEventListener('click', function() {
+            zoomIn();
+        });
+
+        document.getElementById('zoomOut').addEventListener('click', function() {
+            zoomOut();
+        });
+
         // Reset graph
         document.getElementById('resetGraph').addEventListener('click', function() {
             resetFilters();
@@ -435,6 +444,26 @@
         });
 
         cy.fit();
+    }
+
+    function zoomIn() {
+        if (!cy) return;
+        const currentZoom = cy.zoom();
+        const newZoom = currentZoom * 1.2; // Zoom in by 20%
+        cy.animate({
+            zoom: newZoom,
+            duration: 300
+        });
+    }
+
+    function zoomOut() {
+        if (!cy) return;
+        const currentZoom = cy.zoom();
+        const newZoom = currentZoom / 1.2; // Zoom out by 20%
+        cy.animate({
+            zoom: newZoom,
+            duration: 300
+        });
     }
 
     function resetFilters() {

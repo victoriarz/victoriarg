@@ -2105,6 +2105,28 @@ footer p {
     transform: translateY(-2px);
 }
 
+.zoom-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.zoom-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d4a574;
+}
+
+.zoom-btn:hover {
+    background-color: #c89563;
+}
+
 .graph-visualization-container {
     display: flex;
     gap: 20px;
