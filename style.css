@@ -2105,28 +2105,6 @@ footer p {
     transform: translateY(-2px);
 }
 
-.zoom-controls {
-    display: flex;
-    gap: 8px;
-}
-
-.zoom-btn {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #d4a574;
-}
-
-.zoom-btn:hover {
-    background-color: #c89563;
-}
-
 .graph-visualization-container {
     display: flex;
     gap: 20px;
@@ -2141,6 +2119,41 @@ footer p {
     border-radius: 16px;
     position: relative;
     overflow: hidden;
+}
+
+.graph-zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+}
+
+.zoom-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d4a574;
+    color: #ffffff;
+    border: 2px solid #e8dfd2;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-btn:hover {
+    background-color: #c89563;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .graph-loading {
