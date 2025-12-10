@@ -1151,6 +1151,32 @@ footer p {
     border: 2px solid #7fa563;
 }
 
+.response-length-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #6b5d52;
+    user-select: none;
+}
+
+.response-length-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #d4a574;
+}
+
+.response-length-toggle .toggle-label {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.response-length-toggle:hover .toggle-label {
+    color: #4a3f35;
+}
+
 .settings-button {
     padding: 8px 16px;
     background-color: #7fa563;
