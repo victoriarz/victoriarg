@@ -2008,3 +2008,520 @@ footer p {
         width: 100%;
     }
 }
+
+/* ------------------------------------------- */
+/* 12. Culinary Graph Visualization Styles */
+/* ------------------------------------------- */
+
+#graph-demo {
+    padding: 40px 0;
+    background-color: #faf7f2;
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 20px;
+}
+
+#graph-demo h2 {
+    color: #3d2e1f;
+    margin-bottom: 15px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    text-align: center;
+}
+
+.demo-intro {
+    color: #6b5d52;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.graph-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group label {
+    color: #3d2e1f;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.graph-select {
+    padding: 8px 16px;
+    border: 2px solid #e8dfd2;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: #ffffff;
+    color: #3d2e1f;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.graph-select:focus {
+    outline: none;
+    border-color: #7fa563;
+}
+
+.graph-button {
+    padding: 8px 20px;
+    background-color: #7fa563;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.graph-button:hover {
+    background-color: #6b8a54;
+    transform: translateY(-2px);
+}
+
+.graph-container {
+    width: 100%;
+    height: 600px;
+    background-color: #ffffff;
+    border: 2px solid #e8dfd2;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.node-info-panel {
+    background-color: #ffffff;
+    border: 2px solid #d97642;
+    border-radius: 16px;
+    padding: 25px;
+    margin-top: 20px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.node-info-panel h3 {
+    color: #d97642;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.node-detail-item {
+    margin-bottom: 12px;
+    color: #3d2e1f;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.node-detail-item strong {
+    color: #2c1f15;
+    font-weight: 700;
+}
+
+.dietary-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #7fa563;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+}
+
+.node-detail-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #e8dfd2;
+}
+
+.node-detail-section strong {
+    color: #3d2e1f;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.substitutes-list,
+.pairs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.substitutes-list li,
+.pairs-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #f5ede3;
+    border-radius: 8px;
+    border-left: 4px solid #d97642;
+}
+
+.substitute-name {
+    color: #3d2e1f;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.substitute-ratio {
+    color: #7fa563;
+    font-size: 0.9rem;
+    margin-left: 8px;
+}
+
+.substitute-context {
+    color: #6b5d52;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.pair-strength {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.pair-strength.strong {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.pair-strength.medium {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* ------------------------------------------- */
+/* 13. Substitution Finder Styles */
+/* ------------------------------------------- */
+
+#substitution-finder {
+    padding: 40px 0;
+}
+
+#substitution-finder h2 {
+    color: #3d2e1f;
+    margin-bottom: 15px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    text-align: center;
+}
+
+.substitution-tool {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ingredient-input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid #e8dfd2;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.ingredient-input:focus {
+    outline: none;
+    border-color: #7fa563;
+}
+
+.find-button {
+    padding: 14px 30px;
+    background-color: #d97642;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.find-button:hover {
+    background-color: #c26534;
+    transform: translateY(-2px);
+}
+
+.substitution-results {
+    background-color: #ffffff;
+    border: 2px solid #e8dfd2;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 25px;
+    animation: fadeIn 0.4s ease;
+}
+
+.substitution-results h3 {
+    color: #3d2e1f;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.original-ingredient {
+    background-color: #f5ede3;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border-left: 5px solid #d97642;
+}
+
+.original-ingredient h4 {
+    color: #3d2e1f;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.ingredient-name {
+    color: #d97642;
+    font-weight: 700;
+}
+
+.substitute-card {
+    background-color: #faf7f2;
+    border: 2px solid #e8dfd2;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.substitute-card:hover {
+    border-color: #7fa563;
+    box-shadow: 0 4px 12px rgba(127, 165, 99, 0.15);
+    transform: translateY(-2px);
+}
+
+.substitute-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.substitute-number {
+    background-color: #d97642;
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.substitute-title {
+    color: #3d2e1f;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    flex: 1;
+}
+
+.confidence-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.confidence-badge.high {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #7fa563;
+}
+
+.confidence-badge.medium {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.substitute-ratio {
+    color: #6b5d52;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.substitute-ratio strong {
+    color: #3d2e1f;
+}
+
+.substitute-notes {
+    color: #6b5d52;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.substitute-dietary {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.quick-suggestions {
+    text-align: center;
+    padding: 25px;
+    background-color: #f5ede3;
+    border-radius: 12px;
+}
+
+.quick-suggestions p {
+    color: #6b5d52;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.suggestion-pills {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.suggestion-pill {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #d97642;
+    border: 2px solid #d97642;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.suggestion-pill:hover {
+    background-color: #d97642;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.no-results h4 {
+    color: #3d2e1f;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.no-results p {
+    color: #6b5d52;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.no-results ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.no-results li {
+    color: #d97642;
+    font-weight: 600;
+    padding: 8px 0;
+}
+
+.no-results .tip {
+    background-color: #dbeafe;
+    border: 2px solid #3b82f6;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    color: #1e40af;
+    font-size: 0.95rem;
+}
+
+/* Responsive adjustments for graph components */
+@media (max-width: 768px) {
+    .graph-container {
+        height: 400px;
+    }
+
+    .graph-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .control-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .graph-select,
+    .graph-button {
+        width: 100%;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .find-button {
+        width: 100%;
+    }
+
+    .suggestion-pills {
+        flex-direction: column;
+    }
+
+    .suggestion-pill {
+        width: 100%;
+    }
+
+    .substitute-header {
+        flex-wrap: wrap;
+    }
+}

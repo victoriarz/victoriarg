@@ -55,6 +55,69 @@
             </div>
         </section>
 
+        <section id="graph-demo">
+            <h2>Interactive Knowledge Graph Demo</h2>
+            <p class="demo-intro">Explore the ingredient relationship network below. Click on any ingredient to see its connections, substitutes, and related culinary information.</p>
+
+            <div class="graph-controls">
+                <div class="control-group">
+                    <label for="filterCuisine">Filter by Cuisine:</label>
+                    <select id="filterCuisine" class="graph-select">
+                        <option value="all">All Cuisines</option>
+                        <option value="italian">Italian</option>
+                        <option value="asian">Asian</option>
+                        <option value="mexican">Mexican</option>
+                        <option value="mediterranean">Mediterranean</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="filterDietary">Dietary Filter:</label>
+                    <select id="filterDietary" class="graph-select">
+                        <option value="all">All</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="gluten-free">Gluten-Free</option>
+                    </select>
+                </div>
+                <button id="resetGraph" class="graph-button">Reset View</button>
+            </div>
+
+            <div id="graphContainer" class="graph-container"></div>
+
+            <div id="nodeInfo" class="node-info-panel" style="display: none;">
+                <h3 id="nodeTitle"></h3>
+                <div id="nodeDetails"></div>
+            </div>
+        </section>
+
+        <section id="substitution-finder">
+            <h2>Smart Ingredient Substitution Finder</h2>
+            <p class="demo-intro">Find the perfect substitute for any ingredient based on flavor profile, cooking properties, and dietary needs.</p>
+
+            <div class="substitution-tool">
+                <div class="search-container">
+                    <input type="text" id="ingredientSearch" class="ingredient-input" placeholder="Enter an ingredient (e.g., butter, milk, eggs)..." autocomplete="off">
+                    <button id="findSubstitute" class="find-button">Find Substitutes</button>
+                </div>
+
+                <div id="substitutionResults" class="substitution-results" style="display: none;">
+                    <h3>Recommended Substitutes</h3>
+                    <div id="substitutesList"></div>
+                </div>
+
+                <div class="quick-suggestions">
+                    <p>Try these common ingredients:</p>
+                    <div class="suggestion-pills">
+                        <button class="suggestion-pill" data-ingredient="butter">Butter</button>
+                        <button class="suggestion-pill" data-ingredient="eggs">Eggs</button>
+                        <button class="suggestion-pill" data-ingredient="milk">Milk</button>
+                        <button class="suggestion-pill" data-ingredient="flour">Flour</button>
+                        <button class="suggestion-pill" data-ingredient="sugar">Sugar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="project-overview">
             <h2>Overview</h2>
             <p>The Culinary Graph is an intelligent recipe discovery platform powered by knowledge graph technology. By representing ingredients, recipes, cuisines, and cooking techniques as interconnected nodes in a graph database, this project enables sophisticated recipe recommendations and ingredient substitution insights that go far beyond traditional search capabilities.</p>
@@ -113,5 +176,17 @@
     <footer>
         <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
     </footer>
+
+    <!-- Cytoscape.js for graph visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+
+    <!-- Knowledge Graph Data -->
+    <script src="culinary-graph-data.js"></script>
+
+    <!-- Graph Visualization Engine -->
+    <script src="culinary-graph-viz.js"></script>
+
+    <!-- Substitution Finder Engine -->
+    <script src="culinary-substitution.js"></script>
 </body>
 </html>
