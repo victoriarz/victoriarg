@@ -51,12 +51,16 @@ const culinaryGraphData = {
         { id: 'soy-sauce', label: 'Soy Sauce', category: 'sauce', cuisine: ['asian'], dietary: ['vegan', 'vegetarian'] },
         { id: 'tomato-sauce', label: 'Tomato Sauce', category: 'sauce', cuisine: ['italian'], dietary: ['vegan', 'vegetarian'] },
         { id: 'salsa', label: 'Salsa', category: 'sauce', cuisine: ['mexican'], dietary: ['vegan', 'vegetarian'] },
+        { id: 'tahini', label: 'Tahini', category: 'sauce', cuisine: ['mediterranean'], dietary: ['vegan', 'vegetarian'] },
 
         // Vegetables
         { id: 'tomato', label: 'Tomato', category: 'vegetable', cuisine: ['italian', 'mexican', 'mediterranean'], dietary: ['vegan', 'vegetarian'] },
         { id: 'bell-pepper', label: 'Bell Pepper', category: 'vegetable', cuisine: ['mexican', 'italian'], dietary: ['vegan', 'vegetarian'] },
         { id: 'mushrooms', label: 'Mushrooms', category: 'vegetable', cuisine: ['all'], dietary: ['vegan', 'vegetarian'] },
         { id: 'spinach', label: 'Spinach', category: 'vegetable', cuisine: ['mediterranean', 'italian'], dietary: ['vegan', 'vegetarian'] },
+
+        // Nutritional Supplements
+        { id: 'nutritional-yeast', label: 'Nutritional Yeast', category: 'dairy-alt', cuisine: ['all'], dietary: ['vegan', 'vegetarian'] },
     ],
 
     // Edges represent relationships between ingredients
