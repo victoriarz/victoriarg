@@ -176,9 +176,11 @@
 
     function transformDataToCytoscape(data) {
         const elements = [];
+        const nodeIds = new Set();
 
-        // Add nodes
+        // Add nodes first
         data.nodes.forEach(node => {
+            nodeIds.add(node.id);
             elements.push({
                 data: {
                     id: node.id,
@@ -190,8 +192,20 @@
             });
         });
 
-        // Add edges
+        console.log('Node IDs:', Array.from(nodeIds));
+
+        // Add edges - validate that both source and target exist
+        const invalidEdges = [];
         data.edges.forEach(edge => {
+            if (!nodeIds.has(edge.source)) {
+                invalidEdges.push(`Missing source: ${edge.source} in edge ${edge.source} -> ${edge.target}`);
+                return;
+            }
+            if (!nodeIds.has(edge.target)) {
+                invalidEdges.push(`Missing target: ${edge.target} in edge ${edge.source} -> ${edge.target}`);
+                return;
+            }
+
             elements.push({
                 data: {
                     source: edge.source,
@@ -204,6 +218,13 @@
                 }
             });
         });
+
+        if (invalidEdges.length > 0) {
+            console.error('Invalid edges found:', invalidEdges);
+            console.error('These edges reference nodes that do not exist in the graph data.');
+        }
+
+        console.log(`Added ${data.nodes.length} nodes and ${elements.length - data.nodes.length} valid edges (skipped ${invalidEdges.length} invalid)`);
 
         return elements;
     }
