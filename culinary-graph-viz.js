@@ -16,6 +16,12 @@
         // Transform data into Cytoscape format
         const elements = transformDataToCytoscape(culinaryGraphData);
 
+        // Hide loading spinner
+        const loadingEl = document.querySelector('.graph-loading');
+        if (loadingEl) {
+            loadingEl.style.display = 'none';
+        }
+
         // Initialize Cytoscape
         cy = cytoscape({
             container: document.getElementById('graphContainer'),
