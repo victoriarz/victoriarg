@@ -116,7 +116,7 @@ async function callGemini(messages) {
                 contents: contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 400  // Reduced from 800 to encourage shorter responses
+                    maxOutputTokens: 2048  // Increased to allow full recipe outputs with tables and properties
                 }
             })
         }
