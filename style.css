@@ -319,9 +319,9 @@ nav ul li a.active {
 
 footer {
     text-align: center;
-    padding: 50px 6% 40px;
+    padding: 30px 6% 25px;
     max-width: 1100px;
-    margin: 60px auto 0;
+    margin: 30px auto 0;
     border-top: 2px solid #e8dfd2;
     color: #9b8b7e;
     background-color: #f5ede3;
@@ -338,7 +338,7 @@ footer p {
 /* ------------------------------------------- */
 
 #projects-hero {
-    padding: 60px 6% 40px;
+    padding: 30px 6% 20px;
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -361,7 +361,7 @@ footer p {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 30px;
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
 .project-card-link {
@@ -423,7 +423,7 @@ footer p {
 /* ------------------------------------------- */
 
 #about-hero {
-    padding: 60px 6% 40px;
+    padding: 30px 6% 20px;
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -449,14 +449,14 @@ footer p {
 }
 
 #about-bio {
-    padding: 40px 0;
+    padding: 20px 0;
     max-width: 1100px;
     margin: 0 auto;
     background-color: #ffffff;
-    padding: 40px;
+    padding: 25px;
     border-radius: 16px;
     border: 2px solid #e8dfd2;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 #about-bio h2 {
@@ -474,8 +474,8 @@ footer p {
 }
 
 #skills {
-    padding: 40px 0;
-    margin-bottom: 40px;
+    padding: 20px 0;
+    margin-bottom: 20px;
 }
 
 #skills h2 {
@@ -494,7 +494,7 @@ footer p {
 
 .skill-category {
     background-color: #f5ede3;
-    padding: 30px;
+    padding: 20px;
     border-radius: 16px;
     border: 2px solid #7fa563; /* Sage green border */
 }
@@ -528,7 +528,7 @@ footer p {
 }
 
 #experience {
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
 #experience h2 {
@@ -628,7 +628,7 @@ footer p {
 }
 
 #education {
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
 #education h2 {
@@ -641,8 +641,8 @@ footer p {
 
 .education-item {
     background-color: #f5ede3;
-    padding: 25px;
-    margin-bottom: 25px;
+    padding: 20px;
+    margin-bottom: 20px;
     border-radius: 16px;
     border: 2px solid #e8dfd2;
 }
@@ -662,7 +662,7 @@ footer p {
 
 .certifications {
     background-color: #ffffff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 16px;
     border: 2px solid #e8dfd2;
 }
@@ -701,7 +701,7 @@ footer p {
 /* ------------------------------------------- */
 
 #contact-hero {
-    padding: 60px 6% 40px;
+    padding: 30px 6% 20px;
     max-width: 1100px;
     margin: 0 auto;
     text-align: center;
@@ -722,7 +722,7 @@ footer p {
 }
 
 #contact-info {
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
 .contact-grid {
@@ -734,7 +734,7 @@ footer p {
 
 .contact-card {
     background-color: #f5ede3;
-    padding: 30px;
+    padding: 20px;
     text-align: center;
     border-radius: 16px;
     border: 2px solid #e8dfd2;
@@ -773,7 +773,7 @@ footer p {
 }
 
 #social-links {
-    padding: 40px 0;
+    padding: 20px 0;
 }
 
 #social-links h2 {
@@ -826,9 +826,9 @@ footer p {
 
 #cta-section {
     text-align: center;
-    padding: 60px 6%;
+    padding: 30px 6%;
     max-width: 1100px;
-    margin: 40px auto 0;
+    margin: 20px auto 0;
     background: linear-gradient(135deg, #f5ede3 0%, #faf7f2 100%);
     border-radius: 20px;
 }
@@ -852,7 +852,7 @@ footer p {
 /* ------------------------------------------- */
 
 #featured-projects {
-    padding: 60px 0;
+    padding: 30px 0;
 }
 
 #featured-projects h2,
@@ -887,14 +887,14 @@ footer p {
 }
 
 #experience-highlights {
-    padding: 60px 0;
+    padding: 30px 0;
     background-color: #f5ede3;
     border-radius: 20px;
-    padding: 50px 40px;
+    padding: 30px 25px;
 }
 
 #education-home {
-    padding: 60px 0;
+    padding: 30px 0;
 }
 
 .education-grid {
@@ -962,7 +962,7 @@ footer p {
 /* ------------------------------------------- */
 
 #project-detail-hero {
-    padding: 60px 0 20px;
+    padding: 30px 0 15px;
     text-align: center;
 }
 
@@ -989,7 +989,7 @@ footer p {
 #project-features,
 #project-tech-stack,
 #project-impact {
-    padding: 25px 0;
+    padding: 15px 0;
 }
 
 #project-overview h2,
@@ -1068,13 +1068,13 @@ footer p {
 }
 
 #project-cta {
-    padding: 40px 0 30px;
-    margin-top: 30px;
+    padding: 20px 0 15px;
+    margin-top: 15px;
 }
 
 .project-cta-content {
     background: linear-gradient(135deg, #f5ede3 0%, #faf7f2 100%);
-    padding: 50px 40px;
+    padding: 30px 25px;
     border-radius: 20px;
     text-align: center;
 }
@@ -1100,8 +1100,8 @@ footer p {
 #soap-chat-demo {
     background-color: #faf7f2;
     border-radius: 20px;
-    padding: 40px;
-    margin-top: 20px;
+    padding: 25px;
+    margin-top: 15px;
 }
 
 #soap-chat-demo h2 {
