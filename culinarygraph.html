@@ -56,33 +56,32 @@
         </section>
 
         <section id="graph-demo">
-            <div class="graph-header-controls">
-                <div>
-                    <h2>Interactive Knowledge Graph Explorer</h2>
-                    <p class="graph-intro">Explore how ingredients connect in the culinary world! This comprehensive network features 275+ cooking ingredients including dairy, proteins, grains, vegetables, herbs, spices, oils, sauces, and more. Discover substitutions, flavor pairings, and dietary compatibility across all major cuisines. Click any ingredient to see its connections and get smart substitution recommendations.</p>
+            <div class="graph-header">
+                <h2>Interactive Knowledge Graph Explorer</h2>
+                <p class="graph-intro">Explore how ingredients connect in the culinary world! This comprehensive network features 275+ cooking ingredients including dairy, proteins, grains, vegetables, herbs, spices, oils, sauces, and more. Discover substitutions, flavor pairings, and dietary compatibility across all major cuisines. Click any ingredient to see its connections and get smart substitution recommendations.</p>
+            </div>
+
+            <div class="graph-filter-controls">
+                <div class="control-group">
+                    <label for="filterCuisine">🌍 Cuisine</label>
+                    <select id="filterCuisine" class="graph-select">
+                        <option value="all">All Cuisines</option>
+                        <option value="italian">Italian</option>
+                        <option value="asian">Asian</option>
+                        <option value="mexican">Mexican</option>
+                        <option value="mediterranean">Mediterranean</option>
+                    </select>
                 </div>
-                <div class="graph-filter-controls">
-                    <div class="control-group">
-                        <label for="filterCuisine">🌍 Cuisine</label>
-                        <select id="filterCuisine" class="graph-select">
-                            <option value="all">All Cuisines</option>
-                            <option value="italian">Italian</option>
-                            <option value="asian">Asian</option>
-                            <option value="mexican">Mexican</option>
-                            <option value="mediterranean">Mediterranean</option>
-                        </select>
-                    </div>
-                    <div class="control-group">
-                        <label for="filterDietary">🥗 Dietary</label>
-                        <select id="filterDietary" class="graph-select">
-                            <option value="all">All</option>
-                            <option value="vegan">Vegan</option>
-                            <option value="vegetarian">Vegetarian</option>
-                            <option value="gluten-free">Gluten-Free</option>
-                        </select>
-                    </div>
-                    <button id="resetGraph" class="graph-button">Reset View</button>
+                <div class="control-group">
+                    <label for="filterDietary">🥗 Dietary</label>
+                    <select id="filterDietary" class="graph-select">
+                        <option value="all">All</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="gluten-free">Gluten-Free</option>
+                    </select>
                 </div>
+                <button id="resetGraph" class="graph-button">Reset View</button>
             </div>
 
             <div class="graph-visualization-container">

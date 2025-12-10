@@ -2021,18 +2021,8 @@ footer p {
     margin-bottom: 40px;
 }
 
-.graph-header-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 30px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
-
-.graph-header-controls > div:first-child {
-    flex: 1;
-    min-width: 300px;
+.graph-header {
+    margin-bottom: 25px;
 }
 
 #graph-demo h2 {
@@ -2055,6 +2045,11 @@ footer p {
     align-items: center;
     gap: 15px;
     flex-wrap: wrap;
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: #faf8f5;
+    border-radius: 12px;
+    border: 1px solid #e8dfd2;
 }
 
 .control-group {
@@ -2774,11 +2769,6 @@ footer p {
 @media (max-width: 768px) {
     #graph-demo {
         padding: 30px 20px;
-    }
-
-    .graph-header-controls {
-        flex-direction: column;
-        gap: 20px;
     }
 
     .graph-filter-controls {
