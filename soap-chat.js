@@ -504,9 +504,6 @@ async function sendMessage() {
         if (conversationHistory.length > 20) {
             conversationHistory = conversationHistory.slice(-20);
         }
-
-        // Update conversation counter
-        updateConversationCounter();
     } catch (error) {
         console.error('Error getting response:', error);
         removeTypingIndicator();
@@ -885,19 +882,7 @@ function startOver() {
             chatMessages.appendChild(firstMessage.cloneNode(true));
         }
 
-        // Update conversation counter
-        updateConversationCounter();
-
         showCopyFeedback('Conversation reset! Starting fresh. ✓');
-    }
-}
-
-// Update conversation counter
-function updateConversationCounter() {
-    const counter = document.getElementById('conversationCounter');
-    if (counter) {
-        const messageCount = conversationHistory.length / 2; // Divide by 2 (user + assistant)
-        counter.textContent = `💬 ${Math.floor(messageCount)} messages`;
     }
 }
 

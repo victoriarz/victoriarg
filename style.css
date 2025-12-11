@@ -1159,22 +1159,27 @@ footer p {
 }
 
 .start-over-btn {
-    padding: 8px 14px;
-    background-color: #ffffff;
-    color: #7fa563;
-    border: 2px solid #7fa563;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #7fa563;
+    color: #ffffff;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(127, 165, 99, 0.2);
 }
 
 .start-over-btn:hover {
-    background-color: #7fa563;
-    color: #ffffff;
+    background-color: #6b8a54;
     transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(127, 165, 99, 0.3);
+}
+
+.start-over-btn:active {
+    transform: translateY(0);
 }
 
 .ai-status-badge {
