@@ -794,6 +794,71 @@ function printRecipe() {
     }, 250);
 }
 
+// Scale recipe by multiplier
+function scaleRecipe(multiplier) {
+    if (!lastCalculatedRecipe) {
+        alert('No recipe to scale. Please calculate a recipe first.');
+        return;
+    }
+
+    // Get original recipe
+    const originalRecipe = lastCalculatedRecipe.recipe;
+
+    // Scale all oil amounts
+    const scaledOils = originalRecipe.oils.map(oil => ({
+        name: oil.name,
+        grams: Math.round(oil.grams * multiplier * 10) / 10,
+        percent: oil.percent // Percentages stay the same
+    }));
+
+    // Recalculate using SoapCalculator with scaled amounts
+    const calc = new SoapCalculator();
+    calc.setSuperfat(originalRecipe.superfat);
+
+    // Set water settings if available
+    if (originalRecipe.water.concentration) {
+        calc.setLyeConcentration(originalRecipe.water.concentration);
+    } else if (originalRecipe.water.ratio) {
+        calc.setWaterRatio(originalRecipe.water.ratio);
+    }
+
+    // Add scaled oils
+    scaledOils.forEach(oil => {
+        calc.addOil(oil.name, oil.grams, 'grams');
+    });
+
+    // Calculate new recipe
+    const scaledRecipe = calc.calculate();
+
+    // Validate the scaled recipe
+    let validationMessage = '';
+    if (recipeValidator) {
+        const validation = recipeValidator.validateRecipe(scaledRecipe);
+
+        if (!validation.valid) {
+            validationMessage = recipeValidator.formatValidationMessage(validation);
+            validationMessage += '\n---\n\n';
+        } else if (validation.warnings.length > 0) {
+            validationMessage = recipeValidator.formatValidationMessage(validation);
+            validationMessage += '\n---\n\n';
+        }
+    }
+
+    // Format and display the scaled recipe
+    const scaledOutput = formatCalculatedRecipe(scaledRecipe);
+    const scaleInfo = `\n**📐 Scaled Recipe** (×${multiplier} from original)\n\n`;
+    const finalOutput = scaleInfo + validationMessage + scaledOutput;
+
+    // Add as bot message
+    addMessage(finalOutput, true);
+
+    // Scroll to show new recipe
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Show feedback
+    showCopyFeedback(`Recipe scaled to ${Math.round(scaledRecipe.totalBatchSize.grams)}g! ✓`);
+}
+
 // Start over - reset conversation
 function startOver() {
     if (confirm('Are you sure you want to start a new conversation? This will clear the chat history.')) {
@@ -891,6 +956,15 @@ function formatCalculatedRecipe(result) {
     output += `\n<div class="recipe-actions">\n`;
     output += `<button onclick="copyRecipeToClipboard()" class="recipe-action-btn">📋 Copy Recipe</button>\n`;
     output += `<button onclick="printRecipe()" class="recipe-action-btn">🖨️ Print Recipe</button>\n`;
+    output += `</div>\n\n`;
+
+    // Scaling buttons
+    output += `<div class="recipe-scaling">\n`;
+    output += `<span class="scaling-label">Scale Recipe:</span>\n`;
+    output += `<button onclick="scaleRecipe(0.5)" class="scaling-btn" title="Half the recipe size">×0.5 (Half)</button>\n`;
+    output += `<button onclick="scaleRecipe(1.5)" class="scaling-btn" title="Make 50% more">×1.5</button>\n`;
+    output += `<button onclick="scaleRecipe(2)" class="scaling-btn" title="Double the recipe size">×2 (Double)</button>\n`;
+    output += `<button onclick="scaleRecipe(3)" class="scaling-btn" title="Triple the recipe size">×3 (Triple)</button>\n`;
     output += `</div>\n\n`;
 
     // Safety warnings
