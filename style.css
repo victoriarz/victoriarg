@@ -1145,6 +1145,36 @@ footer p {
     align-items: center;
     gap: 12px;
     flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.conversation-counter {
+    padding: 8px 14px;
+    background-color: #f5ede3;
+    color: #6b5d52;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.start-over-btn {
+    padding: 8px 14px;
+    background-color: #ffffff;
+    color: #7fa563;
+    border: 2px solid #7fa563;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.start-over-btn:hover {
+    background-color: #7fa563;
+    color: #ffffff;
+    transform: translateY(-2px);
 }
 
 .ai-status-badge {
@@ -1503,6 +1533,18 @@ footer p {
     padding: 15px 20px;
 }
 
+.typing-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.typing-text {
+    color: #6b5d52;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
 .typing-dots {
     display: flex;
     align-items: center;
@@ -1622,6 +1664,19 @@ footer p {
     background-color: #7fa563;
     color: #ffffff;
     transform: translateY(-2px);
+}
+
+.keyboard-shortcuts-hint {
+    margin-top: 15px !important;
+    padding-top: 15px;
+    border-top: 1px solid #e8dfd2;
+    font-size: 0.75rem !important;
+    color: #888 !important;
+    text-align: center;
+}
+
+.keyboard-shortcuts-hint strong {
+    color: #6b5d52;
 }
 
 /* AI Settings Modal */
@@ -3174,5 +3229,98 @@ footer p {
 
     .node-info-header h3 {
         font-size: 1.3rem;
+    }
+}
+
+/* ------------------------------------------- */
+/* Quick Wins - New Features */
+/* ------------------------------------------- */
+
+/* Copy feedback toast */
+.copy-feedback {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: #7fa563;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 10000;
+    white-space: nowrap;
+}
+
+.copy-feedback.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Recipe action buttons */
+.recipe-actions {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.recipe-action-btn {
+    padding: 10px 20px;
+    background-color: #7fa563;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-action-btn:hover {
+    background-color: #6b8a54;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-action-btn:active {
+    transform: translateY(0);
+}
+
+/* Mobile adjustments for quick wins */
+@media (max-width: 768px) {
+    .conversation-counter {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    .start-over-btn {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    .recipe-actions {
+        flex-direction: column;
+    }
+
+    .recipe-action-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .copy-feedback {
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        transform: translateX(0) translateY(100px);
+        text-align: center;
+    }
+
+    .copy-feedback.show {
+        transform: translateX(0) translateY(0);
     }
 }

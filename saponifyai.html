@@ -64,7 +64,9 @@
                     <p class="chat-intro">Get accurate, SAFE soap recipes with a built-in calculator! Request custom recipes and I'll calculate exact lye amounts, water, and show you detailed soap properties (hardness, cleansing, conditioning, lather) just like SoapCalc. Also ask about techniques, ingredients, and troubleshooting.</p>
                 </div>
                 <div class="ai-controls">
+                    <span id="conversationCounter" class="conversation-counter">💬 0 messages</span>
                     <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
+                    <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">🔄 Start Over</button>
                 </div>
             </div>
 
@@ -102,6 +104,7 @@
                         <button class="suggestion-btn" data-question="What do the soap properties mean?" aria-label="Ask: What do the soap properties mean?">Soap Properties 📊</button>
                         <button class="suggestion-btn" data-question="Make me a conditioning soap recipe" aria-label="Ask: Make me a conditioning soap recipe">Conditioning Recipe 💧</button>
                     </div>
+                    <p class="keyboard-shortcuts-hint">⌨️ <strong>Shortcuts:</strong> Enter to send • Esc to clear • Ctrl/Cmd+K to start over</p>
                 </div>
             </div>
         </section>
