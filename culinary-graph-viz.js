@@ -24,6 +24,48 @@
     // Track which ingredients have been revealed through searches
     let revealedIngredients = new Set(mainIngredients);
 
+    // Detect if user is on mobile device
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+
+    // Get responsive node size
+    function getNodeSize() {
+        if (window.innerWidth <= 480) return '45px';
+        if (window.innerWidth <= 768) return '50px';
+        return '60px';
+    }
+
+    // Get responsive font size
+    function getFontSize() {
+        if (window.innerWidth <= 480) return '10px';
+        if (window.innerWidth <= 768) return '11px';
+        return '12px';
+    }
+
+    // Get responsive layout parameters
+    function getLayoutParams() {
+        const isMobileDevice = isMobile();
+        return {
+            name: 'cose',
+            idealEdgeLength: isMobileDevice ? 80 : 100,
+            nodeOverlap: isMobileDevice ? 15 : 20,
+            refresh: 20,
+            fit: true,
+            padding: isMobileDevice ? 20 : 30,
+            randomize: false,
+            componentSpacing: isMobileDevice ? 80 : 100,
+            nodeRepulsion: isMobileDevice ? 300000 : 400000,
+            edgeElasticity: 100,
+            nestingFactor: 5,
+            gravity: 80,
+            numIter: 1000,
+            initialTemp: 200,
+            coolingFactor: 0.95,
+            minTemp: 1.0
+        };
+    }
+
     function initializeGraph() {
         // Check if required dependencies are loaded
         if (typeof cytoscape === 'undefined') {
@@ -81,12 +123,12 @@
                         },
                         'label': 'data(label)',
                         'color': '#3d2e1f',
-                        'font-size': '12px',
+                        'font-size': getFontSize(),
                         'font-weight': '600',
                         'text-valign': 'center',
                         'text-halign': 'center',
-                        'width': '60px',
-                        'height': '60px',
+                        'width': getNodeSize(),
+                        'height': getNodeSize(),
                         'border-width': '2px',
                         'border-color': '#e8dfd2',
                         'text-wrap': 'wrap',
@@ -141,24 +183,7 @@
                 }
             ],
 
-            layout: {
-                name: 'cose',
-                idealEdgeLength: 100,
-                nodeOverlap: 20,
-                refresh: 20,
-                fit: true,
-                padding: 30,
-                randomize: false,
-                componentSpacing: 100,
-                nodeRepulsion: 400000,
-                edgeElasticity: 100,
-                nestingFactor: 5,
-                gravity: 80,
-                numIter: 1000,
-                initialTemp: 200,
-                coolingFactor: 0.95,
-                minTemp: 1.0
-            },
+            layout: getLayoutParams(),
 
             minZoom: 0.5,
             maxZoom: 3,
@@ -416,6 +441,29 @@
         document.getElementById('resetGraph').addEventListener('click', function() {
             resetFilters();
             hideNodeInfo();
+        });
+
+        // Handle window resize for responsive graph
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            // Debounce resize events
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (cy) {
+                    // Update node sizes and font sizes
+                    cy.style()
+                        .selector('node')
+                        .style({
+                            'width': getNodeSize(),
+                            'height': getNodeSize(),
+                            'font-size': getFontSize()
+                        })
+                        .update();
+
+                    // Refit the graph to the container
+                    cy.fit(null, 30);
+                }
+            }, 250);
         });
     }
 

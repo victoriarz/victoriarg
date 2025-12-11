@@ -3029,13 +3029,20 @@ footer p {
         width: 100%;
     }
 
+    .control-group label {
+        font-size: 0.95rem;
+    }
+
     .graph-select,
     .graph-button {
         width: 100%;
+        font-size: 0.95rem;
+        padding: 12px 16px;
     }
 
     .graph-container {
-        height: 450px;
+        height: 400px;
+        min-height: 300px;
     }
 
     .graph-legend {
@@ -3045,6 +3052,37 @@ footer p {
     .legend-items {
         flex-direction: column;
         gap: 10px;
+    }
+
+    .graph-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .graph-intro {
+        font-size: 0.95rem;
+    }
+
+    .node-info-panel {
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .graph-zoom-controls {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .zoom-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
     }
 
     .search-container {
@@ -3077,5 +3115,51 @@ footer p {
 
     .close-results {
         width: 100%;
+    }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+    .graph-container {
+        height: 350px;
+        min-height: 280px;
+    }
+
+    .graph-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .graph-intro {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .control-group label {
+        font-size: 0.9rem;
+    }
+
+    .graph-select,
+    .graph-button {
+        font-size: 0.9rem;
+        padding: 10px 14px;
+    }
+
+    .legend-items {
+        font-size: 0.85rem;
+    }
+
+    .zoom-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+
+    .node-info-panel {
+        max-height: 75vh;
+        font-size: 0.9rem;
+    }
+
+    .node-info-header h3 {
+        font-size: 1.3rem;
     }
 }
