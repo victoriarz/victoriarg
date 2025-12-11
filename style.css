@@ -1297,6 +1297,7 @@ footer p {
     display: flex;
     align-items: flex-start;
     gap: 12px;
+    width: fit-content;
 }
 
 .bot-icon {
@@ -1390,6 +1391,9 @@ footer p {
     padding: 12px;
     overflow-x: auto;
     margin: 12px 0;
+    max-width: 100%;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .markdown-content pre code {
@@ -1465,6 +1469,8 @@ footer p {
     border-collapse: collapse;
     width: 100%;
     margin: 12px 0;
+    display: block;
+    overflow-x: auto;
 }
 
 .markdown-content table th,
