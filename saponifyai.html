@@ -68,11 +68,11 @@
                 </div>
             </div>
 
-            <div class="chat-container">
-                <div class="chat-messages" id="chatMessages">
+            <div class="chat-container" role="region" aria-label="Soap making chat assistant">
+                <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-atomic="false">
                     <div class="message bot-message">
                         <div class="message-content">
-                            <span class="bot-icon">🧼</span>
+                            <span class="bot-icon" aria-hidden="true">🧼</span>
                             <div class="bot-text">
                                 Hello! I'm your soap making assistant with a built-in SoapCalc-style calculator. I can create <strong>accurate, safe recipes</strong> with exact lye calculations and detailed soap properties. Just tell me what oils you want to use or ask for a recipe recommendation. I also answer questions about saponification, techniques, and troubleshooting!
                             </div>
@@ -81,23 +81,26 @@
                 </div>
 
                 <div class="chat-input-container">
+                    <label for="chatInput" class="sr-only">Type your soap making question</label>
                     <input
                         type="text"
                         id="chatInput"
                         class="chat-input"
                         placeholder="Ask about soap making (e.g., 'How do I make lavender soap?')"
                         autocomplete="off"
+                        aria-label="Type your soap making question"
+                        aria-describedby="chatSuggestions"
                     />
-                    <button id="sendButton" class="chat-send-button">Send</button>
+                    <button id="sendButton" class="chat-send-button" aria-label="Send message">Send</button>
                 </div>
 
-                <div class="chat-suggestions">
+                <div class="chat-suggestions" id="chatSuggestions">
                     <p>Try asking:</p>
-                    <div class="suggestion-buttons">
-                        <button class="suggestion-btn" data-question="Create a beginner soap recipe for 500g batch">Calculate Recipe 🧮</button>
-                        <button class="suggestion-btn" data-question="What oils are available in your database?">Available Oils 🌿</button>
-                        <button class="suggestion-btn" data-question="What do the soap properties mean?">Soap Properties 📊</button>
-                        <button class="suggestion-btn" data-question="Make me a conditioning soap recipe">Conditioning Recipe 💧</button>
+                    <div class="suggestion-buttons" role="group" aria-label="Quick question suggestions">
+                        <button class="suggestion-btn" data-question="Create a beginner soap recipe for 500g batch" aria-label="Ask: Create a beginner soap recipe for 500g batch">Calculate Recipe 🧮</button>
+                        <button class="suggestion-btn" data-question="What oils are available in your database?" aria-label="Ask: What oils are available in your database?">Available Oils 🌿</button>
+                        <button class="suggestion-btn" data-question="What do the soap properties mean?" aria-label="Ask: What do the soap properties mean?">Soap Properties 📊</button>
+                        <button class="suggestion-btn" data-question="Make me a conditioning soap recipe" aria-label="Ask: Make me a conditioning soap recipe">Conditioning Recipe 💧</button>
                     </div>
                 </div>
             </div>
@@ -140,10 +143,20 @@
     </footer>
 
     <!-- Markdown parser for formatting AI responses -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+            integrity="sha384-iU9sLPFUPdUE/lz4gF9hAu5V5WNljL0HMXJzJvDhY2/8J6R+3VcRDTK2gAKEm3mU"
+            crossorigin="anonymous"></script>
+
+    <!-- DOMPurify for XSS protection -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"
+            integrity="sha384-cqL3OSI4rTpDPPwz3G0UVpfcFH5ZBJuS5S/7VEF7a/xDzh2tWN0t/nUQnOXCRQkG"
+            crossorigin="anonymous"></script>
 
     <!-- Soap Calculator Engine -->
     <script src="soap-calculator.js"></script>
+
+    <!-- Recipe Validator -->
+    <script src="recipe-validator.js"></script>
 
     <!-- AI Configuration and Chat -->
     <script src="ai-config.js"></script>

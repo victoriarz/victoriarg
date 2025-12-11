@@ -4,29 +4,10 @@
 let aiConfig;
 let conversationHistory = [];
 let soapCalculator = null;  // Will be initialized when SoapCalculator loads
+let recipeValidator = null;  // Will be initialized when RecipeValidator loads
 
-// SAP values for common oils (NaOH per oz of oil)
-const sapValues = {
-    'olive': 0.135,
-    'coconut': 0.184,
-    'palm': 0.141,
-    'castor': 0.129,
-    'sweet almond': 0.134,
-    'avocado': 0.137,
-    'shea butter': 0.128,
-    'cocoa butter': 0.137,
-    'sunflower': 0.136,
-    'grapeseed': 0.135,
-    'jojoba': 0.065,
-    'hemp': 0.138,
-    'apricot kernel': 0.135,
-    'canola': 0.123,
-    'lard': 0.138,
-    'tallow': 0.14,
-    'babassu': 0.179,
-    'mango butter': 0.138,
-    'rice bran': 0.135
-};
+// NOTE: SAP values are now managed by SoapCalculator class in soap-calculator.js
+// This duplicate data structure has been removed to avoid inconsistencies
 
 // Conversation state for recipe building
 let recipeState = {
@@ -180,16 +161,34 @@ if (typeof marked !== 'undefined') {
     });
 }
 
-// Render markdown to HTML
+// Render markdown to HTML with XSS protection
 function renderMarkdown(text) {
+    let html;
+
     if (typeof marked !== 'undefined') {
-        return marked.parse(text);
+        html = marked.parse(text);
+    } else {
+        // Fallback: simple replacements if marked is not available
+        html = text
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
     }
-    // Fallback: simple replacements if marked is not available
-    return text
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/\n/g, '<br>');
+
+    // Sanitize HTML to prevent XSS attacks
+    if (typeof DOMPurify !== 'undefined') {
+        return DOMPurify.sanitize(html, {
+            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4',
+                          'code', 'pre', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr',
+                          'th', 'td', 'hr', 'span', 'div'],
+            ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+            ALLOW_DATA_ATTR: false
+        });
+    }
+
+    // If DOMPurify not available, log warning and return escaped text
+    console.warn('⚠️ DOMPurify not loaded - HTML content may not be safe');
+    return html;
 }
 
 // Add user message to chat with animation
@@ -276,55 +275,37 @@ function removeTypingIndicator() {
     }
 }
 
-// Calculate recipe from user inputs
-function calculateRecipe(batchSizeGrams, oils, superfatPercent = 5) {
-    // Convert grams to ounces for SAP calculation
-    const gramsToOz = 0.035274;
-
-    let totalLyeOz = 0;
-    let oilDetails = [];
-
-    // Calculate lye needed for each oil
-    for (const oil of oils) {
-        const oilOz = oil.grams * gramsToOz;
-        const lyeNeeded = oilOz * oil.sapValue;
-        totalLyeOz += lyeNeeded;
-        oilDetails.push({
-            name: oil.name,
-            grams: oil.grams,
-            ounces: oilOz.toFixed(2),
-            lyeNeeded: lyeNeeded.toFixed(3)
-        });
+// Calculate recipe using SoapCalculator class
+function calculateRecipeWithCalculator(oils, superfatPercent = 5) {
+    if (!soapCalculator) {
+        throw new Error('SoapCalculator not initialized');
     }
 
-    // Apply superfat discount
-    const superfatMultiplier = 1 - (superfatPercent / 100);
-    const adjustedLyeOz = totalLyeOz * superfatMultiplier;
-    const lyeGrams = adjustedLyeOz / gramsToOz;
+    // Create new calculator instance for this recipe
+    const calc = new SoapCalculator();
+    calc.setSuperfat(superfatPercent);
 
-    // Water calculation (typically 38% water to oil ratio, or 2.5:1 water to lye)
-    const waterGrams = lyeGrams * 2.5;
-
-    return {
-        oils: oilDetails,
-        totalOilGrams: batchSizeGrams,
-        lyeGrams: lyeGrams.toFixed(1),
-        lyeOunces: adjustedLyeOz.toFixed(2),
-        waterGrams: waterGrams.toFixed(1),
-        waterOunces: (waterGrams * gramsToOz).toFixed(2),
-        superfat: superfatPercent
-    };
-}
-
-// Find oil SAP value from user input
-function findOilSapValue(oilName) {
-    const normalized = oilName.toLowerCase().trim();
-    for (const [key, value] of Object.entries(sapValues)) {
-        if (normalized.includes(key) || key.includes(normalized)) {
-            return { oil: key, sapValue: value };
+    // Add each oil to the calculator
+    for (const oil of oils) {
+        try {
+            calc.addOil(oil.name, oil.grams, 'grams');
+        } catch (error) {
+            throw new Error(`Failed to add ${oil.name}: ${error.message}`);
         }
     }
-    return null;
+
+    // Calculate complete recipe with properties
+    return calc.calculate();
+}
+
+// Find oil in database (uses SoapCalculator's database)
+function findOilInDatabase(oilName) {
+    if (!soapCalculator) {
+        return null;
+    }
+
+    const oilData = soapCalculator.findOil(oilName);
+    return oilData;
 }
 
 // Find matching response based on keywords
@@ -350,9 +331,14 @@ function findResponse(userInput) {
         const gramsMatch = input.match(/(\d+)\s*(grams?|g\b)/i);
         if (gramsMatch && recipeState.batchSizeGrams === 0) {
             recipeState.batchSizeGrams = parseInt(gramsMatch[1]);
-            const availableOils = Object.keys(sapValues).slice(0, 10).join(', ');
+
+            // Get available oils from SoapCalculator database
+            const availableOilsList = soapCalculator
+                ? soapCalculator.getAvailableOils().slice(0, 10).map(oil => oil.name).join(', ')
+                : 'olive oil, coconut oil, palm oil, castor oil, sweet almond oil, shea butter';
+
             return {
-                response: `Perfect! You want to make ${recipeState.batchSizeGrams}g of soap. Now, tell me what oils you have and how many grams of each. For example: "300g olive oil, 150g coconut oil, 50g castor oil". Available oils include: ${availableOils}, and more. What oils do you have?`,
+                response: `Perfect! You want to make ${recipeState.batchSizeGrams}g of soap. Now, tell me what oils you have and how many grams of each. For example: "300g olive oil, 150g coconut oil, 50g castor oil". Available oils include: ${availableOilsList}, and more. What oils do you have?`,
                 category: 'recipe'
             };
         }
@@ -369,13 +355,12 @@ function findResponse(userInput) {
                     if (parts) {
                         const grams = parseInt(parts[1]);
                         const oilName = parts[2].trim().replace(/,/g, '');
-                        const oilData = findOilSapValue(oilName);
+                        const oilData = findOilInDatabase(oilName);
 
                         if (oilData) {
                             recipeState.oils.push({
-                                name: oilData.oil,
-                                grams: grams,
-                                sapValue: oilData.sapValue
+                                name: oilData.name,
+                                grams: grams
                             });
                             totalGrams += grams;
                         } else {
@@ -385,8 +370,12 @@ function findResponse(userInput) {
                 }
 
                 if (unknownOils.length > 0) {
+                    const availableOils = soapCalculator
+                        ? soapCalculator.getAvailableOils().map(oil => oil.name).join(', ')
+                        : 'olive oil, coconut oil, palm oil, etc.';
+
                     return {
-                        response: `I don't have SAP values for: ${unknownOils.join(', ')}. Available oils include: ${Object.keys(sapValues).join(', ')}. Please try again with oils from this list.`,
+                        response: `I don't have data for: ${unknownOils.join(', ')}. Available oils include: ${availableOils}. Please try again with oils from this list.`,
                         category: 'recipe'
                     };
                 }
@@ -413,36 +402,47 @@ function findResponse(userInput) {
             }
 
             if (input.includes('calculate') || input.includes('yes') || superfatMatch) {
-                const recipe = calculateRecipe(
-                    recipeState.oils.reduce((sum, oil) => sum + oil.grams, 0),
-                    recipeState.oils,
-                    recipeState.superfat
-                );
+                try {
+                    // Use the proper SoapCalculator class for accurate calculation
+                    const recipe = calculateRecipeWithCalculator(
+                        recipeState.oils,
+                        recipeState.superfat
+                    );
 
-                let response = `🧼 **Your Soap Recipe** (${recipeState.superfat}% superfat)\n\n`;
-                response += `**Oils:**\n`;
-                for (const oil of recipe.oils) {
-                    response += `• ${oil.name}: ${oil.grams}g (${oil.ounces}oz)\n`;
+                    // Validate recipe for safety
+                    let validationMessage = '';
+                    if (recipeValidator) {
+                        const validation = recipeValidator.validateRecipe(recipe);
+
+                        if (!validation.valid) {
+                            validationMessage = recipeValidator.formatValidationMessage(validation);
+                            validationMessage += '\n---\n\n';
+                        } else if (validation.warnings.length > 0) {
+                            validationMessage = recipeValidator.formatValidationMessage(validation);
+                            validationMessage += '\n---\n\n';
+                        }
+                    }
+
+                    // Format the complete recipe with properties
+                    const recipeOutput = formatCalculatedRecipe(recipe);
+                    const response = validationMessage + recipeOutput;
+
+                    // Reset state
+                    recipeState = {
+                        active: false,
+                        batchSizeGrams: 0,
+                        oils: [],
+                        superfat: 5
+                    };
+
+                    return { response: response, category: 'recipe' };
+                } catch (error) {
+                    console.error('Recipe calculation error:', error);
+                    return {
+                        response: `Sorry, I encountered an error calculating your recipe: ${error.message}. Please try again or ask for help.`,
+                        category: 'recipe'
+                    };
                 }
-                response += `\n**Lye (NaOH):** ${recipe.lyeGrams}g (${recipe.lyeOunces}oz)\n`;
-                response += `**Water:** ${recipe.waterGrams}g (${recipe.waterOunces}oz)\n\n`;
-                response += `⚠️ **Safety Reminder:**\n`;
-                response += `• Always add lye to water (never water to lye)\n`;
-                response += `• Wear safety goggles and gloves\n`;
-                response += `• Work in a well-ventilated area\n`;
-                response += `• Double-check your measurements\n`;
-                response += `• Cure for 4-6 weeks before use\n\n`;
-                response += `Need another recipe? Just say "calculate recipe"!`;
-
-                // Reset state
-                recipeState = {
-                    active: false,
-                    batchSizeGrams: 0,
-                    oils: [],
-                    superfat: 5
-                };
-
-                return { response: response, category: 'recipe' };
             }
         }
     }
@@ -501,9 +501,31 @@ async function sendMessage() {
         console.error('Error getting response:', error);
         removeTypingIndicator();
 
-        // Fallback to local knowledge base if backend fails
-        const result = findResponse(userMessage);
-        addMessage(`<span class="ai-provider-badge">Local Knowledge Base</span>${result.response}`, true, result.category);
+        // Provide specific error messages based on error type
+        let errorMessage = '';
+        let useFallback = true;
+
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            errorMessage = '**Connection Error**: Unable to reach the AI server. Using local knowledge base instead.';
+        } else if (error.message.includes('429') || error.message.includes('rate limit')) {
+            errorMessage = '**Rate Limit**: Too many requests. Please wait a moment before trying again.';
+            useFallback = false;
+        } else if (error.message.includes('timeout')) {
+            errorMessage = '**Request Timeout**: The AI took too long to respond. Please try asking again with a simpler question.';
+        } else if (error.message.includes('401') || error.message.includes('403')) {
+            errorMessage = '**Authentication Error**: API key issue. Please contact support.';
+            useFallback = true;
+        } else {
+            errorMessage = '**Unexpected Error**: Something went wrong. Trying local knowledge base...';
+        }
+
+        if (useFallback) {
+            // Fallback to local knowledge base
+            const result = findResponse(userMessage);
+            addMessage(`<span class="ai-provider-badge">Local Mode</span>${errorMessage}\n\n${result.response}`, true, result.category);
+        } else {
+            addMessage(`<span class="ai-provider-badge">Error</span>${errorMessage}`, true);
+        }
     } finally {
         // Re-enable input
         chatInput.disabled = false;
@@ -599,9 +621,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize SoapCalculator if available
     if (typeof SoapCalculator !== 'undefined') {
         soapCalculator = new SoapCalculator();
-        console.log('SoapCalculator initialized successfully');
+        console.log('✅ SoapCalculator initialized successfully');
     } else {
-        console.warn('SoapCalculator not loaded - recipe calculations may be limited');
+        console.warn('⚠️ SoapCalculator not loaded - recipe calculations may be limited');
+    }
+
+    // Initialize RecipeValidator if available
+    if (typeof RecipeValidator !== 'undefined') {
+        recipeValidator = new RecipeValidator();
+        console.log('✅ RecipeValidator initialized successfully');
+    } else {
+        console.warn('⚠️ RecipeValidator not loaded - recipe validation disabled');
     }
 
     // Check backend health
