@@ -1297,7 +1297,6 @@ footer p {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    width: fit-content;
 }
 
 .bot-icon {
