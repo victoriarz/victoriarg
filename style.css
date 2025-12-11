@@ -1850,6 +1850,147 @@ footer p {
     margin-bottom: 25px;
 }
 
+/* Dietary Restrictions Banner */
+.dietary-restrictions-banner {
+    background-color: #fff9e6;
+    border: 2px solid #d4a574;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.restrictions-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.restrictions-icon {
+    font-size: 1.5rem;
+}
+
+.restrictions-header label {
+    color: #2c1f15;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.restrictions-input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.restrictions-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #e8dfd2;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+.restrictions-input:focus {
+    outline: none;
+    border-color: #d4a574;
+}
+
+.add-restriction-btn {
+    padding: 10px 24px;
+    background-color: #d4a574;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.add-restriction-btn:hover {
+    background-color: #c89563;
+    transform: translateY(-2px);
+}
+
+.restrictions-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 30px;
+    margin-bottom: 10px;
+}
+
+.no-restrictions {
+    color: #7a6a5a;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0;
+}
+
+.restriction-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: #fee2e2;
+    border: 2px solid #fecaca;
+    border-radius: 20px;
+    color: #991b1b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: chipFadeIn 0.3s ease;
+}
+
+@keyframes chipFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.chip-text {
+    text-transform: capitalize;
+}
+
+.chip-remove {
+    background: none;
+    border: none;
+    color: #991b1b;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.chip-remove:hover {
+    background-color: #991b1b;
+    color: #ffffff;
+}
+
+.restrictions-hint {
+    color: #6b5d52;
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
 /* Reuse existing chat container, messages, and input styles from soap-chat-demo */
 /* All chat styling from lines 1187-1583 applies to both sections */
 
@@ -2046,8 +2187,21 @@ footer p {
         font-size: 1.8rem;
     }
 
-    #soap-chat-demo {
+    #soap-chat-demo,
+    #culinary-chat-demo {
         padding: 40px 20px;
+    }
+
+    .dietary-restrictions-banner {
+        padding: 15px;
+    }
+
+    .restrictions-input-area {
+        flex-direction: column;
+    }
+
+    .add-restriction-btn {
+        width: 100%;
     }
 
     .chat-messages {

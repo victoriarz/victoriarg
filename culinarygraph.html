@@ -7,6 +7,9 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
+    <!-- LogRocket Session Tracking -->
+    <script src="https://cdn.lr-in-prod.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>window.LogRocket && window.LogRocket.init('ljer86/aiprojects');</script>
 </head>
 <body>
     <div class="info-banner">
@@ -64,6 +67,26 @@
                 <div class="ai-controls">
                     <span id="culinaryAIStatusBadge" class="ai-status-badge">🤖 AI: Loading...</span>
                 </div>
+            </div>
+
+            <!-- Dietary Restrictions Banner -->
+            <div class="dietary-restrictions-banner">
+                <div class="restrictions-header">
+                    <span class="restrictions-icon">🚫</span>
+                    <label for="restrictionsInput">Dietary Restrictions & Allergies:</label>
+                </div>
+                <div class="restrictions-input-area">
+                    <input
+                        type="text"
+                        id="restrictionsInput"
+                        class="restrictions-input"
+                        placeholder="Enter allergies or restrictions (e.g., nuts, dairy, gluten)..."
+                        autocomplete="off"
+                    />
+                    <button id="addRestrictionBtn" class="add-restriction-btn">Add</button>
+                </div>
+                <div id="restrictionsChips" class="restrictions-chips"></div>
+                <p class="restrictions-hint">💡 Added restrictions will be excluded from all recommendations and recipes</p>
             </div>
 
             <div class="chat-container">
