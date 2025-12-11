@@ -13,23 +13,56 @@ const suggestionButtons = document.querySelectorAll('.suggestion-btn');
 
 // Configure marked for better markdown rendering
 if (typeof marked !== 'undefined') {
-    marked.setOptions({
-        breaks: true, // Convert \n to <br>
-        gfm: true, // GitHub Flavored Markdown
-        headerIds: false,
-        mangle: false
-    });
+    // Check if we're using marked v4+ or older version
+    if (typeof marked.setOptions === 'function') {
+        marked.setOptions({
+            breaks: true, // Convert \n to <br>
+            gfm: true, // GitHub Flavored Markdown
+            headerIds: false,
+            mangle: false,
+            sanitize: false // Allow HTML in markdown
+        });
+    } else if (typeof marked.use === 'function') {
+        // For marked v4+
+        marked.use({
+            breaks: true,
+            gfm: true,
+            headerIds: false,
+            mangle: false
+        });
+    }
 }
 
-// Render markdown to HTML
+// Render markdown to HTML with enhanced formatting
 function renderMarkdown(text) {
     if (typeof marked !== 'undefined') {
-        return marked.parse(text);
+        try {
+            // Use marked.parse if available, otherwise fall back to marked()
+            const parseFunc = typeof marked.parse === 'function' ? marked.parse : marked;
+            return parseFunc(text);
+        } catch (error) {
+            console.error('Markdown parsing error:', error);
+            return fallbackMarkdown(text);
+        }
     }
-    // Fallback: simple replacements if marked is not available
+    return fallbackMarkdown(text);
+}
+
+// Fallback markdown renderer for simple formatting
+function fallbackMarkdown(text) {
     return text
+        // Headers
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        // Bold and italic
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        // Code blocks
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Links
+        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>')
+        // Line breaks
         .replace(/\n/g, '<br>');
 }
 

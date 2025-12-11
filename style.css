@@ -1307,6 +1307,21 @@ footer p {
     margin-bottom: 0;
 }
 
+/* Nested lists */
+.markdown-content ul ul,
+.markdown-content ol ul {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.markdown-content ul ul {
+    list-style-type: circle;
+}
+
+.markdown-content ul ul ul {
+    list-style-type: square;
+}
+
 .markdown-content code {
     background-color: #f5ebe0;
     color: #7fa563;
@@ -1333,10 +1348,25 @@ footer p {
 
 .markdown-content blockquote {
     border-left: 4px solid #7fa563;
-    padding-left: 16px;
+    padding: 12px 16px;
     margin: 12px 0;
-    color: #6b5d52;
-    font-style: italic;
+    background-color: #f0f7ed;
+    border-radius: 0 8px 8px 0;
+    color: #3d2e1f;
+}
+
+.markdown-content blockquote p {
+    margin: 0;
+}
+
+.markdown-content blockquote strong {
+    color: #2c1f15;
+}
+
+/* Special blockquote for tips and warnings */
+.markdown-content blockquote:has(strong:first-child) {
+    background-color: #fff9e6;
+    border-left-color: #d4a574;
 }
 
 .markdown-content h1,
