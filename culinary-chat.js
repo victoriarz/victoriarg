@@ -732,7 +732,10 @@ async function getLLMResponse(userMessage) {
 // Enhance local knowledge base response with context
 function enhanceWithContext(userMessage, localResult) {
     // Add ingredient count and database info to help AI
-    const context = `\n\n[Knowledge Base Context: ${ingredientNodes.length} ingredients, ${ingredientEdges.length} relationships]`;
+    let context = '';
+    if (typeof ingredientNodes !== 'undefined' && typeof ingredientEdges !== 'undefined') {
+        context = `\n\n[Knowledge Base Context: ${ingredientNodes.length} ingredients, ${ingredientEdges.length} relationships]`;
+    }
 
     // If we have local results, provide them as context
     if (localResult && localResult.response) {
@@ -855,18 +858,34 @@ function updateAIStatus(isBackendHealthy) {
 // Initialize chat on page load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Culinary Chat Assistant initialized');
-    console.log(`Loaded ${ingredientNodes.length} ingredients and ${ingredientEdges.length} relationships`);
+
+    // Check if ingredientNodes is available
+    if (typeof ingredientNodes !== 'undefined' && typeof ingredientEdges !== 'undefined') {
+        console.log(`Loaded ${ingredientNodes.length} ingredients and ${ingredientEdges.length} relationships`);
+    } else {
+        console.warn('Warning: ingredientNodes or ingredientEdges not loaded yet');
+    }
 
     // Initialize AI configuration
-    culinaryAiConfig = new CulinaryAIConfig();
+    try {
+        if (typeof CulinaryAIConfig !== 'undefined') {
+            culinaryAiConfig = new CulinaryAIConfig();
 
-    // Check backend health
-    const isHealthy = await culinaryAiConfig.checkBackendHealth();
-    updateAIStatus(isHealthy);
+            // Check backend health
+            const isHealthy = await culinaryAiConfig.checkBackendHealth();
+            updateAIStatus(isHealthy);
 
-    if (isHealthy) {
-        console.log('AI backend is healthy - Gemini 2.5 Flash active');
-    } else {
-        console.log('AI backend unavailable - using local knowledge base');
+            if (isHealthy) {
+                console.log('AI backend is healthy - Gemini 2.5 Flash active');
+            } else {
+                console.log('AI backend unavailable - using local knowledge base');
+            }
+        } else {
+            console.error('CulinaryAIConfig not loaded - AI features disabled');
+            updateAIStatus(false);
+        }
+    } catch (error) {
+        console.error('Error initializing AI:', error);
+        updateAIStatus(false);
     }
 });
