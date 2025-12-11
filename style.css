@@ -1266,6 +1266,8 @@ footer p {
     border-radius: 12px;
     line-height: 1.6;
     font-size: 0.95rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .user-message {
@@ -1304,11 +1306,16 @@ footer p {
 
 .bot-text {
     flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
 /* Markdown content styling */
 .markdown-content {
     line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .markdown-content p {
