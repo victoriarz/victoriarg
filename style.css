@@ -1794,7 +1794,71 @@ footer p {
 }
 
 /* ------------------------------------------- */
-/* 11. Responsive Design */
+/* 11. Culinary Chat Demo Styles */
+/* ------------------------------------------- */
+
+#culinary-chat-demo {
+    background-color: #faf7f2;
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+#culinary-chat-demo h2 {
+    color: #3d2e1f;
+    margin-bottom: 15px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+#culinary-chat-demo .chat-intro {
+    color: #6b5d52;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+/* Reuse existing chat container, messages, and input styles from soap-chat-demo */
+/* All chat styling from lines 1187-1583 applies to both sections */
+
+/* AI loading state for substitution finder */
+.ai-loading {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.ai-loading .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e8dfd2;
+    border-top-color: #7fa563;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.ai-loading p {
+    color: #6b5d52;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* AI results styling */
+.ai-results {
+    padding: 20px 0;
+}
+
+.ai-response {
+    padding: 20px;
+    background-color: #faf8f5;
+    border-radius: 12px;
+    border: 2px solid #7fa563;
+}
+
+/* ------------------------------------------- */
+/* 12. Responsive Design */
 /* ------------------------------------------- */
 
 @media (max-width: 768px) {
@@ -2010,7 +2074,7 @@ footer p {
 }
 
 /* ------------------------------------------- */
-/* 12. Culinary Graph Visualization Styles */
+/* 13. Culinary Graph Visualization Styles */
 /* ------------------------------------------- */
 
 #graph-demo {

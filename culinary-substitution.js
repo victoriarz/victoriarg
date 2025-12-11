@@ -1,10 +1,21 @@
-// Culinary Substitution Finder
-// Smart ingredient substitution based on knowledge graph relationships
+// Culinary Substitution Finder with AI Enhancement
+// Smart ingredient substitution based on knowledge graph relationships + AI
 
 (function() {
     'use strict';
 
-    document.addEventListener('DOMContentLoaded', function() {
+    let culinaryAiConfig;
+    let useAI = true;
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Initialize AI configuration
+        if (typeof CulinaryAIConfig !== 'undefined') {
+            culinaryAiConfig = new CulinaryAIConfig();
+            const isHealthy = await culinaryAiConfig.checkBackendHealth();
+            useAI = isHealthy;
+            console.log(`Substitution Finder AI: ${isHealthy ? 'Active' : 'Local Mode'}`);
+        }
+
         setupSubstitutionFinder();
     });
 
@@ -41,7 +52,7 @@
         });
     }
 
-    function findSubstitutes(ingredient) {
+    async function findSubstitutes(ingredient) {
         const normalizedIngredient = normalizeIngredient(ingredient);
 
         // Reveal the ingredient in the knowledge graph
@@ -49,7 +60,18 @@
             window.revealIngredientInGraph(normalizedIngredient);
         }
 
-        // Check if we have substitution rules for this ingredient
+        // If AI is available, use it for enhanced substitution recommendations
+        if (useAI && culinaryAiConfig) {
+            try {
+                await findSubstitutesWithAI(ingredient, normalizedIngredient);
+                return;
+            } catch (error) {
+                console.error('AI substitution failed, falling back to local:', error);
+                // Fall through to local mode
+            }
+        }
+
+        // Local mode: Check if we have substitution rules for this ingredient
         if (substitutionRules[normalizedIngredient]) {
             displaySubstitutionResults(normalizedIngredient, substitutionRules[normalizedIngredient]);
         } else {
@@ -61,6 +83,158 @@
                 displayNoResults(ingredient);
             }
         }
+    }
+
+    // AI-enhanced substitution finder
+    async function findSubstitutesWithAI(originalIngredient, normalizedIngredient) {
+        // Show loading state
+        const resultsContainer = document.getElementById('substitutionResults');
+        const substitutesList = document.getElementById('substitutesList');
+        resultsContainer.style.display = 'block';
+        substitutesList.innerHTML = `
+            <div class="ai-loading">
+                <div class="loading-spinner"></div>
+                <p>Finding best substitutions for ${originalIngredient}...</p>
+            </div>
+        `;
+
+        // Get local data first for context
+        const localRules = substitutionRules[normalizedIngredient] || [];
+        const graphSubs = findSubstitutesInGraph(normalizedIngredient);
+
+        // Build context for AI
+        let contextInfo = '';
+        if (localRules.length > 0 || graphSubs.length > 0) {
+            contextInfo = '\n\nKnowledge Base Context:\n';
+            if (localRules.length > 0) {
+                contextInfo += `Available substitutes in database: ${localRules.map(r => r.substitute).join(', ')}\n`;
+            }
+            if (graphSubs.length > 0) {
+                contextInfo += `Graph relationships: ${graphSubs.map(s => s.substitute).join(', ')}\n`;
+            }
+        }
+
+        // Create prompt for AI
+        const userMessage = `Find substitutes for **${originalIngredient}**. Provide 3-5 best substitutes with:
+1. Substitute name
+2. Ratio (e.g., "1:1" or "1:0.75")
+3. Brief notes on best use case
+4. Dietary tags if applicable (vegan, gluten-free, etc.)
+
+Format as a clear, scannable list.${contextInfo}`;
+
+        try {
+            // Call AI
+            const response = await callGeminiForSubstitution(userMessage);
+
+            // Display AI results
+            displayAISubstitutionResults(originalIngredient, response);
+        } catch (error) {
+            throw error; // Let caller handle fallback
+        }
+    }
+
+    // Call Gemini AI for substitution
+    async function callGeminiForSubstitution(userMessage) {
+        const messages = [
+            { role: 'system', content: culinaryAiConfig.getSystemPrompt() },
+            { role: 'user', content: userMessage }
+        ];
+
+        // Convert to Gemini format
+        const contents = [];
+        for (let i = 0; i < messages.length; i++) {
+            const msg = messages[i];
+            if (msg.role === 'system') continue;
+            contents.push({
+                role: msg.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: msg.content }]
+            });
+        }
+
+        // Prepend system message to first user message
+        if (contents.length > 0 && messages[0].role === 'system') {
+            contents[0].parts[0].text = messages[0].content + '\n\n' + contents[0].parts[0].text;
+        }
+
+        const response = await fetch(
+            `${culinaryAiConfig.getBackendUrl()}/api/chat`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: contents,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 600
+                    }
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Backend API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.candidates && data.candidates[0]) {
+            const candidate = data.candidates[0];
+            if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {
+                return candidate.content.parts[0].text;
+            }
+            if (candidate.content && candidate.content.text) {
+                return candidate.content.text;
+            }
+        }
+
+        throw new Error('Invalid response format from Gemini API');
+    }
+
+    // Display AI-generated substitution results
+    function displayAISubstitutionResults(ingredient, aiResponse) {
+        const resultsContainer = document.getElementById('substitutionResults');
+        const substitutesList = document.getElementById('substitutesList');
+
+        // Configure marked for markdown rendering if available
+        if (typeof marked !== 'undefined') {
+            marked.setOptions({
+                breaks: true,
+                gfm: true,
+                headerIds: false,
+                mangle: false
+            });
+        }
+
+        // Render markdown response
+        let renderedHTML = aiResponse;
+        if (typeof marked !== 'undefined') {
+            renderedHTML = marked.parse(aiResponse);
+        } else {
+            // Simple fallback
+            renderedHTML = aiResponse
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        const html = `
+            <div class="ai-results">
+                <div class="ai-provider-badge" style="margin-bottom: 15px;">Gemini 2.5 Flash</div>
+                <div class="original-ingredient">
+                    <h4>Substitutes for: <span class="ingredient-name">${capitalizeFirst(ingredient)}</span></h4>
+                </div>
+                <div class="ai-response markdown-content">
+                    ${renderedHTML}
+                </div>
+            </div>
+        `;
+
+        substitutesList.innerHTML = html;
+        resultsContainer.style.display = 'block';
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function normalizeIngredient(ingredient) {

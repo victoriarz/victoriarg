@@ -55,6 +55,52 @@
             </div>
         </section>
 
+        <section id="culinary-chat-demo">
+            <div class="chat-header-controls">
+                <div>
+                    <h2>Ask the Culinary Assistant</h2>
+                    <p class="chat-intro">Search through 236+ ingredients, discover recipe combinations, find substitutions, and explore flavor pairings! Ask about dietary restrictions, cuisine types, or get cooking advice from our comprehensive culinary knowledge graph.</p>
+                </div>
+                <div class="ai-controls">
+                    <span id="culinaryAIStatusBadge" class="ai-status-badge">🤖 AI: Loading...</span>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <span class="bot-icon">🥗</span>
+                            <div class="bot-text">
+                                Hello! I'm your culinary knowledge assistant. I can help you <strong>search ingredients</strong>, <strong>find substitutions</strong>, <strong>discover flavor pairings</strong>, and <strong>suggest recipe combinations</strong>. Our database includes 236+ ingredients across 13 categories. What would you like to explore?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <input
+                        type="text"
+                        id="chatInput"
+                        class="chat-input"
+                        placeholder="Ask about ingredients, substitutions, or recipes (e.g., 'What can I substitute for eggs?')"
+                        autocomplete="off"
+                    />
+                    <button id="sendButton" class="chat-send-button">Send</button>
+                </div>
+
+                <div class="chat-suggestions">
+                    <p>Try asking:</p>
+                    <div class="suggestion-buttons">
+                        <button class="suggestion-btn" data-question="Find vegan protein substitutes">Vegan Proteins 🌱</button>
+                        <button class="suggestion-btn" data-question="Show me Italian ingredients">Italian Ingredients 🇮🇹</button>
+                        <button class="suggestion-btn" data-question="Substitute for eggs">Egg Substitutes 🥚</button>
+                        <button class="suggestion-btn" data-question="What pairs well with garlic?">Garlic Pairings 🧄</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="graph-demo">
             <div class="graph-header">
                 <h2>Interactive Knowledge Graph Explorer</h2>
@@ -226,13 +272,22 @@
     <!-- Cytoscape.js for graph visualization -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
 
+    <!-- Markdown parser for chat formatting -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- Knowledge Graph Data -->
     <script src="culinary-graph-data.js"></script>
+
+    <!-- AI Configuration -->
+    <script src="culinary-ai-config.js"></script>
 
     <!-- Graph Visualization Engine -->
     <script src="culinary-graph-viz.js"></script>
 
-    <!-- Substitution Finder Engine -->
+    <!-- Substitution Finder Engine (with AI) -->
     <script src="culinary-substitution.js"></script>
+
+    <!-- Culinary Chat Assistant (with AI) -->
+    <script src="culinary-chat.js"></script>
 </body>
 </html>
