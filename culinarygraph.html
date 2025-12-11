@@ -124,6 +124,45 @@
             </div>
         </section>
 
+        <section id="substitution-finder">
+            <div class="substitution-header">
+                <h2>Smart Ingredient Substitution Finder</h2>
+                <p class="substitution-intro">Enter any ingredient to get intelligent substitution recommendations based on flavor profiles, cooking properties, and dietary compatibility. Our knowledge graph analyzes ingredient relationships to find the perfect match.</p>
+            </div>
+
+            <div class="substitution-tool">
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="ingredientSearch" class="ingredient-input" placeholder="Search for an ingredient (e.g., butter, eggs, milk, flour)..." autocomplete="off">
+                    </div>
+                    <button id="findSubstitute" class="find-button">
+                        <span>Find Substitutes</span>
+                        <span class="button-arrow">→</span>
+                    </button>
+                </div>
+
+                <div class="quick-suggestions">
+                    <p>Popular searches:</p>
+                    <div class="suggestion-pills">
+                        <button class="suggestion-pill" data-ingredient="butter">🧈 Butter</button>
+                        <button class="suggestion-pill" data-ingredient="eggs">🥚 Eggs</button>
+                        <button class="suggestion-pill" data-ingredient="milk">🥛 Milk</button>
+                        <button class="suggestion-pill" data-ingredient="flour">🌾 Flour</button>
+                        <button class="suggestion-pill" data-ingredient="sugar">🍬 Sugar</button>
+                    </div>
+                </div>
+
+                <div id="substitutionResults" class="substitution-results" style="display: none;">
+                    <div class="results-header">
+                        <h3>Recommended Substitutes</h3>
+                        <button class="close-results" onclick="document.getElementById('substitutionResults').style.display='none'">Clear Results</button>
+                    </div>
+                    <div id="substitutesList"></div>
+                </div>
+            </div>
+        </section>
+
         <section id="graph-demo">
             <div class="graph-header">
                 <h2>Interactive Knowledge Graph Explorer</h2>
@@ -191,45 +230,6 @@
                     <button class="close-node-info" onclick="document.getElementById('nodeInfo').style.display='none'">✕</button>
                 </div>
                 <div id="nodeDetails"></div>
-            </div>
-        </section>
-
-        <section id="substitution-finder">
-            <div class="substitution-header">
-                <h2>Smart Ingredient Substitution Finder</h2>
-                <p class="substitution-intro">Enter any ingredient to get intelligent substitution recommendations based on flavor profiles, cooking properties, and dietary compatibility. Our knowledge graph analyzes ingredient relationships to find the perfect match.</p>
-            </div>
-
-            <div class="substitution-tool">
-                <div class="search-container">
-                    <div class="search-input-wrapper">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="ingredientSearch" class="ingredient-input" placeholder="Search for an ingredient (e.g., butter, eggs, milk, flour)..." autocomplete="off">
-                    </div>
-                    <button id="findSubstitute" class="find-button">
-                        <span>Find Substitutes</span>
-                        <span class="button-arrow">→</span>
-                    </button>
-                </div>
-
-                <div class="quick-suggestions">
-                    <p>Popular searches:</p>
-                    <div class="suggestion-pills">
-                        <button class="suggestion-pill" data-ingredient="butter">🧈 Butter</button>
-                        <button class="suggestion-pill" data-ingredient="eggs">🥚 Eggs</button>
-                        <button class="suggestion-pill" data-ingredient="milk">🥛 Milk</button>
-                        <button class="suggestion-pill" data-ingredient="flour">🌾 Flour</button>
-                        <button class="suggestion-pill" data-ingredient="sugar">🍬 Sugar</button>
-                    </div>
-                </div>
-
-                <div id="substitutionResults" class="substitution-results" style="display: none;">
-                    <div class="results-header">
-                        <h3>Recommended Substitutes</h3>
-                        <button class="close-results" onclick="document.getElementById('substitutionResults').style.display='none'">Clear Results</button>
-                    </div>
-                    <div id="substitutesList"></div>
-                </div>
             </div>
         </section>
 
