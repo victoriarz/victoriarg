@@ -517,9 +517,20 @@
     }
 
     function revealIngredientInGraph(ingredientId) {
-        if (!cy) return;
+        if (!cy) {
+            console.log('Graph not initialized yet');
+            return;
+        }
 
         const normalizedId = ingredientId.toLowerCase().trim();
+
+        // Scroll to graph section first
+        const graphSection = document.getElementById('graph-demo');
+        if (graphSection) {
+            setTimeout(() => {
+                graphSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
 
         // Check if ingredient already revealed
         if (revealedIngredients.has(normalizedId)) {
@@ -527,11 +538,13 @@
             // Focus on the ingredient
             const node = cy.getElementById(normalizedId);
             if (node.length > 0) {
-                cy.animate({
-                    center: { eles: node },
-                    zoom: 1.5,
-                    duration: 500
-                });
+                setTimeout(() => {
+                    cy.animate({
+                        center: { eles: node },
+                        zoom: 1.5,
+                        duration: 500
+                    });
+                }, 800);
             }
             return;
         }
@@ -562,12 +575,14 @@
             }
         });
 
-        // Animate to focus on the newly revealed ingredient
-        cy.animate({
-            center: { eles: node },
-            zoom: 1.5,
-            duration: 500
-        });
+        // Animate to focus on the newly revealed ingredient (after scroll completes)
+        setTimeout(() => {
+            cy.animate({
+                center: { eles: node },
+                zoom: 1.5,
+                duration: 500
+            });
+        }, 800);
 
         console.log('Revealed ingredient and connections:', normalizedId);
     }
