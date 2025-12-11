@@ -11,6 +11,7 @@
     });
 
     let cy; // Cytoscape instance
+    let graphEngine = null; // Graph engine for advanced operations
 
     // Define 20 main cooking ingredients to show by default
     const mainIngredients = [
@@ -38,6 +39,20 @@
         }
 
         console.log('Initializing graph with', culinaryGraphData.nodes.length, 'nodes and', culinaryGraphData.edges.length, 'edges');
+
+        // Initialize graph engine for advanced operations
+        if (typeof CulinaryGraphEngine !== 'undefined') {
+            graphEngine = {
+                analytics: CulinaryGraphEngine.createAnalytics(culinaryGraphData),
+                pathFinder: CulinaryGraphEngine.createPathFinder(culinaryGraphData),
+                inferenceEngine: CulinaryGraphEngine.createInferenceEngine(culinaryGraphData),
+                recipeGenerator: CulinaryGraphEngine.createRecipeGenerator(culinaryGraphData),
+                pantryOptimizer: CulinaryGraphEngine.createPantryOptimizer(culinaryGraphData)
+            };
+            console.log('Graph engine initialized successfully');
+        } else {
+            console.warn('Graph engine not available - advanced features disabled');
+        }
 
         // Transform data into Cytoscape format
         const elements = transformDataToCytoscape(culinaryGraphData);
@@ -589,5 +604,130 @@
 
     // Expose function globally for substitution finder to call
     window.revealIngredientInGraph = revealIngredientInGraph;
+
+    // ============================================
+    // GRAPH STATISTICS & ANALYTICS
+    // ============================================
+
+    function displayGraphStatistics() {
+        if (!graphEngine || !graphEngine.analytics) {
+            console.warn('Graph analytics not available');
+            return;
+        }
+
+        const stats = graphEngine.analytics.getStatistics();
+
+        console.log('=== CULINARY GRAPH STATISTICS ===');
+        console.log('Total Nodes:', stats.nodes.total);
+        console.log('Total Edges:', stats.edges.total);
+        console.log('Avg Connections per Node:', stats.edges.avgConnectionsPerNode);
+        console.log('\nNodes by Category:', stats.nodes.byCategory);
+        console.log('\nMost Connected Ingredients:', stats.mostConnected);
+        console.log('\nSubstitution Chains:', stats.substitutionChains);
+        console.log('\nCuisine Overlap:', stats.cuisineOverlap);
+
+        return stats;
+    }
+
+    function findIngredientPath(fromIngredient, toIngredient) {
+        if (!graphEngine || !graphEngine.pathFinder) {
+            console.warn('Path finder not available');
+            return null;
+        }
+
+        const fromId = fromIngredient.toLowerCase().replace(/\s+/g, '-');
+        const toId = toIngredient.toLowerCase().replace(/\s+/g, '-');
+
+        const path = graphEngine.pathFinder.findSubstitutionPath(fromId, toId);
+
+        if (path.found) {
+            console.log(`Path found from ${fromIngredient} to ${toIngredient}:`);
+            console.log('Path:', path.path.join(' → '));
+            console.log('Hops:', path.hops);
+        } else {
+            console.log(`No path found: ${path.reason}`);
+        }
+
+        return path;
+    }
+
+    function inferNewRelationships() {
+        if (!graphEngine || !graphEngine.inferenceEngine) {
+            console.warn('Inference engine not available');
+            return null;
+        }
+
+        const transitiveSubstitutions = graphEngine.inferenceEngine.inferTransitiveSubstitutions();
+        const inferredPairings = graphEngine.inferenceEngine.inferPairings();
+
+        console.log('=== INFERRED RELATIONSHIPS ===');
+        console.log('Transitive Substitutions:', transitiveSubstitutions.length);
+        console.log('Sample:', transitiveSubstitutions.slice(0, 5));
+        console.log('\nInferred Pairings:', inferredPairings.length);
+        console.log('Sample:', inferredPairings.slice(0, 5));
+
+        return {
+            substitutions: transitiveSubstitutions,
+            pairings: inferredPairings
+        };
+    }
+
+    function generateRecipeFromIngredients(ingredientNames, cuisine = null, dietary = []) {
+        if (!graphEngine || !graphEngine.recipeGenerator) {
+            console.warn('Recipe generator not available');
+            return null;
+        }
+
+        const ingredientIds = ingredientNames.map(name =>
+            name.toLowerCase().replace(/\s+/g, '-')
+        );
+
+        const recipe = graphEngine.recipeGenerator.generateRecipe(ingredientIds, cuisine, dietary);
+
+        console.log('=== RECIPE GENERATION ===');
+        console.log('Provided Ingredients:', recipe.providedIngredients);
+        console.log('Balance:', recipe.balance);
+        console.log('Pairings Found:', recipe.pairings);
+        console.log('Suggestions:', recipe.suggestions);
+        console.log('Possible Dishes:', recipe.possibleDishes);
+
+        return recipe;
+    }
+
+    function optimizePantry(ingredientNames, cuisine = null, dietary = []) {
+        if (!graphEngine || !graphEngine.pantryOptimizer) {
+            console.warn('Pantry optimizer not available');
+            return null;
+        }
+
+        const ingredientIds = ingredientNames.map(name =>
+            name.toLowerCase().replace(/\s+/g, '-')
+        );
+
+        const optimization = graphEngine.pantryOptimizer.optimizePantry(ingredientIds, cuisine, dietary);
+
+        console.log('=== PANTRY OPTIMIZATION ===');
+        console.log('Current Inventory:', optimization.currentInventory, 'ingredients');
+        console.log('Balance:', optimization.balance);
+        console.log('\nStrategic Additions:');
+        optimization.strategicAdditions.forEach((item, i) => {
+            console.log(`${i+1}. ${item.label} (${item.connections} connections)`);
+            console.log('   Connects with:', item.connectsWith.join(', '));
+        });
+        console.log('\nVersatile Ingredients to Consider:');
+        optimization.versatileIngredients.forEach((item, i) => {
+            console.log(`${i+1}. ${item.label} (${item.connections} total connections)`);
+        });
+
+        return optimization;
+    }
+
+    // Expose advanced functions globally
+    window.displayGraphStatistics = displayGraphStatistics;
+    window.findIngredientPath = findIngredientPath;
+    window.inferNewRelationships = inferNewRelationships;
+    window.generateRecipeFromIngredients = generateRecipeFromIngredients;
+    window.optimizePantry = optimizePantry;
+    window.getCulinaryGraphEngine = () => graphEngine;
 
 })();

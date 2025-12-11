@@ -1,6 +1,97 @@
 
 // Culinary Knowledge Graph Data
 // Represents ingredients, their relationships, and substitution rules
+// Enhanced with ontology, confidence scores, and metadata
+
+// ============================================
+// ONTOLOGY DEFINITION
+// ============================================
+
+const culinaryOntology = {
+    // Metadata about the ontology itself
+    metadata: {
+        version: '2.0',
+        created: '2025-01-01',
+        lastUpdated: '2025-12-11',
+        author: 'Victoria Ruiz Griffith',
+        description: 'Comprehensive culinary knowledge graph ontology'
+    },
+
+    // Entity classes and their properties
+    classes: {
+        'Ingredient': {
+            description: 'Any ingredient used in cooking',
+            properties: ['id', 'label', 'category', 'cuisine', 'dietary', 'aliases', 'nutritionalInfo'],
+            subclasses: ['Protein', 'Grain', 'Vegetable', 'Spice', 'Oil', 'Dairy', 'Herb', 'Sauce', 'Sweetener']
+        },
+        'Protein': {
+            parent: 'Ingredient',
+            subclasses: ['AnimalProtein', 'PlantProtein', 'Seafood']
+        },
+        'Recipe': {
+            description: 'A combination of ingredients with preparation method',
+            properties: ['name', 'ingredients', 'cuisine', 'difficulty', 'cookingTime', 'serves']
+        },
+        'Technique': {
+            description: 'A cooking method or technique',
+            properties: ['name', 'temperature', 'duration', 'equipment']
+        }
+    },
+
+    // Relationship types with their semantics
+    relationshipTypes: {
+        'SUBSTITUTES': {
+            description: 'One ingredient can replace another',
+            cardinality: 'many-to-many',
+            directional: true,
+            properties: ['ratio', 'context', 'confidence', 'note'],
+            inverseOf: null
+        },
+        'PAIRS_WITH': {
+            description: 'Ingredients that complement each other',
+            cardinality: 'many-to-many',
+            directional: false,
+            properties: ['strength', 'confidence'],
+            inverseOf: 'PAIRS_WITH'
+        },
+        'USED_WITH': {
+            description: 'Ingredients commonly used together in recipes',
+            cardinality: 'many-to-many',
+            directional: false,
+            properties: ['context', 'frequency'],
+            inverseOf: 'USED_WITH'
+        },
+        'SIMILAR_TO': {
+            description: 'Ingredients with similar properties',
+            cardinality: 'many-to-many',
+            directional: false,
+            properties: ['similarity_type', 'confidence'],
+            inverseOf: 'SIMILAR_TO'
+        }
+    },
+
+    // Dietary restriction vocabulary
+    dietaryRestrictions: [
+        'vegan', 'vegetarian', 'pescatarian', 'gluten-free', 'dairy-free',
+        'nut-free', 'keto', 'paleo', 'low-carb', 'kosher', 'halal'
+    ],
+
+    // Cuisine types vocabulary
+    cuisineTypes: [
+        'italian', 'mexican', 'mediterranean', 'asian', 'greek', 'spanish',
+        'french', 'indian', 'chinese', 'turkish', 'japanese', 'thai', 'all'
+    ],
+
+    // Category vocabulary
+    categories: [
+        'dairy', 'dairy-alt', 'protein', 'grain', 'vegetable', 'aromatic',
+        'herb', 'spice', 'oil', 'sauce', 'sweetener', 'baking', 'nuts', 'acid', 'liquid'
+    ]
+};
+
+// ============================================
+// KNOWLEDGE GRAPH DATA
+// ============================================
 
 const culinaryGraphData = {
     // Nodes represent ingredients - Comprehensive cooking ingredient database
@@ -277,49 +368,50 @@ const culinaryGraphData = {
     ],
 
     // Edges represent relationships between ingredients
+    // Enhanced with confidence scores (0-1 scale) and metadata
     edges: [
-        // Substitution relationships (can replace)
-        { source: 'butter', target: 'olive-oil', type: 'substitutes', ratio: '1:0.75', context: 'baking, cooking' },
-        { source: 'butter', target: 'coconut-oil', type: 'substitutes', ratio: '1:1', context: 'baking' },
-        { source: 'milk', target: 'almond-milk', type: 'substitutes', ratio: '1:1', context: 'all' },
-        { source: 'milk', target: 'coconut-milk', type: 'substitutes', ratio: '1:1', context: 'curries, baking' },
-        { source: 'eggs', target: 'tofu', type: 'substitutes', ratio: '1 egg:1/4 cup', context: 'scrambles, baking' },
-        { source: 'eggs', target: 'chickpeas', type: 'substitutes', ratio: '1 egg:3 tbsp aquafaba', context: 'baking' },
-        { source: 'flour', target: 'almond-flour', type: 'substitutes', ratio: '1:1', context: 'gluten-free baking' },
-        { source: 'flour', target: 'rice-flour', type: 'substitutes', ratio: '1:0.75', context: 'gluten-free' },
-        { source: 'sugar', target: 'honey', type: 'substitutes', ratio: '1:0.75', context: 'baking' },
-        { source: 'sugar', target: 'maple-syrup', type: 'substitutes', ratio: '1:0.75', context: 'baking' },
-        { source: 'sugar', target: 'agave', type: 'substitutes', ratio: '1:0.75', context: 'beverages, baking' },
-        { source: 'chicken', target: 'tofu', type: 'substitutes', ratio: '1:1', context: 'stir-fry, curry' },
-        { source: 'chicken', target: 'mushrooms', type: 'substitutes', ratio: '1:1.5', context: 'umami flavor' },
-        { source: 'cream', target: 'coconut-milk', type: 'substitutes', ratio: '1:1', context: 'dairy-free sauces' },
-        { source: 'cheese-parmesan', target: 'nutritional-yeast', type: 'substitutes', ratio: '1:1', context: 'vegan alternative' },
+        // Substitution relationships (can replace) - with confidence scores
+        { source: 'butter', target: 'olive-oil', type: 'substitutes', ratio: '1:0.75', context: 'baking, cooking', confidence: 0.9 },
+        { source: 'butter', target: 'coconut-oil', type: 'substitutes', ratio: '1:1', context: 'baking', confidence: 0.95 },
+        { source: 'milk', target: 'almond-milk', type: 'substitutes', ratio: '1:1', context: 'all', confidence: 0.95 },
+        { source: 'milk', target: 'coconut-milk', type: 'substitutes', ratio: '1:1', context: 'curries, baking', confidence: 0.9 },
+        { source: 'eggs', target: 'tofu', type: 'substitutes', ratio: '1 egg:1/4 cup', context: 'scrambles, baking', confidence: 0.85 },
+        { source: 'eggs', target: 'chickpeas', type: 'substitutes', ratio: '1 egg:3 tbsp aquafaba', context: 'baking', confidence: 0.8 },
+        { source: 'flour', target: 'almond-flour', type: 'substitutes', ratio: '1:1', context: 'gluten-free baking', confidence: 0.75 },
+        { source: 'flour', target: 'rice-flour', type: 'substitutes', ratio: '1:0.75', context: 'gluten-free', confidence: 0.7 },
+        { source: 'sugar', target: 'honey', type: 'substitutes', ratio: '1:0.75', context: 'baking', confidence: 0.9 },
+        { source: 'sugar', target: 'maple-syrup', type: 'substitutes', ratio: '1:0.75', context: 'baking', confidence: 0.9 },
+        { source: 'sugar', target: 'agave', type: 'substitutes', ratio: '1:0.75', context: 'beverages, baking', confidence: 0.85 },
+        { source: 'chicken-breast', target: 'tofu', type: 'substitutes', ratio: '1:1', context: 'stir-fry, curry', confidence: 0.8 },
+        { source: 'chicken-breast', target: 'mushrooms', type: 'substitutes', ratio: '1:1.5', context: 'umami flavor', confidence: 0.7 },
+        { source: 'cream', target: 'coconut-milk', type: 'substitutes', ratio: '1:1', context: 'dairy-free sauces', confidence: 0.9 },
+        { source: 'cheese-parmesan', target: 'nutritional-yeast', type: 'substitutes', ratio: '1:1', context: 'vegan alternative', confidence: 0.75 },
 
-        // Pairing relationships (goes well with)
-        { source: 'garlic', target: 'olive-oil', type: 'pairs-with', strength: 'strong' },
-        { source: 'garlic', target: 'butter', type: 'pairs-with', strength: 'strong' },
-        { source: 'tomato', target: 'basil', type: 'pairs-with', strength: 'strong' },
-        { source: 'tomato', target: 'oregano', type: 'pairs-with', strength: 'strong' },
-        { source: 'ginger', target: 'soy-sauce', type: 'pairs-with', strength: 'strong' },
-        { source: 'ginger', target: 'garlic', type: 'pairs-with', strength: 'medium' },
-        { source: 'cilantro', target: 'salsa', type: 'pairs-with', strength: 'strong' },
-        { source: 'onion', target: 'garlic', type: 'pairs-with', strength: 'strong' },
-        { source: 'cheese-mozzarella', target: 'tomato', type: 'pairs-with', strength: 'strong' },
-        { source: 'basil', target: 'olive-oil', type: 'pairs-with', strength: 'strong' },
+        // Pairing relationships (goes well with) - with confidence scores
+        { source: 'garlic', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'garlic', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'tomato', target: 'basil', type: 'pairs-with', strength: 'strong', confidence: 1.0 },
+        { source: 'tomato', target: 'oregano', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'ginger', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'ginger', target: 'garlic', type: 'pairs-with', strength: 'medium', confidence: 0.9 },
+        { source: 'cilantro', target: 'salsa', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'onion', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 1.0 },
+        { source: 'cheese-mozzarella', target: 'tomato', type: 'pairs-with', strength: 'strong', confidence: 1.0 },
+        { source: 'basil', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
 
         // Recipe component relationships (used in)
-        { source: 'butter', target: 'flour', type: 'used-with', context: 'baking' },
-        { source: 'eggs', target: 'flour', type: 'used-with', context: 'baking' },
-        { source: 'milk', target: 'eggs', type: 'used-with', context: 'custards, baking' },
-        { source: 'rice', target: 'soy-sauce', type: 'used-with', context: 'fried rice' },
-        { source: 'chickpeas', target: 'tahini', type: 'used-with', context: 'hummus' },
-        { source: 'black-beans', target: 'salsa', type: 'used-with', context: 'mexican dishes' },
+        { source: 'butter', target: 'flour', type: 'used-with', context: 'baking', confidence: 1.0 },
+        { source: 'eggs', target: 'flour', type: 'used-with', context: 'baking', confidence: 1.0 },
+        { source: 'milk', target: 'eggs', type: 'used-with', context: 'custards, baking', confidence: 0.95 },
+        { source: 'rice', target: 'soy-sauce', type: 'used-with', context: 'fried rice', confidence: 0.95 },
+        { source: 'chickpeas', target: 'tahini', type: 'used-with', context: 'hummus', confidence: 1.0 },
+        { source: 'black-beans', target: 'salsa', type: 'used-with', context: 'mexican dishes', confidence: 0.9 },
 
         // Similar flavor profile
-        { source: 'oregano', target: 'basil', type: 'similar-flavor', note: 'italian herbs' },
-        { source: 'coconut-milk', target: 'cream', type: 'similar-texture', note: 'creamy consistency' },
-        { source: 'tofu', target: 'chicken', type: 'similar-texture', note: 'absorbs flavors' },
-        { source: 'almond-milk', target: 'milk', type: 'similar-use', note: 'plant-based alternative' },
+        { source: 'oregano', target: 'basil', type: 'similar-flavor', note: 'italian herbs', confidence: 0.85 },
+        { source: 'coconut-milk', target: 'cream', type: 'similar-texture', note: 'creamy consistency', confidence: 0.9 },
+        { source: 'tofu', target: 'chicken-breast', type: 'similar-texture', note: 'absorbs flavors', confidence: 0.75 },
+        { source: 'almond-milk', target: 'milk', type: 'similar-use', note: 'plant-based alternative', confidence: 0.9 },
     ]
 };
 
@@ -451,5 +543,8 @@ const substitutionRules = {
 
 // Export for use in other scripts
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { culinaryGraphData, substitutionRules };
+    module.exports = { culinaryGraphData, substitutionRules, culinaryOntology };
 }
+
+// Make ontology available globally
+window.culinaryOntology = culinaryOntology;

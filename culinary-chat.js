@@ -847,10 +847,19 @@ async function callGemini(messages) {
     throw new Error('Invalid response format from Gemini API');
 }
 
-// Main LLM call via backend proxy
+// Main LLM call via backend proxy with GraphRAG enhancement
 async function getLLMResponse(userMessage) {
+    // Enhance query with graph context using GraphRAG
+    let enhancedMessage = userMessage;
+    if (culinaryAiConfig && typeof culinaryAiConfig.enhanceQueryWithGraphContext === 'function') {
+        enhancedMessage = culinaryAiConfig.enhanceQueryWithGraphContext(userMessage);
+        if (enhancedMessage !== userMessage) {
+            console.log('✨ GraphRAG: Query enhanced with knowledge graph context');
+        }
+    }
+
     // Add dietary restrictions to user message
-    const userMessageWithRestrictions = userMessage + getRestrictionsPrompt();
+    const userMessageWithRestrictions = enhancedMessage + getRestrictionsPrompt();
 
     // Build conversation history
     const messages = [

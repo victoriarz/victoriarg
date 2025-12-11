@@ -201,6 +201,181 @@ Be conversational, helpful, and inspiring about cooking. Make ingredient substit
             return false;
         }
     }
+
+    // ============================================
+    // GraphRAG ENHANCEMENT
+    // ============================================
+
+    // Extract entities (ingredients) from user question
+    extractEntities(question) {
+        const lowerQuestion = question.toLowerCase();
+        const entities = [];
+
+        // Check if graph data is available
+        if (typeof culinaryGraphData === 'undefined') {
+            return entities;
+        }
+
+        // Find ingredient mentions in the question
+        culinaryGraphData.nodes.forEach(node => {
+            const labelLower = node.label.toLowerCase();
+            const idLower = node.id.toLowerCase();
+
+            if (lowerQuestion.includes(labelLower) || lowerQuestion.includes(idLower)) {
+                entities.push({
+                    id: node.id,
+                    label: node.label,
+                    category: node.category,
+                    cuisine: node.cuisine,
+                    dietary: node.dietary
+                });
+            }
+        });
+
+        return entities;
+    }
+
+    // Get relevant subgraph around entities
+    getRelevantSubgraph(entities, hops = 2) {
+        if (typeof window.getCulinaryGraphEngine !== 'function') {
+            return null;
+        }
+
+        const graphEngine = window.getCulinaryGraphEngine();
+        if (!graphEngine || !graphEngine.pathFinder) {
+            return null;
+        }
+
+        const subgraphNodes = new Set();
+        const subgraphEdges = [];
+
+        // For each entity, find its neighborhood
+        entities.forEach(entity => {
+            subgraphNodes.add(entity.id);
+
+            const neighborhood = graphEngine.pathFinder.findNeighborhood(entity.id, hops);
+
+            neighborhood.forEach(node => {
+                subgraphNodes.add(node.id);
+            });
+        });
+
+        // Get edges between nodes in subgraph
+        culinaryGraphData.edges.forEach(edge => {
+            if (subgraphNodes.has(edge.source) && subgraphNodes.has(edge.target)) {
+                subgraphEdges.push(edge);
+            }
+        });
+
+        // Get full node details
+        const nodes = Array.from(subgraphNodes).map(id =>
+            culinaryGraphData.nodes.find(n => n.id === id)
+        ).filter(n => n !== undefined);
+
+        return {
+            nodes,
+            edges: subgraphEdges
+        };
+    }
+
+    // Serialize subgraph for LLM context
+    serializeSubgraph(subgraph) {
+        if (!subgraph || !subgraph.nodes) {
+            return '';
+        }
+
+        let context = `\n\n=== RELEVANT KNOWLEDGE GRAPH CONTEXT ===\n\n`;
+
+        // Group nodes by category
+        const byCategory = {};
+        subgraph.nodes.forEach(node => {
+            if (!byCategory[node.category]) {
+                byCategory[node.category] = [];
+            }
+            byCategory[node.category].push(node.label);
+        });
+
+        context += `**Available Ingredients** (${subgraph.nodes.length}):\n`;
+        Object.entries(byCategory).forEach(([category, ingredients]) => {
+            context += `- ${category}: ${ingredients.join(', ')}\n`;
+        });
+
+        context += `\n**Relationships** (${subgraph.edges.length}):\n`;
+
+        // Group edges by type
+        const byType = {
+            substitutes: [],
+            'pairs-with': [],
+            'used-with': [],
+            other: []
+        };
+
+        subgraph.edges.forEach(edge => {
+            const source = subgraph.nodes.find(n => n.id === edge.source);
+            const target = subgraph.nodes.find(n => n.id === edge.target);
+
+            if (!source || !target) return;
+
+            const relationStr = `${source.label} → ${target.label}`;
+
+            if (edge.type === 'substitutes') {
+                byType.substitutes.push(`${relationStr} (${edge.ratio || '1:1'})`);
+            } else if (edge.type === 'pairs-with') {
+                byType['pairs-with'].push(`${relationStr} (${edge.strength || 'good'})`);
+            } else if (edge.type === 'used-with') {
+                byType['used-with'].push(`${relationStr}${edge.context ? ' in ' + edge.context : ''}`);
+            } else {
+                byType.other.push(relationStr);
+            }
+        });
+
+        if (byType.substitutes.length > 0) {
+            context += `\nSubstitutions:\n${byType.substitutes.slice(0, 8).map(s => `- ${s}`).join('\n')}\n`;
+        }
+        if (byType['pairs-with'].length > 0) {
+            context += `\nFlavor Pairings:\n${byType['pairs-with'].slice(0, 8).map(s => `- ${s}`).join('\n')}\n`;
+        }
+        if (byType['used-with'].length > 0) {
+            context += `\nCommon Combinations:\n${byType['used-with'].slice(0, 8).map(s => `- ${s}`).join('\n')}\n`;
+        }
+
+        context += `\n=== END CONTEXT ===\n`;
+
+        return context;
+    }
+
+    // Enhanced query with GraphRAG
+    enhanceQueryWithGraphContext(userQuestion) {
+        try {
+            // Extract entities from question
+            const entities = this.extractEntities(userQuestion);
+
+            if (entities.length === 0) {
+                // No entities found, return original question
+                return userQuestion;
+            }
+
+            console.log('GraphRAG: Found entities:', entities.map(e => e.label));
+
+            // Get relevant subgraph
+            const subgraph = this.getRelevantSubgraph(entities, 2);
+
+            if (!subgraph) {
+                return userQuestion;
+            }
+
+            console.log('GraphRAG: Subgraph size:', subgraph.nodes.length, 'nodes,', subgraph.edges.length, 'edges');
+
+            // Serialize subgraph for context
+            const graphContext = this.serializeSubgraph(subgraph);
+
+            // Append context to question
+            return userQuestion + graphContext;
+        } catch (error) {
+            console.error('GraphRAG enhancement error:', error);
+            return userQuestion;
+        }
+    }
 }
 
 // Export as global
