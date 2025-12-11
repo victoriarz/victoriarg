@@ -3387,3 +3387,373 @@ footer p {
         transform: translateX(0) translateY(0);
     }
 }
+
+/* ------------------------------------------- */
+/* 18. Recipe Saving & Library Styles */
+/* ------------------------------------------- */
+
+/* Modal overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9998;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal dialog */
+.modal {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    position: relative;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal h2 {
+    color: #3d2e1f;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6b5d52;
+    cursor: pointer;
+    padding: 5px 10px;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #3d2e1f;
+}
+
+/* Form styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #3d2e1f;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e3d5ca;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #7fa563;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-help {
+    font-size: 0.85rem;
+    color: #6b5d52;
+    margin-top: 5px;
+}
+
+/* Modal buttons */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    justify-content: flex-end;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #7fa563;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #6b8a54;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background-color: #f5ede3;
+    color: #6b5d52;
+}
+
+.btn-secondary:hover {
+    background-color: #e8dfd2;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Saved recipes library */
+.recipes-library {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.recipe-card {
+    background-color: #faf8f5;
+    border: 2px solid #e8dfd2;
+    border-radius: 12px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.recipe-card:hover {
+    border-color: #7fa563;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.recipe-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.recipe-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #3d2e1f;
+    margin: 0;
+}
+
+.recipe-card-date {
+    font-size: 0.8rem;
+    color: #7a6a5a;
+    white-space: nowrap;
+}
+
+.recipe-card-info {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.recipe-card-detail {
+    font-size: 0.85rem;
+    color: #6b5d52;
+}
+
+.recipe-card-detail strong {
+    color: #3d2e1f;
+}
+
+.recipe-card-notes {
+    font-size: 0.9rem;
+    color: #6b5d52;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+.recipe-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-load {
+    background-color: #7fa563;
+    color: #ffffff;
+    flex: 1;
+}
+
+.btn-load:hover {
+    background-color: #6b8a54;
+}
+
+.btn-delete {
+    background-color: #e8dfd2;
+    color: #6b5d52;
+}
+
+.btn-delete:hover {
+    background-color: #d4a574;
+    color: #ffffff;
+}
+
+.empty-library {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b5d52;
+}
+
+.empty-library-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.empty-library p {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+/* Library header with search */
+.library-header {
+    margin-bottom: 20px;
+}
+
+.library-search {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.library-search input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border: 2px solid #e3d5ca;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.library-search input:focus {
+    outline: none;
+    border-color: #7fa563;
+}
+
+.library-search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7a6a5a;
+    pointer-events: none;
+}
+
+.library-stats {
+    font-size: 0.9rem;
+    color: #6b5d52;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.storage-badge {
+    background-color: #f5ede3;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.storage-badge.warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .modal {
+        width: 95%;
+        padding: 20px;
+        max-height: 90vh;
+    }
+
+    .modal h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    .recipe-card-header {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .recipe-card-info {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

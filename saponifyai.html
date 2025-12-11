@@ -65,6 +65,7 @@
                 </div>
                 <div class="ai-controls">
                     <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
+                    <button onclick="openRecipeLibrary()" class="start-over-btn" aria-label="View saved recipes">📚 My Recipes</button>
                     <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">🔄 Start Over</button>
                 </div>
             </div>
@@ -144,6 +145,72 @@
         <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
     </footer>
 
+    <!-- Save Recipe Modal -->
+    <div id="saveRecipeModal" class="modal-overlay" role="dialog" aria-labelledby="saveRecipeTitle" aria-modal="true">
+        <div class="modal">
+            <button class="modal-close" onclick="closeSaveRecipeModal()" aria-label="Close dialog">&times;</button>
+            <h2 id="saveRecipeTitle">Save Recipe</h2>
+            <form id="saveRecipeForm" onsubmit="handleSaveRecipe(event)">
+                <div class="form-group">
+                    <label for="recipeName">Recipe Name *</label>
+                    <input
+                        type="text"
+                        id="recipeName"
+                        name="recipeName"
+                        required
+                        maxlength="100"
+                        placeholder="e.g., Lavender Dream Soap"
+                        autocomplete="off"
+                    />
+                    <p class="form-help">Give your recipe a memorable name</p>
+                </div>
+                <div class="form-group">
+                    <label for="recipeNotes">Notes (Optional)</label>
+                    <textarea
+                        id="recipeNotes"
+                        name="recipeNotes"
+                        maxlength="500"
+                        placeholder="Add notes about this recipe, like fragrance used, colorants, or special techniques..."
+                    ></textarea>
+                    <p class="form-help">Optional: Add notes about scent, color, or how it turned out</p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeSaveRecipeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Recipe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recipe Library Modal -->
+    <div id="recipeLibraryModal" class="modal-overlay" role="dialog" aria-labelledby="libraryTitle" aria-modal="true">
+        <div class="modal">
+            <button class="modal-close" onclick="closeRecipeLibrary()" aria-label="Close dialog">&times;</button>
+            <h2 id="libraryTitle">My Saved Recipes</h2>
+
+            <div class="library-header">
+                <div class="library-search">
+                    <input
+                        type="text"
+                        id="librarySearchInput"
+                        placeholder="Search recipes..."
+                        oninput="filterRecipes(this.value)"
+                        autocomplete="off"
+                    />
+                    <span class="library-search-icon">🔍</span>
+                </div>
+                <div class="library-stats">
+                    <span id="recipeCount">0 recipes</span>
+                    <span id="storageCapacity" class="storage-badge">0/50</span>
+                </div>
+            </div>
+
+            <div id="recipesLibrary" class="recipes-library">
+                <!-- Recipe cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Markdown parser for formatting AI responses -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
             integrity="sha384-iU9sLPFUPdUE/lz4gF9hAu5V5WNljL0HMXJzJvDhY2/8J6R+3VcRDTK2gAKEm3mU"
@@ -160,8 +227,14 @@
     <!-- Recipe Validator -->
     <script src="recipe-validator.js"></script>
 
+    <!-- Recipe Storage Manager -->
+    <script src="recipe-storage.js"></script>
+
     <!-- AI Configuration and Chat -->
     <script src="ai-config.js"></script>
     <script src="soap-chat.js"></script>
+
+    <!-- Recipe Saving UI -->
+    <script src="recipe-ui.js"></script>
 </body>
 </html>
