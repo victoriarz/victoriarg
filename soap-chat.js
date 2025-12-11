@@ -107,7 +107,7 @@ async function callGemini(messages) {
                 contents: contents,
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 2048  // Allow full detailed responses when requested
+                    maxOutputTokens: 8192  // Increased to prevent cut-off responses (Gemini Flash supports up to 8192)
                 }
             })
         }
@@ -124,9 +124,16 @@ async function callGemini(messages) {
     if (data.candidates && data.candidates[0]) {
         const candidate = data.candidates[0];
 
-        // Try to get text from parts array
-        if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {
-            return candidate.content.parts[0].text;
+        // Try to get text from parts array - concatenate ALL parts to avoid cut-off
+        if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+            // Concatenate all text parts in case the response is split
+            const fullText = candidate.content.parts
+                .map(part => part.text || '')
+                .join('');
+
+            if (fullText) {
+                return fullText;
+            }
         }
 
         // Fallback: check if there's text directly in content
