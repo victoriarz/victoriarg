@@ -23,9 +23,11 @@ let lastCalculatedRecipeTime = null;
 
 // Rate limiting state
 let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL_MS = 2000; // Minimum 2 seconds between API requests
+const MIN_REQUEST_INTERVAL_MS = 5000; // Minimum 5 seconds between API requests (increased for stability)
 let requestQueue = [];
 let isProcessingQueue = false;
+let consecutiveRateLimitErrors = 0;
+const MAX_RETRIES = 2;
 
 // Knowledge base for soap making
 const soapKnowledge = {
@@ -263,7 +265,7 @@ function getCategoryLabel(category) {
 }
 
 // Show typing indicator
-function showTypingIndicator() {
+function showTypingIndicator(message = 'AI is thinking') {
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message bot-message typing-indicator';
     typingDiv.id = 'typingIndicator';
@@ -273,7 +275,7 @@ function showTypingIndicator() {
     contentDiv.innerHTML = `
         <span class="bot-icon">🧼</span>
         <div class="typing-container">
-            <span class="typing-text">AI is thinking</span>
+            <span class="typing-text" id="typingText">${message}</span>
             <div class="typing-dots">
                 <span class="dot"></span>
                 <span class="dot"></span>
@@ -285,6 +287,14 @@ function showTypingIndicator() {
     typingDiv.appendChild(contentDiv);
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Update typing indicator message
+function updateTypingIndicator(message) {
+    const typingText = document.getElementById('typingText');
+    if (typingText) {
+        typingText.textContent = message;
+    }
 }
 
 // Remove typing indicator
@@ -481,23 +491,71 @@ function findResponse(userInput) {
     };
 }
 
-// Rate-limited API request function
-async function makeRateLimitedRequest(userMessage) {
+// Rate-limited API request function with exponential backoff retry
+async function makeRateLimitedRequest(userMessage, retryCount = 0) {
     const now = Date.now();
     const timeSinceLastRequest = now - lastRequestTime;
 
+    // Calculate wait time with exponential backoff if there were recent rate limit errors
+    let baseWaitTime = MIN_REQUEST_INTERVAL_MS;
+    if (consecutiveRateLimitErrors > 0) {
+        // Exponential backoff: 5s, 10s, 20s, 40s...
+        baseWaitTime = MIN_REQUEST_INTERVAL_MS * Math.pow(2, consecutiveRateLimitErrors);
+    }
+
     // If not enough time has passed since last request, wait
-    if (timeSinceLastRequest < MIN_REQUEST_INTERVAL_MS) {
-        const waitTime = MIN_REQUEST_INTERVAL_MS - timeSinceLastRequest;
-        console.log(`⏱️ Rate limiting: waiting ${waitTime}ms before next request`);
+    if (timeSinceLastRequest < baseWaitTime) {
+        const waitTime = baseWaitTime - timeSinceLastRequest;
+        const waitSeconds = Math.round(waitTime/1000);
+        console.log(`⏱️ Rate limiting: waiting ${waitSeconds}s before next request`);
+
+        // Update typing indicator to show wait time
+        updateTypingIndicator(`Rate limiting... waiting ${waitSeconds}s`);
+
         await new Promise(resolve => setTimeout(resolve, waitTime));
+
+        // Reset typing indicator
+        updateTypingIndicator('AI is thinking');
     }
 
     // Update last request time
     lastRequestTime = Date.now();
 
-    // Make the actual API call
-    return await getLLMResponse(userMessage);
+    try {
+        // Make the actual API call
+        const result = await getLLMResponse(userMessage);
+
+        // Success! Reset consecutive error counter
+        consecutiveRateLimitErrors = 0;
+
+        return result;
+    } catch (error) {
+        // Check if it's a rate limit error
+        if ((error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit'))
+            && retryCount < MAX_RETRIES) {
+
+            consecutiveRateLimitErrors++;
+            const retryDelay = 10000 * Math.pow(2, retryCount); // 10s, 20s, 40s
+            const retrySeconds = Math.round(retryDelay/1000);
+
+            console.log(`⚠️ Rate limit hit. Retry ${retryCount + 1}/${MAX_RETRIES} after ${retrySeconds}s...`);
+
+            // Update typing indicator to show retry status
+            updateTypingIndicator(`Rate limit hit... retrying in ${retrySeconds}s (${retryCount + 1}/${MAX_RETRIES})`);
+
+            // Wait with exponential backoff
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+
+            // Reset typing indicator
+            updateTypingIndicator('AI is thinking');
+
+            // Retry the request
+            return makeRateLimitedRequest(userMessage, retryCount + 1);
+        }
+
+        // Not a rate limit error or max retries reached - throw the error
+        throw error;
+    }
 }
 
 // Handle sending messages
@@ -547,8 +605,8 @@ async function sendMessage() {
         if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
             errorMessage = '**Connection Error**: Unable to reach the AI server. Using local knowledge base instead.';
         } else if (error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit')) {
-            errorMessage = '**Rate Limit Exceeded**: The AI received too many requests. The chat now includes automatic rate limiting (2 seconds between requests) to prevent this. Please wait 10-15 seconds before trying again.';
-            useFallback = false;
+            errorMessage = '**Rate Limit Exceeded**: The AI service has hit its request limit (this is normal for free-tier backend). The chat automatically retried but still hit limits. Please wait 30-60 seconds before trying again. Tip: Use the "Start Over" button to reset rate limiting if issues persist.';
+            useFallback = true; // Fall back to local knowledge so user still gets an answer
         } else if (error.message.includes('timeout')) {
             errorMessage = '**Request Timeout**: The AI took too long to respond. Please try asking again with a simpler question.';
         } else if (error.message.includes('401') || error.message.includes('403')) {
@@ -906,6 +964,10 @@ function startOver() {
         lastCalculatedRecipe = null;
         lastCalculatedRecipeTime = null;
 
+        // Reset rate limiting state to allow fresh requests
+        lastRequestTime = 0;
+        consecutiveRateLimitErrors = 0;
+
         // Clear chat messages (except initial bot message)
         const chatMessages = document.getElementById('chatMessages');
         const firstMessage = chatMessages.querySelector('.bot-message');
@@ -914,7 +976,7 @@ function startOver() {
             chatMessages.appendChild(firstMessage.cloneNode(true));
         }
 
-        showCopyFeedback('Conversation reset! Starting fresh. ✓');
+        showCopyFeedback('Conversation reset! Rate limits cleared. ✓');
     }
 }
 
