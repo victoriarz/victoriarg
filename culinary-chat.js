@@ -928,7 +928,8 @@ async function sendMessage() {
                 // Fall back to local knowledge base
                 const result = processQuery(userMessage);
                 removeTypingIndicator();
-                addMessage(`<span class="ai-provider-badge">Local Knowledge Base</span>${result.response}`, true, result.category);
+                const fallbackMessage = `<span class="ai-provider-badge">Local Knowledge Base</span>${result.response}\n\n💡 *AI is currently offline. Try asking again in a moment to use our enhanced AI assistant!*`;
+                addMessage(fallbackMessage, true, result.category);
             }
         } else {
             // Use local knowledge base only
