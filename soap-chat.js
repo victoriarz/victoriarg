@@ -21,6 +21,12 @@ let recipeState = {
 let lastCalculatedRecipe = null;
 let lastCalculatedRecipeTime = null;
 
+// Rate limiting state
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL_MS = 2000; // Minimum 2 seconds between API requests
+let requestQueue = [];
+let isProcessingQueue = false;
+
 // Knowledge base for soap making
 const soapKnowledge = {
     'saponification': {
@@ -468,6 +474,25 @@ function findResponse(userInput) {
     };
 }
 
+// Rate-limited API request function
+async function makeRateLimitedRequest(userMessage) {
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTime;
+
+    // If not enough time has passed since last request, wait
+    if (timeSinceLastRequest < MIN_REQUEST_INTERVAL_MS) {
+        const waitTime = MIN_REQUEST_INTERVAL_MS - timeSinceLastRequest;
+        console.log(`⏱️ Rate limiting: waiting ${waitTime}ms before next request`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+
+    // Update last request time
+    lastRequestTime = Date.now();
+
+    // Make the actual API call
+    return await getLLMResponse(userMessage);
+}
+
 // Handle sending messages
 async function sendMessage() {
     const userMessage = chatInput.value.trim();
@@ -488,8 +513,8 @@ async function sendMessage() {
     showTypingIndicator();
 
     try {
-        // Always try to use the backend AI
-        const result = await getLLMResponse(userMessage);
+        // Use rate-limited request to prevent API throttling
+        const result = await makeRateLimitedRequest(userMessage);
 
         removeTypingIndicator();
 
@@ -514,8 +539,8 @@ async function sendMessage() {
 
         if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
             errorMessage = '**Connection Error**: Unable to reach the AI server. Using local knowledge base instead.';
-        } else if (error.message.includes('429') || error.message.includes('rate limit')) {
-            errorMessage = '**Rate Limit**: Too many requests. Please wait a moment before trying again.';
+        } else if (error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit')) {
+            errorMessage = '**Rate Limit Exceeded**: The AI received too many requests. The chat now includes automatic rate limiting (2 seconds between requests) to prevent this. Please wait 10-15 seconds before trying again.';
             useFallback = false;
         } else if (error.message.includes('timeout')) {
             errorMessage = '**Request Timeout**: The AI took too long to respond. Please try asking again with a simpler question.';
