@@ -182,32 +182,42 @@ if (typeof marked !== 'undefined') {
 
 // Render markdown to HTML with XSS protection
 function renderMarkdown(text) {
-    let html;
+    try {
+        let html;
 
-    if (typeof marked !== 'undefined') {
-        html = marked.parse(text);
-    } else {
-        // Fallback: simple replacements if marked is not available
-        html = text
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        if (typeof marked !== 'undefined') {
+            html = marked.parse(text);
+        } else {
+            // Fallback: simple replacements if marked is not available
+            html = text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Sanitize HTML to prevent XSS attacks
+        if (typeof DOMPurify !== 'undefined') {
+            return DOMPurify.sanitize(html, {
+                ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4',
+                              'code', 'pre', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr',
+                              'th', 'td', 'hr', 'span', 'div'],
+                ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+                ALLOW_DATA_ATTR: false
+            });
+        }
+
+        // If DOMPurify not available, log warning and return html
+        console.warn('⚠️ DOMPurify not loaded - HTML content may not be safe');
+        return html;
+    } catch (error) {
+        console.error('Error rendering markdown:', error);
+        // Return text with basic HTML escaping as fallback
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
             .replace(/\n/g, '<br>');
     }
-
-    // Sanitize HTML to prevent XSS attacks
-    if (typeof DOMPurify !== 'undefined') {
-        return DOMPurify.sanitize(html, {
-            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4',
-                          'code', 'pre', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr',
-                          'th', 'td', 'hr', 'span', 'div'],
-            ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
-            ALLOW_DATA_ATTR: false
-        });
-    }
-
-    // If DOMPurify not available, log warning and return escaped text
-    console.warn('⚠️ DOMPurify not loaded - HTML content may not be safe');
-    return html;
 }
 
 // Add user message to chat with animation
@@ -577,25 +587,32 @@ async function sendMessage() {
     // Show typing indicator
     showTypingIndicator();
 
+    let aiResult;
     try {
         // Use rate-limited request to prevent API throttling
-        const result = await makeRateLimitedRequest(userMessage);
+        aiResult = await makeRateLimitedRequest(userMessage);
 
         removeTypingIndicator();
 
-        // Add response with provider badge
-        const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>${result.response}`;
-        addMessage(responseWithBadge, true);
+        try {
+            // Add response with provider badge (markdown will be rendered in addMessage)
+            addMessage(aiResult.response, true);
 
-        // Update conversation history (keep last 10 messages for context)
-        conversationHistory.push({ role: 'user', content: userMessage });
-        conversationHistory.push({ role: 'assistant', content: result.response });
+            // Update conversation history (keep last 10 messages for context)
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'assistant', content: aiResult.response });
 
-        if (conversationHistory.length > 20) {
-            conversationHistory = conversationHistory.slice(-20);
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+        } catch (displayError) {
+            console.error('Error displaying response:', displayError);
+            // If we got a response but failed to display it, don't fall through to error handling
+            // The message might have partially rendered, so just log and continue
+            throw displayError;
         }
     } catch (error) {
-        console.error('Error getting response:', error);
+        console.error('Error in sendMessage:', error);
         removeTypingIndicator();
 
         // Provide specific error messages based on error type
@@ -619,9 +636,9 @@ async function sendMessage() {
         if (useFallback) {
             // Fallback to local knowledge base
             const result = findResponse(userMessage);
-            addMessage(`<span class="ai-provider-badge">Local Mode</span>${errorMessage}\n\n${result.response}`, true, result.category);
+            addMessage(`${errorMessage}\n\n${result.response}`, true, result.category);
         } else {
-            addMessage(`<span class="ai-provider-badge">Error</span>${errorMessage}`, true);
+            addMessage(errorMessage, true);
         }
     } finally {
         // Re-enable input
