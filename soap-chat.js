@@ -21,13 +21,7 @@ let recipeState = {
 let lastCalculatedRecipe = null;
 let lastCalculatedRecipeTime = null;
 
-// Rate limiting state
-let lastRequestTime = 0;
-const MIN_REQUEST_INTERVAL_MS = 5000; // Minimum 5 seconds between API requests (increased for stability)
-let requestQueue = [];
-let isProcessingQueue = false;
-let consecutiveRateLimitErrors = 0;
-const MAX_RETRIES = 2;
+// Removed rate limiting - no artificial delays between requests
 
 // Knowledge base for soap making
 const soapKnowledge = {
@@ -561,82 +555,14 @@ function findResponse(userInput) {
     };
 }
 
-// Rate-limited API request function with exponential backoff retry
-async function makeRateLimitedRequest(userMessage, retryCount = 0) {
-    const now = Date.now();
-    const timeSinceLastRequest = now - lastRequestTime;
-
-    // Calculate wait time with exponential backoff if there were recent rate limit errors
-    let baseWaitTime = MIN_REQUEST_INTERVAL_MS;
-    if (consecutiveRateLimitErrors > 0) {
-        // Exponential backoff: 5s, 10s, 20s, 40s...
-        baseWaitTime = MIN_REQUEST_INTERVAL_MS * Math.pow(2, consecutiveRateLimitErrors);
-    }
-
-    // If not enough time has passed since last request, wait
-    if (timeSinceLastRequest < baseWaitTime) {
-        const waitTime = baseWaitTime - timeSinceLastRequest;
-        const waitSeconds = Math.round(waitTime/1000);
-        console.log(`⏱️ Rate limiting: waiting ${waitSeconds}s before next request`);
-
-        // Update typing indicator to show wait time
-        updateTypingIndicator(`Rate limiting... waiting ${waitSeconds}s`);
-
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-
-        // Reset typing indicator
-        updateTypingIndicator('AI is thinking');
-    }
-
-    // Update last request time
-    lastRequestTime = Date.now();
-
+// Direct API request - no rate limiting or artificial delays
+async function makeDirectRequest(userMessage) {
     try {
-        // Make the actual API call
+        // Make the API call directly without any delays
         const result = await getLLMResponse(userMessage);
-
-        // Success! Reset consecutive error counter
-        consecutiveRateLimitErrors = 0;
-
         return result;
     } catch (error) {
-        // Check if it's a retryable error
-        const isRateLimitError = error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit');
-        const isTimeoutError = error.message.includes('timeout') || error.message.includes('Request timeout');
-        const isNetworkError = error.message.includes('Failed to fetch') || error.message.includes('NetworkError');
-
-        // Retry on rate limit, timeout, or network errors (but not on other errors like auth failures)
-        const shouldRetry = (isRateLimitError || isTimeoutError || isNetworkError) && retryCount < MAX_RETRIES;
-
-        if (shouldRetry) {
-            if (isRateLimitError) {
-                consecutiveRateLimitErrors++;
-            }
-
-            const retryDelay = 10000 * Math.pow(2, retryCount); // 10s, 20s, 40s
-            const retrySeconds = Math.round(retryDelay/1000);
-
-            let retryReason = 'Error';
-            if (isRateLimitError) retryReason = 'Rate limit hit';
-            else if (isTimeoutError) retryReason = 'Request timeout';
-            else if (isNetworkError) retryReason = 'Network error';
-
-            console.log(`⚠️ ${retryReason}. Retry ${retryCount + 1}/${MAX_RETRIES} after ${retrySeconds}s...`);
-
-            // Update typing indicator to show retry status
-            updateTypingIndicator(`${retryReason}... retrying in ${retrySeconds}s (${retryCount + 1}/${MAX_RETRIES})`);
-
-            // Wait with exponential backoff
-            await new Promise(resolve => setTimeout(resolve, retryDelay));
-
-            // Reset typing indicator
-            updateTypingIndicator('AI is thinking');
-
-            // Retry the request
-            return makeRateLimitedRequest(userMessage, retryCount + 1);
-        }
-
-        // Not a retryable error or max retries reached - throw the error
+        // Simply throw the error - no retry logic
         throw error;
     }
 }
@@ -679,8 +605,8 @@ async function sendMessage() {
             }
         }
 
-        // Use rate-limited request to prevent API throttling
-        aiResult = await makeRateLimitedRequest(userMessage);
+        // Make direct API request without rate limiting
+        aiResult = await makeDirectRequest(userMessage);
 
         removeTypingIndicator();
 
@@ -717,7 +643,7 @@ async function sendMessage() {
         if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
             errorMessage = '**Connection Error**: Unable to reach the AI server. Using local knowledge base instead.';
         } else if (error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit')) {
-            errorMessage = '**Rate Limit Exceeded**: The AI service has hit its request limit (this is normal for free-tier backend). The chat automatically retried but still hit limits. Please wait 30-60 seconds before trying again. Tip: Use the "Start Over" button to reset rate limiting if issues persist.';
+            errorMessage = '**API Limit**: The AI backend is experiencing high load. Please try again in a moment.';
             useFallback = true; // Fall back to local knowledge so user still gets an answer
         } else if (error.message.includes('timeout')) {
             errorMessage = '**Request Timeout**: The AI took too long to respond. Please try asking again with a simpler question.';
@@ -1091,9 +1017,7 @@ function startOver() {
         lastCalculatedRecipe = null;
         lastCalculatedRecipeTime = null;
 
-        // Reset rate limiting state to allow fresh requests
-        lastRequestTime = 0;
-        consecutiveRateLimitErrors = 0;
+        // No rate limiting state to reset
 
         // Clear chat messages (except initial bot message)
         const chatMessages = document.getElementById('chatMessages');
@@ -1103,7 +1027,7 @@ function startOver() {
             chatMessages.appendChild(firstMessage.cloneNode(true));
         }
 
-        showCopyFeedback('Conversation reset! Rate limits cleared. ✓');
+        showCopyFeedback('Conversation reset! ✓');
     }
 }
 
