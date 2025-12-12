@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Victoria Ruiz Griffith | AI Engineer</title>
+    <meta name="description" content="Victoria Ruiz Griffith - AI Engineer & Developer specializing in AI-first development, prompt engineering, and knowledge graphs. Self-taught engineer building innovative AI solutions.">
+    <meta name="keywords" content="AI Engineer, AI Development, Prompt Engineering, Knowledge Graphs, Neo4j, Claude Code, Machine Learning, Portfolio">
+    <meta name="author" content="Victoria Ruiz Griffith">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://victoriarg.com/">
+    <meta property="og:title" content="Victoria Ruiz Griffith | AI Engineer & Developer">
+    <meta property="og:description" content="Self-taught AI Engineer specializing in AI-first development, prompt engineering, and innovative solutions. Open to new opportunities.">
+    <meta property="og:image" content="https://victoriarg.com/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://victoriarg.com/">
+    <meta property="twitter:title" content="Victoria Ruiz Griffith | AI Engineer & Developer">
+    <meta property="twitter:description" content="Self-taught AI Engineer specializing in AI-first development, prompt engineering, and innovative solutions. Open to new opportunities.">
+    <meta property="twitter:image" content="https://victoriarg.com/og-image.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://victoriarg.com/">
+
+    <title>Victoria Ruiz Griffith | AI Engineer & Developer</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -158,6 +179,58 @@
             margin: 10px 0;
         }
 
+        .hero-bio {
+            font-size: 20px;
+            color: var(--dark-brown);
+            padding: 20px 0;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        .hero-bio p {
+            margin-bottom: 15px;
+        }
+
+        .hero-bio strong {
+            color: var(--accent);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--cream);
+            padding: 12px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 5px 0 3px var(--dark-brown);
+            transition: all 0.1s;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(2px);
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 3px 0 3px var(--dark-brown);
+            background: var(--gold);
+        }
+
+        .hero-cta.secondary {
+            background: var(--blue);
+        }
+
         /* Navigation Menu */
         nav {
             margin: 30px 0;
@@ -216,6 +289,22 @@
         .section-frame {
             padding: 30px;
             animation: fadeIn 0.8s ease-out;
+        }
+
+        .project-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--cream);
+            padding: 5px 12px;
+            font-size: 12px;
+            font-family: 'Press Start 2P', monospace;
+            margin-bottom: 10px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .project-badge.new {
+            background: var(--green);
+            animation: pulse 2s infinite;
         }
 
         @keyframes fadeIn {
@@ -527,6 +616,23 @@
                 font-size: 18px;
             }
 
+            .hero-bio {
+                font-size: 18px;
+            }
+
+            .hero-bio strong {
+                font-size: 16px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .hero-cta {
+                text-align: center;
+            }
+
             .nav-list {
                 grid-template-columns: 1fr;
             }
@@ -570,46 +676,53 @@
                 <div class="corner-decoration bottom-left"></div>
                 <div class="corner-decoration bottom-right"></div>
 
-                <div class="time-display" id="time">Loading...</div>
-                <div class="coin-display">★ Open to Work</div>
+                <div class="time-display" id="time" aria-label="Current time">Loading...</div>
+                <div class="coin-display" role="status" aria-label="Employment status">★ Open to Work</div>
 
                 <h1>VICTORIA RUIZ GRIFFITH</h1>
-                <div class="subtitle">AI Engineer & Developer</div>
-                <div class="location">📍 Woodland Park, Colorado</div>
+                <p class="subtitle">AI Engineer & Developer</p>
+                <p class="location">📍 Woodland Park, Colorado</p>
 
-                <div class="project-description" style="font-size: 20px; color: var(--dark-brown); padding: 20px 0; margin-top: 15px;">
-                    Self-taught analytical engineer with an AI-first mindset, orchestrating AI to develop efficient and creative workflows that rapidly architect concepts to deployment. Currently seeking opportunities in AI engineering and development roles where I can contribute to innovative projects and continue growing my skills.
+                <div class="hero-bio">
+                    <p>Self-taught analytical engineer with an <strong>AI-first mindset</strong>, orchestrating AI to develop efficient and creative workflows that rapidly architect concepts to deployment.</p>
+                    <p>Currently seeking opportunities in AI engineering and development roles where I can contribute to innovative projects and continue growing my skills.</p>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="#projects" class="hero-cta">View Projects</a>
+                    <a href="contact.html" class="hero-cta secondary">Get In Touch</a>
                 </div>
             </div>
         </header>
 
         <!-- Navigation -->
-        <nav>
+        <nav aria-label="Main navigation">
             <div class="nav-frame pixel-border">
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="#projects" class="nav-link">⚡ Projects</a>
+                        <a href="index.html" class="nav-link" aria-current="page">🏠 Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#skills" class="nav-link">🎯 Skills</a>
+                        <a href="projects.html" class="nav-link">⚡ Projects</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#experience" class="nav-link">💼 Experience</a>
+                        <a href="about.html" class="nav-link">👤 About</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#contact" class="nav-link">📧 Contact</a>
+                        <a href="contact.html" class="nav-link">📧 Contact</a>
                     </li>
                 </ul>
             </div>
         </nav>
 
         <!-- Projects Section -->
-        <section id="projects" class="projects-section">
+        <section id="projects" class="projects-section" aria-labelledby="projects-heading">
             <div class="section-frame pixel-border">
-                <h2 class="section-title">Featured Projects</h2>
+                <h2 id="projects-heading" class="section-title">Featured Projects</h2>
 
                 <div class="project-grid">
-                    <a href="saponifyai.html" class="project-card">
+                    <a href="saponifyai.html" class="project-card" aria-label="View Saponify AI project details">
+                        <span class="project-badge new">NEW</span>
                         <div class="project-title">Saponify AI</div>
                         <div class="project-description">
                             AI-powered application leveraging natural language processing and prompt engineering to create efficient workflows and transform concepts into deployable solutions.
@@ -622,7 +735,8 @@
                         </div>
                     </a>
 
-                    <a href="culinarygraph.html" class="project-card">
+                    <a href="culinarygraph.html" class="project-card" aria-label="View The Culinary Graph project details">
+                        <span class="project-badge new">NEW</span>
                         <div class="project-title">The Culinary Graph</div>
                         <div class="project-description">
                             Knowledge graph-powered recipe discovery platform using Neo4j to model complex relationships between ingredients, recipes, and cuisines for intelligent recommendations.
@@ -674,9 +788,9 @@
         </section>
 
         <!-- Skills Section -->
-        <section id="skills">
+        <section id="skills" aria-labelledby="skills-heading">
             <div class="section-frame pixel-border">
-                <h2 class="section-title">Core Competencies</h2>
+                <h2 id="skills-heading" class="section-title">Core Competencies</h2>
 
                 <div class="skills-grid">
                     <div class="skill-category">
@@ -704,9 +818,9 @@
         </section>
 
         <!-- Experience Section -->
-        <section id="experience">
+        <section id="experience" aria-labelledby="experience-heading">
             <div class="section-frame pixel-border">
-                <h2 class="section-title">Professional Experience</h2>
+                <h2 id="experience-heading" class="section-title">Professional Experience</h2>
 
                 <div class="experience-item">
                     <div class="experience-header">
@@ -716,7 +830,7 @@
                         </div>
                         <div class="experience-meta">
                             <p class="location-tag">Remote</p>
-                            <p class="dates">May 2024 – Aug 2025</p>
+                            <p class="dates">May 2024 – Aug 2024</p>
                         </div>
                     </div>
                     <ul class="responsibilities">
@@ -750,9 +864,9 @@
         </section>
 
         <!-- Contact Section -->
-        <section id="contact">
+        <section id="contact" aria-labelledby="contact-heading">
             <div class="contact-frame pixel-border">
-                <h2 class="section-title">Let's Build Something Together</h2>
+                <h2 id="contact-heading" class="section-title">Let's Build Something Together</h2>
                 <div class="project-description" style="font-size: 20px; margin: 20px 0; color: var(--dark-brown);">
                     <span class="status-indicator"></span>
                     Currently open to new opportunities in AI engineering and development roles.
@@ -771,6 +885,54 @@
         <p>© 2025 Victoria Ruiz Griffith. All rights reserved.</p>
         <p style="margin-top: 10px; font-size: 16px;">Built with pixel-perfect precision ✨</p>
     </footer>
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Victoria Ruiz Griffith",
+        "jobTitle": "AI Engineer & Developer",
+        "description": "Self-taught AI Engineer specializing in AI-first development, prompt engineering, and knowledge graphs",
+        "url": "https://victoriarg.com",
+        "sameAs": [
+            "https://www.linkedin.com/in/victoria-ruiz-griffith-4b9398393",
+            "https://github.com/victoriarz/victoriarg"
+        ],
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Woodland Park",
+            "addressRegion": "CO",
+            "addressCountry": "US"
+        },
+        "email": "v-ruiz@outlook.com",
+        "knowsAbout": [
+            "Artificial Intelligence",
+            "AI Engineering",
+            "Prompt Engineering",
+            "Natural Language Processing",
+            "Knowledge Graphs",
+            "Neo4j",
+            "Claude Code",
+            "Machine Learning",
+            "Python",
+            "Web Development"
+        ],
+        "hasOccupation": {
+            "@type": "Occupation",
+            "name": "AI Engineer",
+            "occupationLocation": {
+                "@type": "Place",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Woodland Park",
+                    "addressRegion": "CO",
+                    "addressCountry": "US"
+                }
+            }
+        }
+    }
+    </script>
 
     <script>
         // Update time display
