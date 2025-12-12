@@ -98,6 +98,7 @@ async function callGemini(messages) {
     }
 
     // Call backend proxy instead of Gemini directly
+    console.log('🌐 Calling backend API:', `${aiConfig.getBackendUrl()}/api/chat`);
     const response = await fetch(
         `${aiConfig.getBackendUrl()}/api/chat`,
         {
@@ -115,12 +116,16 @@ async function callGemini(messages) {
         }
     );
 
+    console.log('📡 Backend response status:', response.status, response.statusText);
+
     if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Backend error:', errorData);
         throw new Error(`Backend API error: ${response.status} - ${errorData.error || response.statusText}`);
     }
 
     const data = await response.json();
+    console.log('✅ Backend response received:', data);
 
     // Handle Gemini 2.5 response format (may not have parts in some responses)
     if (data.candidates && data.candidates[0]) {
