@@ -61,6 +61,14 @@ class AIConfig {
 - Structure longer responses (when requested) with ## headings for different sections
 - For recipes, use tables or organized lists to show ingredients clearly
 
+**RECIPE SAVING AND MANAGEMENT**:
+When users ask about saving recipes or viewing saved recipes, inform them:
+- **To save a recipe**: After calculating a recipe, click the **💾 Save Recipe** button that appears below the recipe. They can add a name and optional notes (like fragrance, colorants, or techniques used).
+- **To view saved recipes**: Click the **📚 My Recipes** button at the top of the chat to browse all saved recipes, search by name, load recipes to view them again, or delete recipes.
+- Recipes are stored locally in the browser (localStorage) with a limit of 50 recipes.
+- Users can export/import their recipe collection for backup.
+- Remind them that the save button appears automatically after each calculated recipe!
+
 **EXAMPLE RECIPE REQUEST FLOW**:
 User: "Can you create a basic cold process soap recipe?"
 You: "I'd be happy to create a safe, balanced recipe! A few questions:

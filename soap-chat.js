@@ -353,6 +353,29 @@ function findOilInDatabase(oilName) {
 function findResponse(userInput) {
     const input = userInput.toLowerCase();
 
+    // Check for save recipe commands
+    if (input.includes('save') && (input.includes('recipe') || input.includes('this'))) {
+        if (!lastCalculatedRecipe) {
+            return {
+                response: "I don't have a recipe to save right now. Please calculate a recipe first by saying something like 'create a beginner soap recipe for 500g batch', then I can help you save it!",
+                category: 'recipe'
+            };
+        }
+        return {
+            response: "Great! To save this recipe, click the **💾 Save Recipe** button that appears below the recipe. This will open a form where you can:\n\n1. Give your recipe a memorable name (e.g., 'Lavender Dream Soap')\n2. Add optional notes about scent, color, or how it turned out\n3. Click 'Save Recipe' to store it\n\nYour saved recipes will be stored in your browser and can be accessed anytime by clicking the **📚 My Recipes** button at the top of the chat!",
+            category: 'recipe'
+        };
+    }
+
+    // Check for view/open recipes commands
+    if ((input.includes('view') || input.includes('show') || input.includes('open') || input.includes('see')) &&
+        (input.includes('recipe') || input.includes('saved') || input.includes('my recipes'))) {
+        return {
+            response: "To view your saved recipes, click the **📚 My Recipes** button at the top of the chat! From there you can:\n\n- Browse all your saved recipes\n- Search recipes by name or notes\n- Load a recipe to view it again\n- Delete recipes you no longer need\n\nYou can save up to 50 recipes, and they're stored locally in your browser.",
+            category: 'recipe'
+        };
+    }
+
     // Check for recipe calculation keywords
     if (input.includes('calculate') || input.includes('recipe calculator') ||
         input.includes('make recipe') || input.includes('create recipe') ||
@@ -1059,6 +1082,7 @@ function formatCalculatedRecipe(result) {
     // Quick action buttons
     output += `\n<div class="recipe-actions">\n`;
     output += `<button onclick="copyRecipeToClipboard()" class="recipe-action-btn">📋 Copy Recipe</button>\n`;
+    output += `<button onclick="openSaveRecipeModal()" class="recipe-action-btn">💾 Save Recipe</button>\n`;
     output += `<button onclick="printRecipe()" class="recipe-action-btn">🖨️ Print Recipe</button>\n`;
     output += `</div>\n\n`;
 
