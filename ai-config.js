@@ -164,10 +164,41 @@ Then present the calculated recipe with:
     // Check if backend is available
     async checkBackendHealth() {
         try {
-            const response = await fetch(`${this.backendUrl}/health`);
+            const response = await fetch(`${this.backendUrl}/health`, {
+                method: 'GET',
+                signal: AbortSignal.timeout(10000) // 10 second timeout for health check
+            });
             return response.ok;
         } catch (error) {
             console.error('Backend health check failed:', error);
+            return false;
+        }
+    }
+
+    // Wake up backend (useful for Render free tier which spins down after inactivity)
+    async wakeUpBackend() {
+        console.log('🔄 Waking up backend server...');
+        try {
+            // Send a lightweight ping to wake up the server
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout for wake-up
+
+            const response = await fetch(`${this.backendUrl}/health`, {
+                method: 'GET',
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+                console.log('✅ Backend is awake and ready');
+                return true;
+            } else {
+                console.warn('⚠️ Backend responded but not healthy');
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ Failed to wake up backend:', error);
             return false;
         }
     }

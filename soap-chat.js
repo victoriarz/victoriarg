@@ -99,60 +99,76 @@ async function callGemini(messages) {
 
     // Call backend proxy instead of Gemini directly
     console.log('🌐 Calling backend API:', `${aiConfig.getBackendUrl()}/api/chat`);
-    const response = await fetch(
-        `${aiConfig.getBackendUrl()}/api/chat`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: contents,
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 8192  // Increased to prevent cut-off responses (Gemini Flash supports up to 8192)
-                }
-            })
-        }
-    );
 
-    console.log('📡 Backend response status:', response.status, response.statusText);
+    // Create abort controller for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout (increased for Render free tier)
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        console.error('❌ Backend error:', errorData);
-        throw new Error(`Backend API error: ${response.status} - ${errorData.error || response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log('✅ Backend response received:', data);
-
-    // Handle Gemini 2.5 response format (may not have parts in some responses)
-    if (data.candidates && data.candidates[0]) {
-        const candidate = data.candidates[0];
-
-        // Try to get text from parts array - concatenate ALL parts to avoid cut-off
-        if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
-            // Concatenate all text parts in case the response is split
-            const fullText = candidate.content.parts
-                .map(part => part.text || '')
-                .join('');
-
-            if (fullText) {
-                return fullText;
+    try {
+        const response = await fetch(
+            `${aiConfig.getBackendUrl()}/api/chat`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: contents,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 8192  // Increased to prevent cut-off responses (Gemini Flash supports up to 8192)
+                    }
+                }),
+                signal: controller.signal
             }
+        );
+
+        clearTimeout(timeoutId);
+
+        console.log('📡 Backend response status:', response.status, response.statusText);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('❌ Backend error:', errorData);
+            throw new Error(`Backend API error: ${response.status} - ${errorData.error || response.statusText}`);
         }
 
-        // Fallback: check if there's text directly in content
-        if (candidate.content && candidate.content.text) {
-            return candidate.content.text;
+        const data = await response.json();
+        console.log('✅ Backend response received:', data);
+
+        // Handle Gemini 2.5 response format (may not have parts in some responses)
+        if (data.candidates && data.candidates[0]) {
+            const candidate = data.candidates[0];
+
+            // Try to get text from parts array - concatenate ALL parts to avoid cut-off
+            if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+                // Concatenate all text parts in case the response is split
+                const fullText = candidate.content.parts
+                    .map(part => part.text || '')
+                    .join('');
+
+                if (fullText) {
+                    return fullText;
+                }
+            }
+
+            // Fallback: check if there's text directly in content
+            if (candidate.content && candidate.content.text) {
+                return candidate.content.text;
+            }
+
+            // If no text found, throw error
+            throw new Error('No text content in Gemini response');
         }
 
-        // If no text found, throw error
-        throw new Error('No text content in Gemini response');
+        throw new Error('Invalid response format from Gemini API');
+    } catch (error) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            throw new Error('Request timeout - backend took too long to respond');
+        }
+        throw error;
     }
-
-    throw new Error('Invalid response format from Gemini API');
 }
 
 // Main LLM call via backend proxy
@@ -584,18 +600,31 @@ async function makeRateLimitedRequest(userMessage, retryCount = 0) {
 
         return result;
     } catch (error) {
-        // Check if it's a rate limit error
-        if ((error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit'))
-            && retryCount < MAX_RETRIES) {
+        // Check if it's a retryable error
+        const isRateLimitError = error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit');
+        const isTimeoutError = error.message.includes('timeout') || error.message.includes('Request timeout');
+        const isNetworkError = error.message.includes('Failed to fetch') || error.message.includes('NetworkError');
 
-            consecutiveRateLimitErrors++;
+        // Retry on rate limit, timeout, or network errors (but not on other errors like auth failures)
+        const shouldRetry = (isRateLimitError || isTimeoutError || isNetworkError) && retryCount < MAX_RETRIES;
+
+        if (shouldRetry) {
+            if (isRateLimitError) {
+                consecutiveRateLimitErrors++;
+            }
+
             const retryDelay = 10000 * Math.pow(2, retryCount); // 10s, 20s, 40s
             const retrySeconds = Math.round(retryDelay/1000);
 
-            console.log(`⚠️ Rate limit hit. Retry ${retryCount + 1}/${MAX_RETRIES} after ${retrySeconds}s...`);
+            let retryReason = 'Error';
+            if (isRateLimitError) retryReason = 'Rate limit hit';
+            else if (isTimeoutError) retryReason = 'Request timeout';
+            else if (isNetworkError) retryReason = 'Network error';
+
+            console.log(`⚠️ ${retryReason}. Retry ${retryCount + 1}/${MAX_RETRIES} after ${retrySeconds}s...`);
 
             // Update typing indicator to show retry status
-            updateTypingIndicator(`Rate limit hit... retrying in ${retrySeconds}s (${retryCount + 1}/${MAX_RETRIES})`);
+            updateTypingIndicator(`${retryReason}... retrying in ${retrySeconds}s (${retryCount + 1}/${MAX_RETRIES})`);
 
             // Wait with exponential backoff
             await new Promise(resolve => setTimeout(resolve, retryDelay));
@@ -607,10 +636,13 @@ async function makeRateLimitedRequest(userMessage, retryCount = 0) {
             return makeRateLimitedRequest(userMessage, retryCount + 1);
         }
 
-        // Not a rate limit error or max retries reached - throw the error
+        // Not a retryable error or max retries reached - throw the error
         throw error;
     }
 }
+
+// Track if backend has been used in this session
+let backendHasBeenUsed = false;
 
 // Handle sending messages
 async function sendMessage() {
@@ -635,6 +667,18 @@ async function sendMessage() {
     let messageDisplayed = false;
 
     try {
+        // Wake up backend on first use (for Render free tier)
+        if (!backendHasBeenUsed && aiConfig) {
+            updateTypingIndicator('Waking up AI server...');
+            const isAwake = await aiConfig.wakeUpBackend();
+            if (isAwake) {
+                backendHasBeenUsed = true;
+                updateTypingIndicator('AI is thinking');
+            } else {
+                console.warn('Backend wake-up failed, proceeding anyway...');
+            }
+        }
+
         // Use rate-limited request to prevent API throttling
         aiResult = await makeRateLimitedRequest(userMessage);
 
