@@ -1906,6 +1906,57 @@ footer p {
 }
 
 /* ------------------------------------------- */
+/* 10.6 Expanded Chat Mode Styles */
+/* ------------------------------------------- */
+
+/* Expanded/Fullscreen mode for chat */
+#soap-chat-demo.chat-expanded {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    margin: 0;
+    padding: 20px;
+    border-radius: 0;
+    z-index: 9999;
+    background-color: #faf7f2;
+    overflow-y: auto;
+}
+
+#soap-chat-demo.chat-expanded .chat-container {
+    max-width: 1200px;
+    height: calc(100vh - 200px);
+    min-height: 600px;
+}
+
+#soap-chat-demo.chat-expanded .chat-messages {
+    height: calc(100vh - 350px);
+    min-height: 500px;
+}
+
+#soap-chat-demo.chat-expanded .chat-header-controls {
+    margin-bottom: 20px;
+}
+
+/* Ensure expand button is visible in expanded mode */
+#soap-chat-demo.chat-expanded #expandChatBtn {
+    background-color: #d97642;
+}
+
+#soap-chat-demo.chat-expanded #expandChatBtn:hover {
+    background-color: #c4651f;
+}
+
+/* Smooth transition for expanding */
+#soap-chat-demo {
+    transition: all 0.3s ease;
+}
+
+/* ------------------------------------------- */
 /* 11. Culinary Chat Demo Styles */
 /* ------------------------------------------- */
 

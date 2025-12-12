@@ -1107,6 +1107,45 @@ function startOver() {
     }
 }
 
+// Toggle chat expand/fullscreen mode
+function toggleChatExpand() {
+    const chatSection = document.getElementById('soap-chat-demo');
+    const expandBtn = document.getElementById('expandChatBtn');
+
+    if (chatSection.classList.contains('chat-expanded')) {
+        // Exit expanded mode
+        chatSection.classList.remove('chat-expanded');
+        document.body.style.overflow = ''; // Re-enable body scroll
+        expandBtn.innerHTML = '⛶ Expand';
+        expandBtn.setAttribute('aria-label', 'Expand chat');
+        showCopyFeedback('Chat minimized ✓');
+    } else {
+        // Enter expanded mode
+        chatSection.classList.add('chat-expanded');
+        document.body.style.overflow = 'hidden'; // Disable body scroll
+        expandBtn.innerHTML = '⛶ Minimize';
+        expandBtn.setAttribute('aria-label', 'Minimize chat');
+
+        // Scroll to bottom of chat when expanding
+        setTimeout(() => {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 100);
+
+        showCopyFeedback('Chat expanded! Press ESC or click Minimize to exit ✓');
+    }
+}
+
+// Close expanded chat with ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const chatSection = document.getElementById('soap-chat-demo');
+        if (chatSection && chatSection.classList.contains('chat-expanded')) {
+            toggleChatExpand();
+        }
+    }
+});
+
 // Format recipe results from SoapCalculator for display
 function formatCalculatedRecipe(result) {
     // Store recipe for quick wins
