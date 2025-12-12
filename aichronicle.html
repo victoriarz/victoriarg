@@ -1,509 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The AI Chronicle | Victoria Ruiz Griffith</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="aichronicle-styles.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <!-- LogRocket Session Tracking -->
-    <script src="https://cdn.lr-in-prod.com/LogRocket.min.js" crossorigin="anonymous"></script>
-    <script>window.LogRocket && window.LogRocket.init('ljer86/aiprojects');</script>
-    <style>
-        :root {
-            --cream: #faf6f0;
-            --tan: #e8dcc8;
-            --brown: #b8996d;
-            --dark-brown: #7a6550;
-            --wood: #d9c4a8;
-            --accent: #e8a5a5;
-            --green: #a0c280;
-            --blue: #8ba8c4;
-            --gold: #e6c97a;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'VT323', monospace;
-            background: var(--green);
-            color: var(--dark-brown);
-            line-height: 1.6;
-            image-rendering: pixelated;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Pixel art background pattern */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0,0,0,0.03) 2px,
-                    rgba(0,0,0,0.03) 4px
-                ),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0,0,0,0.03) 2px,
-                    rgba(0,0,0,0.03) 4px
-                );
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Pixel border effect */
-        .pixel-border {
-            position: relative;
-            background: var(--cream);
-            box-shadow:
-                0 0 0 4px var(--dark-brown),
-                0 0 0 8px var(--tan),
-                0 8px 0 8px rgba(0,0,0,0.2);
-        }
-
-        .pixel-border::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            background: var(--wood);
-            z-index: -1;
-        }
-
-        /* Header UI Frame */
-        header {
-            margin: 40px 0;
-        }
-
-        .header-frame {
-            padding: 30px;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .time-display {
-            display: inline-block;
-            background: var(--wood);
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            font-size: 20px;
-            box-shadow: inset 0 0 0 3px var(--dark-brown);
-            font-family: 'Press Start 2P', monospace;
-        }
-
-        .coin-display {
-            display: inline-block;
-            background: var(--gold);
-            padding: 8px 16px;
-            margin-left: 10px;
-            font-size: 20px;
-            box-shadow: inset 0 0 0 3px var(--dark-brown);
-            font-family: 'Press Start 2P', monospace;
-        }
-
-        h1 {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 32px;
-            color: var(--dark-brown);
-            margin: 20px 0;
-            text-shadow: 3px 3px 0 var(--tan);
-            letter-spacing: 2px;
-        }
-
-        .subtitle {
-            font-size: 24px;
-            color: var(--brown);
-            margin: 15px 0;
-        }
-
-        /* Navigation Menu */
-        nav {
-            margin: 30px 0;
-        }
-
-        .nav-frame {
-            padding: 20px;
-        }
-
-        .nav-list {
-            list-style: none;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            display: block;
-            background: var(--tan);
-            color: var(--dark-brown);
-            padding: 15px 20px;
-            text-decoration: none;
-            font-size: 20px;
-            text-align: center;
-            transition: all 0.1s;
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 4px 0 3px var(--brown);
-            position: relative;
-        }
-
-        .nav-link:hover {
-            transform: translateY(2px);
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 2px 0 3px var(--brown);
-            background: var(--wood);
-        }
-
-        .nav-link:active {
-            transform: translateY(4px);
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 0 0 3px var(--brown);
-        }
-
-        /* Section frames */
-        .section-frame {
-            padding: 30px;
-            animation: fadeIn 0.8s ease-out;
-            margin: 30px 0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .section-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 24px;
-            color: var(--dark-brown);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 4px solid var(--brown);
-            text-transform: uppercase;
-        }
-
-        h2 {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 20px;
-            color: var(--dark-brown);
-            margin-bottom: 20px;
-        }
-
-        .project-tagline {
-            font-size: 22px;
-            color: var(--brown);
-            margin: 15px 0;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .tech-tag {
-            background: var(--dark-brown);
-            color: var(--cream);
-            padding: 8px 15px;
-            font-size: 16px;
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 30px;
-            margin-top: 40px;
-            background: var(--dark-brown);
-            color: var(--cream);
-            font-size: 18px;
-            box-shadow: 0 -4px 0 var(--brown);
-        }
-
-        /* Decorative elements */
-        .corner-decoration {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: var(--dark-brown);
-        }
-
-        .corner-decoration.top-left {
-            top: -10px;
-            left: -10px;
-        }
-
-        .corner-decoration.top-right {
-            top: -10px;
-            right: -10px;
-        }
-
-        .corner-decoration.bottom-left {
-            bottom: -10px;
-            left: -10px;
-        }
-
-        .corner-decoration.bottom-right {
-            bottom: -10px;
-            right: -10px;
-        }
-
-        /* CTA Buttons */
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .cta-button, .cta-button-secondary {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--cream);
-            padding: 15px 30px;
-            text-decoration: none;
-            font-size: 20px;
-            font-family: 'Press Start 2P', monospace;
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 6px 0 3px var(--dark-brown);
-            transition: all 0.1s;
-        }
-
-        .cta-button-secondary {
-            background: var(--blue);
-        }
-
-        .cta-button:hover, .cta-button-secondary:hover {
-            transform: translateY(3px);
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 3px 0 3px var(--dark-brown);
-            background: var(--gold);
-        }
-
-        /* Lists */
-        .tech-stack-list {
-            list-style: none;
-            margin-left: 0;
-        }
-
-        .tech-stack-list li {
-            font-size: 20px;
-            color: var(--dark-brown);
-            padding: 10px 0;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        .tech-stack-list li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-size: 18px;
-        }
-
-        p {
-            font-size: 20px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 20px;
-            }
-
-            .section-title, h2 {
-                font-size: 16px;
-            }
-
-            .nav-list {
-                flex-direction: column;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-        }
-
-        /* Pixel cursor */
-        body {
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="2" height="2" x="8" y="2" fill="%235c4a3a"/><rect width="2" height="2" x="10" y="4" fill="%235c4a3a"/><rect width="2" height="2" x="12" y="6" fill="%235c4a3a"/><rect width="2" height="2" x="14" y="8" fill="%235c4a3a"/><rect width="2" height="2" x="2" y="8" fill="%235c4a3a"/><rect width="2" height="2" x="4" y="10" fill="%235c4a3a"/><rect width="2" height="2" x="6" y="12" fill="%235c4a3a"/><rect width="2" height="2" x="8" y="14" fill="%235c4a3a"/><rect width="2" height="2" x="10" y="16" fill="%235c4a3a"/></svg>'), auto;
-        }
-
-        a, button {
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="4" height="4" x="8" y="2" fill="%23d4af37"/><rect width="4" height="4" x="12" y="6" fill="%23d4af37"/><rect width="4" height="4" x="16" y="10" fill="%23d4af37"/><rect width="4" height="4" x="2" y="8" fill="%23d4af37"/><rect width="4" height="4" x="6" y="12" fill="%23d4af37"/></svg>'), pointer;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
-
 <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-icon">📡</div>
+            <div class="loading-text">Scanning AI News...</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header -->
-        <header>
-            <div class="header-frame pixel-border">
-                <div class="corner-decoration top-left"></div>
-                <div class="corner-decoration top-right"></div>
-                <div class="corner-decoration bottom-left"></div>
-                <div class="corner-decoration bottom-right"></div>
-
-                <div class="time-display" id="time">Loading...</div>
-                <div class="coin-display">📰 AI Chronicle</div>
-
-                <h1>VICTORIA RUIZ GRIFFITH</h1>
-                <div class="subtitle">AI Engineer & Developer</div>
+        <header class="main-header">
+            <div class="header-left">
+                <span class="time-display" id="timeDisplay">00:00 PM</span>
+                <span class="status-badge">★ Open to Work</span>
             </div>
         </header>
 
+        <!-- Page Title -->
+        <section class="page-title-section">
+            <h1 class="page-title">THE AI CHRONICLE</h1>
+            <p class="page-subtitle">AI News Intelligence</p>
+            <p class="page-location">📰 Real-time Knowledge Graph of AI Developments</p>
+        </section>
+
+        <!-- Description Panel -->
+        <section class="description-panel">
+            <p>An AI-powered knowledge graph that automatically aggregates, summarizes, and visualizes connections between the latest developments in artificial intelligence. Updated daily from arXiv, Hacker News, and leading AI research blogs.</p>
+        </section>
+
         <!-- Navigation -->
-        <nav>
-            <div class="nav-frame pixel-border">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link">🏠 Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="projects.html" class="nav-link">⚡ Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="about.html" class="nav-link">👤 About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="contact.html" class="nav-link">📧 Contact</a>
-                    </li>
-                </ul>
-            </div>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-item">🏠 Home</a>
+            <a href="projects.html" class="nav-item">⚡ Projects</a>
+            <a href="about.html" class="nav-item">👤 About</a>
+            <a href="contact.html" class="nav-item">📧 Contact</a>
         </nav>
 
-        <main>
-            <section id="project-detail-hero">
-                <div class="section-frame pixel-border">
-                    <h1>The AI Chronicle</h1>
-                    <p class="project-tagline">Coming Soon</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Placeholder</span>
-                        <span class="tech-tag">TBD</span>
-                        <span class="tech-tag">In Development</span>
+        <!-- Stats Bar -->
+        <section class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-icon">📊</span>
+                <span class="stat-label">Nodes</span>
+                <span class="stat-value" id="nodeCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🔗</span>
+                <span class="stat-label">Connections</span>
+                <span class="stat-value" id="edgeCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">📰</span>
+                <span class="stat-label">Articles</span>
+                <span class="stat-value" id="articleCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🔄</span>
+                <span class="stat-label">Last Updated</span>
+                <span class="stat-value" id="lastUpdated">--</span>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Graph Visualization Panel -->
+            <section class="graph-panel">
+                <div class="panel-header">
+                    <h2>📡 KNOWLEDGE GRAPH</h2>
+                    <div class="graph-controls">
+                        <button class="control-btn" id="resetView" title="Reset View">🔄</button>
+                        <button class="control-btn" id="toggleLabels" title="Toggle Labels">🏷️</button>
+                        <button class="control-btn" id="filterTrending" title="Show Trending">🔥</button>
+                    </div>
+                </div>
+                <div class="graph-container" id="graphContainer">
+                    <canvas id="graphCanvas"></canvas>
+                </div>
+                <div class="graph-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot article-dot"></span>
+                        <span>Article</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot topic-dot"></span>
+                        <span>Topic</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot org-dot"></span>
+                        <span>Organization</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot model-dot"></span>
+                        <span>Model</span>
                     </div>
                 </div>
             </section>
 
-            <section id="project-overview">
-                <div class="section-frame pixel-border">
-                    <h2>Overview</h2>
-                    <p>The AI Chronicle is currently under development. Check back soon for more details about this exciting new project!</p>
-                </div>
-            </section>
+            <!-- Sidebar Panel -->
+            <aside class="sidebar-panel">
+                <!-- Selected Node Info -->
+                <section class="info-card" id="nodeInfoCard">
+                    <div class="card-header">
+                        <h3>📋 DETAILS</h3>
+                    </div>
+                    <div class="card-content" id="nodeInfoContent">
+                        <p class="placeholder-text">Click a node to view details</p>
+                    </div>
+                </section>
 
-            <section id="project-tech-stack">
-                <div class="section-frame pixel-border">
-                    <h2>Technology Stack</h2>
-                    <ul class="tech-stack-list">
-                        <li><strong>Status:</strong> Planning and Design Phase</li>
-                        <li><strong>Details:</strong> Coming Soon</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section id="project-impact">
-                <div class="section-frame pixel-border">
-                    <h2>Impact & Results</h2>
-                    <p>This section will be populated as the project develops. Stay tuned for updates on the impact and results of The AI Chronicle.</p>
-                </div>
-            </section>
-
-            <section id="project-cta">
-                <div class="section-frame pixel-border">
-                    <div class="project-cta-content">
-                        <h2>Interested in The AI Chronicle?</h2>
-                        <p>This project is in active development. Reach out to learn more about what's coming or to discuss AI engineering opportunities.</p>
-                        <div class="cta-buttons">
-                            <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
-                            <a href="projects.html" class="cta-button-secondary">View All Projects</a>
+                <!-- Trending Topics -->
+                <section class="info-card">
+                    <div class="card-header">
+                        <h3>🔥 TRENDING</h3>
+                    </div>
+                    <div class="card-content" id="trendingTopics">
+                        <div class="trending-list">
+                            <!-- Populated by JS -->
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+
+                <!-- Recent Articles -->
+                <section class="info-card">
+                    <div class="card-header">
+                        <h3>📰 RECENT</h3>
+                    </div>
+                    <div class="card-content" id="recentArticles">
+                        <div class="article-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Filter Controls -->
+                <section class="info-card">
+                    <div class="card-header">
+                        <h3>🔍 FILTERS</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="filter-group">
+                            <label class="filter-label">Time Range</label>
+                            <select class="filter-select" id="timeFilter">
+                                <option value="7">Last 7 Days</option>
+                                <option value="14">Last 14 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Source</label>
+                            <select class="filter-select" id="sourceFilter">
+                                <option value="all">All Sources</option>
+                                <option value="arxiv">arXiv</option>
+                                <option value="hackernews">Hacker News</option>
+                                <option value="blogs">Tech Blogs</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Node Type</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" checked id="showArticles"> Articles
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" checked id="showTopics"> Topics
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" checked id="showOrgs"> Organizations
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" checked id="showModels"> Models
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
         </main>
+
+        <!-- Tech Stack Tags -->
+        <section class="tech-tags">
+            <span class="tech-tag">Knowledge Graphs</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Claude API</span>
+            <span class="tech-tag">GitHub Actions</span>
+            <span class="tech-tag">Canvas</span>
+            <span class="tech-tag">RSS Aggregation</span>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>© 2025 Victoria Ruiz Griffith. All rights reserved.</p>
+            <p class="footer-note">Built with pixel-perfect precision ✨</p>
+        </footer>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
-        <p style="margin-top: 10px; font-size: 16px;">Built with pixel-perfect precision ✨</p>
-    </footer>
-
-    <script>
-        // Update time display
-        function updateTime() {
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // Convert 0 to 12
-            const hoursStr = String(hours).padStart(2, '0');
-            document.getElementById('time').textContent = `${hoursStr}:${minutes} ${ampm}`;
-        }
-
-        updateTime();
-        setInterval(updateTime, 1000);
-    </script>
+    <!-- Scripts -->
+    <script src="aichronicle-data.js"></script>
+    <script src="aichronicle-graph.js"></script>
+    <script src="aichronicle-app.js"></script>
 </body>
-
 </html>
