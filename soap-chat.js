@@ -584,32 +584,34 @@ async function sendMessage() {
     showTypingIndicator();
 
     let aiResult;
+    let messageDisplayed = false;
+
     try {
         // Use rate-limited request to prevent API throttling
         aiResult = await makeRateLimitedRequest(userMessage);
 
         removeTypingIndicator();
 
-        try {
-            // Add response with provider badge (markdown will be rendered in addMessage)
-            addMessage(aiResult.response, true);
+        // Add response with provider badge (markdown will be rendered in addMessage)
+        addMessage(aiResult.response, true);
+        messageDisplayed = true;
 
-            // Update conversation history (keep last 10 messages for context)
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: aiResult.response });
+        // Update conversation history (keep last 10 messages for context)
+        conversationHistory.push({ role: 'user', content: userMessage });
+        conversationHistory.push({ role: 'assistant', content: aiResult.response });
 
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
-        } catch (displayError) {
-            console.error('Error displaying response:', displayError);
-            // If we got a response but failed to display it, don't fall through to error handling
-            // The message might have partially rendered, so just log and continue
-            throw displayError;
+        if (conversationHistory.length > 20) {
+            conversationHistory = conversationHistory.slice(-20);
         }
     } catch (error) {
         console.error('Error in sendMessage:', error);
         removeTypingIndicator();
+
+        // If the message was already displayed successfully, don't show error to user
+        if (messageDisplayed) {
+            console.error('Error occurred after message was displayed - not showing error to user');
+            return; // Exit early - message was already shown successfully
+        }
 
         // Provide specific error messages based on error type
         let errorMessage = '';
