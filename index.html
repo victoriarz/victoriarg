@@ -180,50 +180,6 @@
             line-height: 1.6;
         }
 
-        .hero-bio p {
-            margin-bottom: 15px;
-        }
-
-        .hero-bio strong {
-            color: var(--accent);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 25px;
-            justify-content: center;
-        }
-
-        .hero-cta {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--cream);
-            padding: 12px 25px;
-            text-decoration: none;
-            font-size: 18px;
-            font-family: 'Press Start 2P', monospace;
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 5px 0 3px var(--dark-brown);
-            transition: all 0.1s;
-        }
-
-        .hero-cta:hover {
-            transform: translateY(2px);
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 3px 0 3px var(--dark-brown);
-            background: var(--gold);
-        }
-
-        .hero-cta.secondary {
-            background: var(--blue);
-        }
-
         /* Navigation Menu */
         nav {
             margin: 30px 0;
@@ -613,19 +569,6 @@
                 font-size: 18px;
             }
 
-            .hero-bio strong {
-                font-size: 16px;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .hero-cta {
-                text-align: center;
-            }
-
             .nav-list {
                 grid-template-columns: 1fr;
             }
@@ -676,15 +619,9 @@
                 <p class="subtitle">AI Engineer & Developer</p>
                 <p class="location">📍 Woodland Park, Colorado</p>
 
-                <div class="hero-bio">
-                    <p>Self-taught analytical engineer with an <strong>AI-first mindset</strong>, orchestrating AI to develop efficient and creative workflows that rapidly architect concepts to deployment.</p>
-                    <p>Currently seeking opportunities in AI engineering and development roles where I can contribute to innovative projects and continue growing my skills.</p>
-                </div>
-
-                <div class="hero-actions">
-                    <a href="#projects" class="hero-cta">View Projects</a>
-                    <a href="contact.html" class="hero-cta secondary">Get In Touch</a>
-                </div>
+                <p class="hero-bio">
+                    Self-taught analytical engineer with an AI-first mindset, orchestrating AI to develop efficient and creative workflows that rapidly architect concepts to deployment. Currently seeking opportunities in AI engineering and development roles where I can contribute to innovative projects and continue growing my skills.
+                </p>
             </div>
         </header>
 
