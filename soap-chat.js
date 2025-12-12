@@ -252,11 +252,10 @@ function addMessage(message, isBot = false, category = null) {
         contentDiv.innerHTML = `${icon}<div class="bot-text markdown-content">${categoryBadge}${renderedMessage}</div>`;
     } else {
         // User messages with proper structure
-        const icon = '<span class="user-icon">👤</span>';
         const userText = document.createElement('div');
         userText.className = 'user-text';
         userText.textContent = message;
-        contentDiv.innerHTML = userText.outerHTML + icon;
+        contentDiv.innerHTML = userText.outerHTML;
     }
 
     messageDiv.appendChild(contentDiv);
