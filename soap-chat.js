@@ -639,46 +639,11 @@ async function sendMessage() {
             return; // Exit early - message was already shown successfully
         }
 
-        // Provide specific error messages based on error type
-        let errorMessage = '';
-        let useFallback = true;
+        // Fallback to local knowledge base - no error message shown
+        const result = findResponse(userMessage);
 
-        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-            errorMessage = '**Connection Error**: Unable to reach the AI server. Using local knowledge base instead.';
-        } else if (error.message.includes('429') || error.message.includes('rate limit') || error.message.includes('Rate Limit')) {
-            errorMessage = '**API Limit**: The AI backend is experiencing high load. Please try again in a moment.';
-            useFallback = true; // Fall back to local knowledge so user still gets an answer
-        } else if (error.message.includes('timeout')) {
-            errorMessage = '**Request Timeout**: The AI took too long to respond. Please try asking again with a simpler question.';
-        } else if (error.message.includes('401') || error.message.includes('403')) {
-            errorMessage = '**Authentication Error**: API key issue. Please contact support.';
-            useFallback = true;
-        } else {
-            errorMessage = '**Unexpected Error**: The AI backend encountered an issue. Using local calculator instead...';
-            console.error('Full error details:', error);
-        }
-
-        if (useFallback) {
-            // Fallback to local knowledge base
-            const result = findResponse(userMessage);
-
-            // Build a helpful fallback message
-            let fallbackMessage = errorMessage;
-
-            // If this looks like a recipe-related question, give more context
-            if (result.category === 'recipe') {
-                fallbackMessage += '\n\n' + result.response;
-            } else if (recipeState.active) {
-                // If we're in the middle of a recipe conversation, explain what happened
-                fallbackMessage += '\n\n**Recipe conversation interrupted.** The local calculator can still help! Please re-state your full request. For example: "Give me a honey and oat soap recipe for 500g with olive oil, coconut oil, shea butter, and castor oil."';
-            } else {
-                fallbackMessage += '\n\n' + result.response;
-            }
-
-            addMessage(fallbackMessage, true, result.category);
-        } else {
-            addMessage(errorMessage, true);
-        }
+        // Just show the fallback response directly without error message
+        addMessage(result.response, true, result.category);
     } finally {
         // Re-enable input
         chatInput.disabled = false;
