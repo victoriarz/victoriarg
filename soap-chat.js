@@ -376,10 +376,30 @@ function findResponse(userInput) {
         };
     }
 
-    // Check for recipe calculation keywords
+    // Check for recipe calculation keywords or recommendation requests
     if (input.includes('calculate') || input.includes('recipe calculator') ||
         input.includes('make recipe') || input.includes('create recipe') ||
-        input.includes('help me calculate')) {
+        input.includes('help me calculate') || input.includes('recommend') ||
+        input.includes('suggestion') || input.includes('your best')) {
+
+        // If user is asking for a recommendation and already specified batch size
+        const gramsMatch = input.match(/(\d+)\s*(grams?|g\b)/i);
+        if ((input.includes('recommend') || input.includes('your best') || input.includes('suggestion')) && gramsMatch) {
+            const batchSize = parseInt(gramsMatch[1]);
+
+            // Provide a beginner-friendly recipe recommendation
+            return {
+                response: `Perfect! For your ${batchSize}g batch, I recommend this balanced recipe:\n\n` +
+                    `**Oils & Fats:**\n` +
+                    `- Olive Oil: ${Math.round(batchSize * 0.35)}g (35%) - conditioning\n` +
+                    `- Coconut Oil: ${Math.round(batchSize * 0.30)}g (30%) - hardness & lather\n` +
+                    `- Shea Butter: ${Math.round(batchSize * 0.25)}g (25%) - hardness & conditioning\n` +
+                    `- Castor Oil: ${Math.round(batchSize * 0.10)}g (10%) - lather boost\n\n` +
+                    `Would you like me to calculate the exact lye and water amounts? Type "calculate" or "yes" to proceed with 5% superfat!`,
+                category: 'recipe'
+            };
+        }
+
         recipeState.active = true;
         recipeState.oils = [];
         recipeState.batchSizeGrams = 0;
@@ -661,13 +681,28 @@ async function sendMessage() {
             errorMessage = '**Authentication Error**: API key issue. Please contact support.';
             useFallback = true;
         } else {
-            errorMessage = '**Unexpected Error**: Something went wrong. Trying local knowledge base...';
+            errorMessage = '**Unexpected Error**: The AI backend encountered an issue. Using local calculator instead...';
+            console.error('Full error details:', error);
         }
 
         if (useFallback) {
             // Fallback to local knowledge base
             const result = findResponse(userMessage);
-            addMessage(`${errorMessage}\n\n${result.response}`, true, result.category);
+
+            // Build a helpful fallback message
+            let fallbackMessage = errorMessage;
+
+            // If this looks like a recipe-related question, give more context
+            if (result.category === 'recipe') {
+                fallbackMessage += '\n\n' + result.response;
+            } else if (recipeState.active) {
+                // If we're in the middle of a recipe conversation, explain what happened
+                fallbackMessage += '\n\n**Recipe conversation interrupted.** The local calculator can still help! Please re-state your full request. For example: "Give me a honey and oat soap recipe for 500g with olive oil, coconut oil, shea butter, and castor oil."';
+            } else {
+                fallbackMessage += '\n\n' + result.response;
+            }
+
+            addMessage(fallbackMessage, true, result.category);
         } else {
             addMessage(errorMessage, true);
         }
