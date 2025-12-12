@@ -3,13 +3,14 @@
 
 class AIConfig {
     constructor() {
-        // Backend proxy URL - update this after deploying your backend
-        // For local development: 'http://localhost:3000'
-        // For production: 'https://your-app.onrender.com' or your deployed URL
-        this.backendUrl = 'https://saponify-ai-backend.onrender.com';
+        // Gemini API Key - Using client-side integration for simplicity
+        this.apiKey = 'AIzaSyD_Fm6pb02cL_zqTJADNECx9ydwfRJsS6k';
+
+        // Gemini API endpoint
+        this.geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
         // Model settings
-        this.geminiModel = 'gemini-2.5-flash'; // Latest Flash model - Fast, efficient, and FREE!
+        this.geminiModel = 'gemini-2.0-flash-exp'; // Latest Flash model - Fast, efficient, and FREE!
 
         // System prompt for soap making assistant
         this.systemPrompt = `You are a knowledgeable and friendly soap making assistant for Saponify AI, powered by a comprehensive soap calculator engine similar to SoapCalc.net. You help users with:
@@ -156,51 +157,14 @@ Then present the calculated recipe with:
         return this.systemPrompt + '\n\n' + this.oilsDatabaseReference;
     }
 
-    // Get backend URL
-    getBackendUrl() {
-        return this.backendUrl;
+    // Get API Key
+    getApiKey() {
+        return this.apiKey;
     }
 
-    // Check if backend is available
-    async checkBackendHealth() {
-        try {
-            const response = await fetch(`${this.backendUrl}/health`, {
-                method: 'GET',
-                signal: AbortSignal.timeout(10000) // 10 second timeout for health check
-            });
-            return response.ok;
-        } catch (error) {
-            console.error('Backend health check failed:', error);
-            return false;
-        }
-    }
-
-    // Wake up backend (useful for Render free tier which spins down after inactivity)
-    async wakeUpBackend() {
-        console.log('🔄 Waking up backend server...');
-        try {
-            // Send a lightweight ping to wake up the server
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout for wake-up
-
-            const response = await fetch(`${this.backendUrl}/health`, {
-                method: 'GET',
-                signal: controller.signal
-            });
-
-            clearTimeout(timeoutId);
-
-            if (response.ok) {
-                console.log('✅ Backend is awake and ready');
-                return true;
-            } else {
-                console.warn('⚠️ Backend responded but not healthy');
-                return false;
-            }
-        } catch (error) {
-            console.error('❌ Failed to wake up backend:', error);
-            return false;
-        }
+    // Get Gemini API URL
+    getGeminiApiUrl() {
+        return `${this.geminiApiUrl}?key=${this.apiKey}`;
     }
 }
 

@@ -91,16 +91,16 @@ async function callGemini(messages) {
         contents[0].parts[0].text = messages[0].content + '\n\n' + contents[0].parts[0].text;
     }
 
-    // Call backend proxy instead of Gemini directly
-    console.log('🌐 Calling backend API:', `${aiConfig.getBackendUrl()}/api/chat`);
+    // Call Gemini API directly
+    console.log('🌐 Calling Gemini API directly');
 
     // Create abort controller for timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout (increased for Render free tier)
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
     try {
         const response = await fetch(
-            `${aiConfig.getBackendUrl()}/api/chat`,
+            aiConfig.getGeminiApiUrl(),
             {
                 method: 'POST',
                 headers: {
@@ -110,7 +110,7 @@ async function callGemini(messages) {
                     contents: contents,
                     generationConfig: {
                         temperature: 0.7,
-                        maxOutputTokens: 8192  // Increased to prevent cut-off responses (Gemini Flash supports up to 8192)
+                        maxOutputTokens: 8192
                     }
                 }),
                 signal: controller.signal
@@ -119,24 +119,23 @@ async function callGemini(messages) {
 
         clearTimeout(timeoutId);
 
-        console.log('📡 Backend response status:', response.status, response.statusText);
+        console.log('📡 Gemini response status:', response.status, response.statusText);
 
         if (!response.ok) {
-            const errorData = await response.json();
-            console.error('❌ Backend error:', errorData);
-            throw new Error(`Backend API error: ${response.status} - ${errorData.error || response.statusText}`);
+            const errorText = await response.text();
+            console.error('❌ Gemini error:', errorText);
+            throw new Error(`Gemini API error: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('✅ Backend response received:', data);
+        console.log('✅ Gemini response received');
 
-        // Handle Gemini 2.5 response format (may not have parts in some responses)
+        // Handle Gemini response format
         if (data.candidates && data.candidates[0]) {
             const candidate = data.candidates[0];
 
-            // Try to get text from parts array - concatenate ALL parts to avoid cut-off
+            // Get text from parts array
             if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
-                // Concatenate all text parts in case the response is split
                 const fullText = candidate.content.parts
                     .map(part => part.text || '')
                     .join('');
@@ -146,12 +145,6 @@ async function callGemini(messages) {
                 }
             }
 
-            // Fallback: check if there's text directly in content
-            if (candidate.content && candidate.content.text) {
-                return candidate.content.text;
-            }
-
-            // If no text found, throw error
             throw new Error('No text content in Gemini response');
         }
 
@@ -159,13 +152,13 @@ async function callGemini(messages) {
     } catch (error) {
         clearTimeout(timeoutId);
         if (error.name === 'AbortError') {
-            throw new Error('Request timeout - backend took too long to respond');
+            throw new Error('Request timeout - Gemini took too long to respond');
         }
         throw error;
     }
 }
 
-// Main LLM call via backend proxy
+// Main LLM call to Gemini
 async function getLLMResponse(userMessage) {
     // Build conversation history
     const messages = [
@@ -174,9 +167,9 @@ async function getLLMResponse(userMessage) {
         { role: 'user', content: userMessage }
     ];
 
-    // Call backend proxy (which securely handles the API key)
+    // Call Gemini API directly
     const response = await callGemini(messages);
-    return { response, provider: 'Gemini 2.5 Flash' };
+    return { response, provider: 'Gemini 2.0 Flash' };
 }
 
 // DOM elements
@@ -570,9 +563,6 @@ async function makeDirectRequest(userMessage) {
     }
 }
 
-// Track if backend has been used in this session
-let backendHasBeenUsed = false;
-
 // Handle sending messages
 async function sendMessage() {
     const userMessage = chatInput.value.trim();
@@ -596,19 +586,7 @@ async function sendMessage() {
     let messageDisplayed = false;
 
     try {
-        // Wake up backend on first use (for Render free tier)
-        if (!backendHasBeenUsed && aiConfig) {
-            updateTypingIndicator('Waking up AI server...');
-            const isAwake = await aiConfig.wakeUpBackend();
-            if (isAwake) {
-                backendHasBeenUsed = true;
-                updateTypingIndicator('AI is thinking');
-            } else {
-                console.warn('Backend wake-up failed, proceeding anyway...');
-            }
-        }
-
-        // Make direct API request without rate limiting
+        // Make direct API request to Gemini
         aiResult = await makeDirectRequest(userMessage);
 
         removeTypingIndicator();
