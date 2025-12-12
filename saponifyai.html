@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saponify AI | Victoria Ruiz Griffith</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <!-- LogRocket Session Tracking -->
     <script src="https://cdn.lr-in-prod.com/LogRocket.min.js" crossorigin="anonymous"></script>
@@ -69,7 +70,8 @@
                         ingredients, and troubleshooting.</p>
                     <div class="ai-controls">
                         <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
-                        <button onclick="toggleChatExpand()" class="start-over-btn" id="expandChatBtn" aria-label="Expand chat">⛶
+                        <button onclick="toggleChatExpand()" class="start-over-btn" id="expandChatBtn"
+                            aria-label="Expand chat">⛶
                             Expand</button>
                         <button onclick="openRecipeLibrary()" class="start-over-btn" aria-label="View saved recipes">📚
                             My Recipes</button>
@@ -215,12 +217,10 @@
     </div>
 
     <!-- Markdown parser for formatting AI responses -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" crossorigin="anonymous"></script>
 
     <!-- DOMPurify for XSS protection -->
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" crossorigin="anonymous"></script>
 
     <!-- Soap Calculator Engine -->
     <script src="soap-calculator.js"></script>
