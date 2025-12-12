@@ -6,13 +6,21 @@ let currentFilteredRecipes = [];
 
 // Initialize recipe storage on page load
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof RecipeStorage !== 'undefined') {
+    initializeRecipeStorage();
+});
+
+// Ensure recipe storage is initialized (can be called multiple times safely)
+function initializeRecipeStorage() {
+    if (!recipeStorage && typeof RecipeStorage !== 'undefined') {
         recipeStorage = new RecipeStorage();
         console.log('✅ RecipeStorage initialized');
-    } else {
+        return true;
+    } else if (!recipeStorage) {
         console.warn('⚠️ RecipeStorage not loaded');
+        return false;
     }
-});
+    return true;
+}
 
 // ============================================
 // SAVE RECIPE MODAL FUNCTIONS
@@ -104,12 +112,23 @@ document.addEventListener('keydown', (e) => {
  * Open recipe library modal
  */
 function openRecipeLibrary() {
+    // Try to initialize if not already done
     if (!recipeStorage) {
-        showCopyFeedback('❌ Recipe storage not available');
-        return;
+        console.log('⚠️ Recipe storage not initialized, attempting to initialize...');
+        if (!initializeRecipeStorage()) {
+            showCopyFeedback('❌ Recipe storage not available');
+            alert('Recipe storage could not be initialized. Please refresh the page.');
+            return;
+        }
     }
 
     const modal = document.getElementById('recipeLibraryModal');
+    if (!modal) {
+        console.error('❌ Recipe library modal not found in DOM');
+        alert('Recipe library modal not found. Please refresh the page.');
+        return;
+    }
+
     modal.classList.add('show');
 
     // Load and display recipes
