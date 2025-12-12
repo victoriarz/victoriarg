@@ -291,6 +291,31 @@
             text-align: right;
         }
 
+        .project-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--cream);
+            padding: 5px 12px;
+            font-size: 12px;
+            font-family: 'Press Start 2P', monospace;
+            margin-bottom: 10px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .project-badge.new {
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
         footer {
             text-align: center;
             padding: 30px;
@@ -397,6 +422,7 @@
 
                 <div class="project-grid">
                     <a href="saponifyai.html" class="project-card">
+                        <span class="project-badge new">NEW</span>
                         <div class="project-title">Saponify AI</div>
                         <div class="project-description">
                             AI-powered application leveraging natural language processing and prompt engineering
@@ -412,6 +438,7 @@
                     </a>
 
                     <a href="culinarygraph.html" class="project-card">
+                        <span class="project-badge new">NEW</span>
                         <div class="project-title">The Culinary Graph</div>
                         <div class="project-description">
                             Knowledge graph-powered recipe discovery platform using Neo4j to model complex relationships
