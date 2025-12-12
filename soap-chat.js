@@ -170,23 +170,19 @@ const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
 const suggestionButtons = document.querySelectorAll('.suggestion-btn');
 
-// Configure marked for better markdown rendering
-if (typeof marked !== 'undefined') {
-    marked.setOptions({
-        breaks: true, // Convert \n to <br>
-        gfm: true, // GitHub Flavored Markdown
-        headerIds: false,
-        mangle: false
-    });
-}
-
 // Render markdown to HTML with XSS protection
 function renderMarkdown(text) {
     try {
         let html;
 
-        if (typeof marked !== 'undefined') {
-            html = marked.parse(text);
+        if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+            // Use marked with inline options (v11+ compatible)
+            html = marked.parse(text, {
+                breaks: true,
+                gfm: true,
+                headerIds: false,
+                mangle: false
+            });
         } else {
             // Fallback: simple replacements if marked is not available
             html = text
@@ -1088,6 +1084,11 @@ function getStatusEmoji(status) {
 // Initialize AI configuration on page load
 document.addEventListener('DOMContentLoaded', async () => {
     aiConfig = new AIConfig();
+
+    // Check if markdown libraries are loaded
+    console.log('📚 Library status:');
+    console.log('  marked:', typeof marked !== 'undefined' ? '✅ Loaded' : '❌ Not loaded');
+    console.log('  DOMPurify:', typeof DOMPurify !== 'undefined' ? '✅ Loaded' : '❌ Not loaded');
 
     // Initialize SoapCalculator if available
     if (typeof SoapCalculator !== 'undefined') {
