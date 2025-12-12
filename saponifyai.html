@@ -397,6 +397,10 @@
 
         .chat-intro {
             margin: 15px 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--dark-brown);
         }
 
         .ai-controls {
@@ -408,26 +412,36 @@
         }
 
         .ai-status-badge {
-            background: var(--wood);
-            padding: 8px 12px;
-            font-size: 16px;
-            box-shadow: 0 0 0 2px var(--dark-brown);
+            background: var(--green);
+            padding: 8px 14px;
+            font-size: 14px;
+            border-radius: 20px;
+            border: 2px solid var(--dark-brown);
+            font-family: 'Press Start 2P', monospace;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         .start-over-btn {
-            background: var(--tan);
+            background: white;
             color: var(--dark-brown);
-            padding: 8px 15px;
-            border: none;
-            font-size: 16px;
-            font-family: 'VT323', monospace;
-            box-shadow: 0 0 0 2px var(--dark-brown), 0 3px 0 2px var(--brown);
-            transition: all 0.1s;
+            padding: 8px 16px;
+            border: 2px solid var(--dark-brown);
+            font-size: 14px;
+            font-family: 'Press Start 2P', monospace;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
         }
 
         .start-over-btn:hover {
-            transform: translateY(2px);
-            box-shadow: 0 0 0 2px var(--dark-brown), 0 1px 0 2px var(--brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            background: var(--wood);
+        }
+
+        .start-over-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         }
 
         .chat-container {
@@ -435,37 +449,97 @@
             border: 4px solid var(--dark-brown);
             padding: 20px;
             margin: 20px 0;
+            border-radius: 12px;
         }
 
         .chat-messages {
             max-height: 500px;
             overflow-y: auto;
             margin-bottom: 20px;
-            padding: 10px;
+            padding: 20px;
+            background: white;
+            border: 3px solid var(--dark-brown);
+            border-radius: 12px;
+        }
+
+        /* Custom scrollbar for chat messages */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
             background: var(--tan);
-            border: 2px solid var(--brown);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--brown);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-brown);
         }
 
         .message {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message-content {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: flex-start;
         }
 
         .bot-icon {
-            font-size: 24px;
+            font-size: 28px;
             flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .user-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brown);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .bot-text {
-            background: var(--wood);
-            padding: 12px;
-            border: 2px solid var(--dark-brown);
+            background: var(--green);
+            padding: 14px 18px;
+            border-radius: 18px;
+            border-radius: 18px 18px 18px 4px;
             flex-grow: 1;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--dark-brown);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .user-message .message-content {
@@ -473,11 +547,16 @@
         }
 
         .user-text {
-            background: var(--blue);
-            color: var(--cream);
-            padding: 12px;
-            border: 2px solid var(--dark-brown);
+            background: var(--brown);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 18px;
+            border-radius: 18px 18px 4px 18px;
             max-width: 70%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .chat-input-container {
@@ -487,34 +566,62 @@
 
         .chat-input {
             flex-grow: 1;
-            padding: 12px;
-            font-size: 18px;
-            font-family: 'VT323', monospace;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             border: 3px solid var(--dark-brown);
-            background: var(--cream);
+            background: white;
+            border-radius: 24px;
+            transition: all 0.2s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(160, 194, 128, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: #999;
+            opacity: 0.7;
         }
 
         .chat-send-button {
             background: var(--accent);
-            color: var(--cream);
-            padding: 12px 25px;
+            color: white;
+            padding: 14px 28px;
             border: none;
-            font-size: 18px;
+            font-size: 14px;
             font-family: 'Press Start 2P', monospace;
-            box-shadow: 0 0 0 3px var(--dark-brown), 0 4px 0 3px var(--dark-brown);
-            transition: all 0.1s;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s;
         }
 
         .chat-send-button:hover {
-            transform: translateY(2px);
-            box-shadow: 0 0 0 3px var(--dark-brown), 0 2px 0 3px var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            background: var(--gold);
+        }
+
+        .chat-send-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .chat-suggestions {
             margin-top: 20px;
-            padding: 15px;
+            padding: 18px;
             background: var(--tan);
             border: 2px solid var(--brown);
+            border-radius: 12px;
+        }
+
+        .chat-suggestions > p:first-child {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            margin-bottom: 12px;
+            color: var(--dark-brown);
         }
 
         .suggestion-buttons {
@@ -525,26 +632,142 @@
         }
 
         .suggestion-btn {
-            background: var(--wood);
+            background: white;
             color: var(--dark-brown);
-            padding: 8px 12px;
-            border: none;
-            font-size: 16px;
-            font-family: 'VT323', monospace;
-            box-shadow: 0 0 0 2px var(--dark-brown), 0 3px 0 2px var(--brown);
-            transition: all 0.1s;
+            padding: 10px 16px;
+            border: 2px solid var(--dark-brown);
+            font-size: 14px;
+            font-family: 'Press Start 2P', monospace;
+            border-radius: 20px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         .suggestion-btn:hover {
-            transform: translateY(2px);
-            box-shadow: 0 0 0 2px var(--dark-brown), 0 1px 0 2px var(--brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             background: var(--gold);
+            border-color: var(--gold);
+            color: white;
+        }
+
+        .suggestion-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         }
 
         .keyboard-shortcuts-hint {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--brown);
-            margin-top: 10px;
+            margin-top: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .keyboard-shortcuts-hint strong {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+        }
+
+        /* Topic badges in bot messages */
+        .topic-badge {
+            display: inline-block;
+            background: var(--dark-brown);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-family: 'Press Start 2P', monospace;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Markdown content styling in bot messages */
+        .markdown-content {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .markdown-content p {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .markdown-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .markdown-content strong {
+            font-weight: 600;
+            color: var(--dark-brown);
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+
+        .markdown-content li {
+            margin: 4px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .markdown-content code {
+            background: rgba(0,0,0,0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .markdown-content pre {
+            background: rgba(0,0,0,0.06);
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+            font-family: 'Press Start 2P', monospace;
+            margin: 16px 0 8px 0;
+            color: var(--dark-brown);
+        }
+
+        .markdown-content h1 {
+            font-size: 18px;
+        }
+
+        .markdown-content h2 {
+            font-size: 16px;
+        }
+
+        .markdown-content h3 {
+            font-size: 14px;
+        }
+
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 12px 0;
+            font-size: 15px;
+        }
+
+        .markdown-content th, .markdown-content td {
+            border: 2px solid var(--dark-brown);
+            padding: 8px;
+            text-align: left;
+        }
+
+        .markdown-content th {
+            background: var(--wood);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
         }
 
         .sr-only {
@@ -830,7 +1053,7 @@
                             <div class="message bot-message">
                                 <div class="message-content">
                                     <span class="bot-icon" aria-hidden="true">🧼</span>
-                                    <div class="bot-text">
+                                    <div class="bot-text markdown-content">
                                         Hello! I'm your soap making assistant with a built-in SoapCalc-style calculator. I can
                                         create <strong>accurate, safe recipes</strong> with exact lye calculations and detailed
                                         soap properties. Just tell me what oils you want to use or ask for a recipe
