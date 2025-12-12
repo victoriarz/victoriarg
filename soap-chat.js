@@ -605,6 +605,11 @@ async function sendMessage() {
         }
     } catch (error) {
         console.error('Error in sendMessage:', error);
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            messageDisplayed: messageDisplayed
+        });
         removeTypingIndicator();
 
         // If the message was already displayed successfully, don't show error to user
