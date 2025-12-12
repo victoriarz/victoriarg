@@ -649,16 +649,115 @@
 }
 
 @media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
     .page-title {
         font-size: 14px;
     }
-    
+
+    .page-subtitle {
+        font-size: 18px;
+    }
+
+    .page-location {
+        font-size: 16px;
+    }
+
     .stats-bar {
         grid-template-columns: 1fr 1fr;
     }
-    
+
+    .stat-item {
+        padding: 10px;
+    }
+
+    .stat-icon {
+        font-size: 20px;
+    }
+
+    .stat-value {
+        font-size: 12px;
+    }
+
     .graph-container {
         height: 300px;
+    }
+
+    .main-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .header-left {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .time-display {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .status-badge {
+        font-size: 10px;
+        padding: 6px 12px;
+    }
+
+    .main-nav {
+        padding: 15px;
+        flex-direction: column;
+    }
+
+    .nav-item {
+        font-size: 16px;
+        padding: 12px 15px;
+    }
+
+    .panel-header h2 {
+        font-size: 10px;
+    }
+
+    .card-header h3 {
+        font-size: 8px;
+    }
+
+    .control-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .description-panel {
+        padding: 15px 20px;
+    }
+
+    .description-panel p {
+        font-size: 18px;
+    }
+
+    .page-title-section {
+        padding: 20px;
+    }
+
+    .tech-tag {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .main-footer {
+        padding: 20px;
+        font-size: 16px;
+    }
+
+    .loading-content {
+        padding: 30px 40px;
+    }
+
+    .loading-text {
+        font-size: 12px;
     }
 }
 
