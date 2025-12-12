@@ -92,7 +92,10 @@ async function callGemini(messages) {
     }
 
     // Call Gemini API directly
+    const apiUrl = aiConfig.getGeminiApiUrl();
     console.log('🌐 Calling Gemini API directly');
+    console.log('📍 API URL:', apiUrl.substring(0, 100) + '...');
+    console.log('📦 Request payload:', { contentsLength: contents.length });
 
     // Create abort controller for timeout
     const controller = new AbortController();
@@ -100,7 +103,7 @@ async function callGemini(messages) {
 
     try {
         const response = await fetch(
-            aiConfig.getGeminiApiUrl(),
+            apiUrl,
             {
                 method: 'POST',
                 headers: {
@@ -603,11 +606,13 @@ async function sendMessage() {
             conversationHistory = conversationHistory.slice(-20);
         }
     } catch (error) {
-        console.error('Error in sendMessage:', error);
-        console.error('Error details:', {
+        console.error('❌ Error in sendMessage:', error);
+        console.error('📋 Error details:', {
             message: error.message,
             stack: error.stack,
-            messageDisplayed: messageDisplayed
+            messageDisplayed: messageDisplayed,
+            aiConfigExists: !!aiConfig,
+            apiKey: aiConfig ? (aiConfig.getApiKey() ? 'Present' : 'Missing') : 'No config'
         });
         removeTypingIndicator();
 
@@ -616,6 +621,9 @@ async function sendMessage() {
             console.error('Error occurred after message was displayed - not showing error to user');
             return; // Exit early - message was already shown successfully
         }
+
+        // Show error to user temporarily for debugging
+        console.warn('⚠️ Falling back to local knowledge base due to error:', error.message);
 
         // Fallback to local knowledge base - no error message shown
         const result = findResponse(userMessage);
