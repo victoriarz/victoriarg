@@ -469,6 +469,51 @@
         a, button {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="4" height="4" x="8" y="2" fill="%23d4af37"/><rect width="4" height="4" x="12" y="6" fill="%23d4af37"/><rect width="4" height="4" x="16" y="10" fill="%23d4af37"/><rect width="4" height="4" x="2" y="8" fill="%23d4af37"/><rect width="4" height="4" x="6" y="12" fill="%23d4af37"/></svg>'), pointer;
         }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--tan);
+            color: var(--dark-brown);
+            padding: 15px 30px;
+            text-decoration: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.1s;
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 4px 0 3px var(--brown);
+        }
+
+        .cta-button:hover {
+            transform: translateY(2px);
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 2px 0 3px var(--brown);
+            background: var(--wood);
+        }
+
+        .cta-button:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 0 0 3px var(--brown);
+        }
+
+        .cta-button.cta-primary {
+            background: var(--accent);
+        }
+
+        .cta-button.cta-primary:hover {
+            background: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .cta-button {
+                font-size: 14px;
+                padding: 12px 24px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -619,9 +664,22 @@
                 <div class="certifications">
                     <h3>Certifications</h3>
                     <ul>
-                        <li>Introduction to AI - Coursera</li>
-                        <li>The Creative HTML5 & CSS3 Course - Creative Programming and Design Courses</li>
+                        <li><a href="https://www.coursera.org/learn/introduction-to-ai" target="_blank" rel="noopener noreferrer" style="color: var(--dark-brown); text-decoration: underline;">Introduction to AI - Coursera</a></li>
+                        <li><a href="https://www.creativeprogramminganddesigncourses.com/" target="_blank" rel="noopener noreferrer" style="color: var(--dark-brown); text-decoration: underline;">The Creative HTML5 & CSS3 Course - Creative Programming and Design Courses</a></li>
                     </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta">
+            <div class="section-frame pixel-border cta-section">
+                <h2 class="section-title">Ready to Connect?</h2>
+                <p class="bio-text" style="text-align: center; margin-bottom: 30px;">
+                    Let's collaborate on your next AI-powered project or discuss opportunities.
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="projects.html" class="cta-button">View My Projects</a>
+                    <a href="contact.html" class="cta-button cta-primary">Get In Touch</a>
                 </div>
             </div>
         </section>
