@@ -158,6 +158,27 @@ Then present the calculated recipe with:
     getBackendUrl() {
         return this.backendUrl;
     }
+
+    // Check backend health (returns true if backend is reachable)
+    async checkBackendHealth() {
+        try {
+            const response = await fetch(`${this.backendUrl}/health`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            return response.ok;
+        } catch (error) {
+            console.warn('Backend health check failed:', error);
+            return false;
+        }
+    }
+
+    // Get API key (not used in browser - backend holds the key)
+    getApiKey() {
+        // API key is stored on backend for security
+        // This method exists for compatibility but returns null
+        return null;
+    }
 }
 
 // Export as global
