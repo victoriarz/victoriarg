@@ -91,15 +91,15 @@ async function callGemini(messages) {
         contents[0].parts[0].text = messages[0].content + '\n\n' + contents[0].parts[0].text;
     }
 
-    // Call Gemini API directly
-    const apiUrl = aiConfig.getGeminiApiUrl();
-    console.log('🌐 Calling Gemini API directly');
-    console.log('📍 API URL:', apiUrl.substring(0, 100) + '...');
+    // Call backend proxy which handles Gemini API
+    const apiUrl = `${aiConfig.getBackendUrl()}/api/chat`;
+    console.log('🌐 Calling backend API');
+    console.log('📍 Backend URL:', apiUrl);
     console.log('📦 Request payload:', { contentsLength: contents.length });
 
     // Create abort controller for timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for backend
 
     try {
         const response = await fetch(
@@ -122,16 +122,16 @@ async function callGemini(messages) {
 
         clearTimeout(timeoutId);
 
-        console.log('📡 Gemini response status:', response.status, response.statusText);
+        console.log('📡 Backend response status:', response.status, response.statusText);
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('❌ Gemini error:', errorText);
-            throw new Error(`Gemini API error: ${response.status}`);
+            console.error('❌ Backend error:', errorText);
+            throw new Error(`Backend API error: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('✅ Gemini response received');
+        console.log('✅ Backend response received');
 
         // Handle Gemini response format
         if (data.candidates && data.candidates[0]) {
@@ -151,17 +151,17 @@ async function callGemini(messages) {
             throw new Error('No text content in Gemini response');
         }
 
-        throw new Error('Invalid response format from Gemini API');
+        throw new Error('Invalid response format from backend');
     } catch (error) {
         clearTimeout(timeoutId);
         if (error.name === 'AbortError') {
-            throw new Error('Request timeout - Gemini took too long to respond');
+            throw new Error('Request timeout - Backend took too long to respond');
         }
         throw error;
     }
 }
 
-// Main LLM call to Gemini
+// Main LLM call via backend proxy
 async function getLLMResponse(userMessage) {
     // Build conversation history
     const messages = [

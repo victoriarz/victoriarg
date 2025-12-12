@@ -3,11 +3,8 @@
 
 class AIConfig {
     constructor() {
-        // Gemini API Key - Using client-side integration for simplicity
-        this.apiKey = 'AIzaSyD_Fm6pb02cL_zqTJADNECx9ydwfRJsS6k';
-
-        // Gemini API endpoint
-        this.geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+        // Backend proxy URL (deployed on Render)
+        this.backendUrl = 'https://saponify-ai-backend.onrender.com';
 
         // Model settings
         this.geminiModel = 'gemini-2.0-flash-exp'; // Latest Flash model - Fast, efficient, and FREE!
@@ -157,14 +154,9 @@ Then present the calculated recipe with:
         return this.systemPrompt + '\n\n' + this.oilsDatabaseReference;
     }
 
-    // Get API Key
-    getApiKey() {
-        return this.apiKey;
-    }
-
-    // Get Gemini API URL
-    getGeminiApiUrl() {
-        return `${this.geminiApiUrl}?key=${this.apiKey}`;
+    // Get backend URL
+    getBackendUrl() {
+        return this.backendUrl;
     }
 }
 
