@@ -6,164 +6,923 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saponify AI | Victoria Ruiz Griffith</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <!-- LogRocket Session Tracking -->
     <script src="https://cdn.lr-in-prod.com/LogRocket.min.js" crossorigin="anonymous"></script>
     <script>window.LogRocket && window.LogRocket.init('ljer86/aiprojects');</script>
+    <style>
+        :root {
+            --cream: #faf6f0;
+            --tan: #e8dcc8;
+            --brown: #b8996d;
+            --dark-brown: #7a6550;
+            --wood: #d9c4a8;
+            --accent: #e8a5a5;
+            --green: #a0c280;
+            --blue: #8ba8c4;
+            --gold: #e6c97a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background: var(--green);
+            color: var(--dark-brown);
+            line-height: 1.6;
+            image-rendering: pixelated;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Pixel art background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.03) 2px,
+                    rgba(0,0,0,0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.03) 2px,
+                    rgba(0,0,0,0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Pixel border effect */
+        .pixel-border {
+            position: relative;
+            background: var(--cream);
+            box-shadow:
+                0 0 0 4px var(--dark-brown),
+                0 0 0 8px var(--tan),
+                0 8px 0 8px rgba(0,0,0,0.2);
+        }
+
+        .pixel-border::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            background: var(--wood);
+            z-index: -1;
+        }
+
+        /* Header UI Frame */
+        header {
+            margin: 40px 0;
+        }
+
+        .header-frame {
+            padding: 30px;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .time-display {
+            display: inline-block;
+            background: var(--wood);
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            box-shadow: inset 0 0 0 3px var(--dark-brown);
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        .coin-display {
+            display: inline-block;
+            background: var(--gold);
+            padding: 8px 16px;
+            margin-left: 10px;
+            font-size: 20px;
+            box-shadow: inset 0 0 0 3px var(--dark-brown);
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 32px;
+            color: var(--dark-brown);
+            margin: 20px 0;
+            text-shadow: 3px 3px 0 var(--tan);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: var(--brown);
+            margin: 15px 0;
+        }
+
+        /* Navigation Menu */
+        nav {
+            margin: 30px 0;
+        }
+
+        .nav-frame {
+            padding: 20px;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: block;
+            background: var(--tan);
+            color: var(--dark-brown);
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 20px;
+            text-align: center;
+            transition: all 0.1s;
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 4px 0 3px var(--brown);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            transform: translateY(2px);
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 2px 0 3px var(--brown);
+            background: var(--wood);
+        }
+
+        .nav-link:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 0 0 3px var(--brown);
+        }
+
+        /* Section frames */
+        .section-frame {
+            padding: 30px;
+            animation: fadeIn 0.8s ease-out;
+            margin: 30px 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .section-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 24px;
+            color: var(--dark-brown);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--brown);
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 20px;
+            color: var(--dark-brown);
+            margin-bottom: 20px;
+        }
+
+        .project-tagline {
+            font-size: 22px;
+            color: var(--brown);
+            margin: 15px 0;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tech-tag {
+            background: var(--dark-brown);
+            color: var(--cream);
+            padding: 8px 15px;
+            font-size: 16px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            background: var(--dark-brown);
+            color: var(--cream);
+            font-size: 18px;
+            box-shadow: 0 -4px 0 var(--brown);
+        }
+
+        /* Decorative elements */
+        .corner-decoration {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--dark-brown);
+        }
+
+        .corner-decoration.top-left {
+            top: -10px;
+            left: -10px;
+        }
+
+        .corner-decoration.top-right {
+            top: -10px;
+            right: -10px;
+        }
+
+        .corner-decoration.bottom-left {
+            bottom: -10px;
+            left: -10px;
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: -10px;
+            right: -10px;
+        }
+
+        /* CTA Buttons */
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cta-button, .cta-button-secondary {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--cream);
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 20px;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 6px 0 3px var(--dark-brown);
+            transition: all 0.1s;
+        }
+
+        .cta-button-secondary {
+            background: var(--blue);
+        }
+
+        .cta-button:hover, .cta-button-secondary:hover {
+            transform: translateY(3px);
+            box-shadow:
+                0 0 0 3px var(--dark-brown),
+                0 3px 0 3px var(--dark-brown);
+            background: var(--gold);
+        }
+
+        /* Lists */
+        .tech-stack-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .tech-stack-list li {
+            font-size: 20px;
+            color: var(--dark-brown);
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .tech-stack-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        p {
+            font-size: 20px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .section-title, h2 {
+                font-size: 16px;
+            }
+
+            .nav-list {
+                flex-direction: column;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Pixel cursor */
+        body {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="2" height="2" x="8" y="2" fill="%235c4a3a"/><rect width="2" height="2" x="10" y="4" fill="%235c4a3a"/><rect width="2" height="2" x="12" y="6" fill="%235c4a3a"/><rect width="2" height="2" x="14" y="8" fill="%235c4a3a"/><rect width="2" height="2" x="2" y="8" fill="%235c4a3a"/><rect width="2" height="2" x="4" y="10" fill="%235c4a3a"/><rect width="2" height="2" x="6" y="12" fill="%235c4a3a"/><rect width="2" height="2" x="8" y="14" fill="%235c4a3a"/><rect width="2" height="2" x="10" y="16" fill="%235c4a3a"/></svg>'), auto;
+        }
+
+        a, button {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="4" height="4" x="8" y="2" fill="%23d4af37"/><rect width="4" height="4" x="12" y="6" fill="%23d4af37"/><rect width="4" height="4" x="16" y="10" fill="%23d4af37"/><rect width="4" height="4" x="2" y="8" fill="%23d4af37"/><rect width="4" height="4" x="6" y="12" fill="%23d4af37"/></svg>'), pointer;
+        }
+
+        /* Chat-specific styles preserved from original */
+        .chat-header-controls {
+            margin-bottom: 20px;
+        }
+
+        .chat-intro {
+            margin: 15px 0;
+        }
+
+        .ai-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            align-items: center;
+        }
+
+        .ai-status-badge {
+            background: var(--wood);
+            padding: 8px 12px;
+            font-size: 16px;
+            box-shadow: 0 0 0 2px var(--dark-brown);
+        }
+
+        .start-over-btn {
+            background: var(--tan);
+            color: var(--dark-brown);
+            padding: 8px 15px;
+            border: none;
+            font-size: 16px;
+            font-family: 'VT323', monospace;
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 3px 0 2px var(--brown);
+            transition: all 0.1s;
+        }
+
+        .start-over-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 1px 0 2px var(--brown);
+        }
+
+        .chat-container {
+            background: var(--cream);
+            border: 4px solid var(--dark-brown);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .chat-messages {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: var(--tan);
+            border: 2px solid var(--brown);
+        }
+
+        .message {
+            margin-bottom: 15px;
+        }
+
+        .message-content {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .bot-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .bot-text {
+            background: var(--wood);
+            padding: 12px;
+            border: 2px solid var(--dark-brown);
+            flex-grow: 1;
+        }
+
+        .user-message .message-content {
+            justify-content: flex-end;
+        }
+
+        .user-text {
+            background: var(--blue);
+            color: var(--cream);
+            padding: 12px;
+            border: 2px solid var(--dark-brown);
+            max-width: 70%;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 18px;
+            font-family: 'VT323', monospace;
+            border: 3px solid var(--dark-brown);
+            background: var(--cream);
+        }
+
+        .chat-send-button {
+            background: var(--accent);
+            color: var(--cream);
+            padding: 12px 25px;
+            border: none;
+            font-size: 18px;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow: 0 0 0 3px var(--dark-brown), 0 4px 0 3px var(--dark-brown);
+            transition: all 0.1s;
+        }
+
+        .chat-send-button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 3px var(--dark-brown), 0 2px 0 3px var(--dark-brown);
+        }
+
+        .chat-suggestions {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--tan);
+            border: 2px solid var(--brown);
+        }
+
+        .suggestion-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .suggestion-btn {
+            background: var(--wood);
+            color: var(--dark-brown);
+            padding: 8px 12px;
+            border: none;
+            font-size: 16px;
+            font-family: 'VT323', monospace;
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 3px 0 2px var(--brown);
+            transition: all 0.1s;
+        }
+
+        .suggestion-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 1px 0 2px var(--brown);
+            background: var(--gold);
+        }
+
+        .keyboard-shortcuts-hint {
+            font-size: 16px;
+            color: var(--brown);
+            margin-top: 10px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--cream);
+            border: 4px solid var(--dark-brown);
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 0 var(--dark-brown);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: var(--cream);
+            border: none;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow: 0 0 0 2px var(--dark-brown);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--dark-brown);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            font-family: 'VT323', monospace;
+            border: 3px solid var(--dark-brown);
+            background: var(--tan);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-help {
+            font-size: 16px;
+            color: var(--brown);
+            margin-top: 5px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 12px 20px;
+            border: none;
+            font-size: 16px;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 4px 0 2px var(--dark-brown);
+            transition: all 0.1s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--cream);
+        }
+
+        .btn-secondary {
+            background: var(--tan);
+            color: var(--dark-brown);
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 2px 0 2px var(--dark-brown);
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .library-search {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .library-search input {
+            width: 100%;
+            padding: 10px 35px 10px 10px;
+            font-size: 18px;
+            font-family: 'VT323', monospace;
+            border: 3px solid var(--dark-brown);
+            background: var(--tan);
+        }
+
+        .library-search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+        }
+
+        .library-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .storage-badge {
+            background: var(--wood);
+            padding: 5px 10px;
+            box-shadow: 0 0 0 2px var(--dark-brown);
+        }
+
+        .recipes-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .recipe-card {
+            background: var(--tan);
+            padding: 15px;
+            border: 3px solid var(--dark-brown);
+            box-shadow: 0 4px 0 var(--brown);
+        }
+
+        .recipe-card h3 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--dark-brown);
+        }
+
+        .recipe-card-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .recipe-card-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            font-size: 14px;
+            font-family: 'VT323', monospace;
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 2px 0 2px var(--brown);
+            transition: all 0.1s;
+        }
+
+        .recipe-card-btn:hover {
+            transform: translateY(1px);
+            box-shadow: 0 0 0 2px var(--dark-brown), 0 1px 0 2px var(--brown);
+        }
+    </style>
 </head>
 
 <body>
-    <div class="info-banner">
-        <div class="info-banner-content">
-            <div class="info-left">
-                <span class="info-item">
-                    <span class="icon">📍</span>
-                    <span class="text-primary">In the Rocky Mountains</span>
-                    <span class="separator">|</span>
-                    <span class="text-secondary">Hybrid available: Colorado Springs</span>
-                </span>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-frame pixel-border">
+                <div class="corner-decoration top-left"></div>
+                <div class="corner-decoration top-right"></div>
+                <div class="corner-decoration bottom-left"></div>
+                <div class="corner-decoration bottom-right"></div>
+
+                <div class="time-display" id="time">Loading...</div>
+                <div class="coin-display">🧼 Saponify AI</div>
+
+                <h1>VICTORIA RUIZ GRIFFITH</h1>
+                <div class="subtitle">AI Engineer & Developer</div>
             </div>
-            <div class="info-right">
-                <a href="mailto:v-ruiz@outlook.com" class="info-link">
-                    <span class="icon">✉️</span>
-                    <span>v-ruiz@outlook.com</span>
-                </a>
-                <a href="https://www.linkedin.com/in/victoria-ruiz-griffith-4b9398393" class="info-link" target="_blank"
-                    rel="noopener noreferrer">
-                    <span class="icon">💼</span>
-                    <span>LinkedIn</span>
-                </a>
-            </div>
-        </div>
-    </div>
-    <header>
+        </header>
+
+        <!-- Navigation -->
         <nav>
-            <h1><a href="index.html">Victoria Ruiz Griffith</a></h1>
-            <ul>
-                <li><a href="projects.html">Projects</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <section id="project-detail-hero">
-            <h1>Saponify AI</h1>
-            <p class="project-tagline">AI-Powered Workflow Automation</p>
-            <div class="project-tech">
-                <span class="tech-tag">Claude Code</span>
-                <span class="tech-tag">Gemini Flash 2.5</span>
-                <span class="tech-tag">NLP</span>
-                <span class="tech-tag">Prompt Engineering</span>
+            <div class="nav-frame pixel-border">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="projects.html" class="nav-link">⚡ Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">👤 About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">📧 Contact</a>
+                    </li>
+                </ul>
             </div>
-        </section>
+        </nav>
 
-        <section id="soap-chat-demo">
-            <div class="chat-header-controls">
-                <div>
-                    <h2>Try the Soap Making Assistant</h2>
-                    <p class="chat-intro">Get accurate, safe soap recipes with a built-in calculator! Request custom
-                        recipes and I'll calculate exact lye amounts, water, and show you detailed soap properties
-                        (hardness, cleansing, conditioning, lather) just like SoapCalc. Also ask about techniques,
-                        ingredients, and troubleshooting.</p>
-                    <div class="ai-controls">
-                        <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
-                        <button onclick="toggleChatExpand()" class="start-over-btn" id="expandChatBtn"
-                            aria-label="Expand chat">⛶
-                            Expand</button>
-                        <button onclick="openRecipeLibrary()" class="start-over-btn" aria-label="View saved recipes">📚
-                            My Recipes</button>
-                        <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">🔄
-                            Start Over</button>
+        <main>
+            <section id="project-detail-hero">
+                <div class="section-frame pixel-border">
+                    <h1>Saponify AI</h1>
+                    <p class="project-tagline">AI-Powered Workflow Automation</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Claude Code</span>
+                        <span class="tech-tag">Gemini Flash 2.5</span>
+                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">Prompt Engineering</span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="chat-container" role="region" aria-label="Soap making chat assistant">
-                <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-atomic="false">
-                    <div class="message bot-message">
-                        <div class="message-content">
-                            <span class="bot-icon" aria-hidden="true">🧼</span>
-                            <div class="bot-text">
-                                Hello! I'm your soap making assistant with a built-in SoapCalc-style calculator. I can
-                                create <strong>accurate, safe recipes</strong> with exact lye calculations and detailed
-                                soap properties. Just tell me what oils you want to use or ask for a recipe
-                                recommendation. I also answer questions about saponification, techniques, and
-                                troubleshooting!
+            <section id="soap-chat-demo">
+                <div class="section-frame pixel-border">
+                    <div class="chat-header-controls">
+                        <div>
+                            <h2>Try the Soap Making Assistant</h2>
+                            <p class="chat-intro">Get accurate, safe soap recipes with a built-in calculator! Request custom
+                                recipes and I'll calculate exact lye amounts, water, and show you detailed soap properties
+                                (hardness, cleansing, conditioning, lather) just like SoapCalc. Also ask about techniques,
+                                ingredients, and troubleshooting.</p>
+                            <div class="ai-controls">
+                                <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
+                                <button onclick="toggleChatExpand()" class="start-over-btn" id="expandChatBtn"
+                                    aria-label="Expand chat">⛶
+                                    Expand</button>
+                                <button onclick="openRecipeLibrary()" class="start-over-btn" aria-label="View saved recipes">📚
+                                    My Recipes</button>
+                                <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">🔄
+                                    Start Over</button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="chat-input-container">
-                    <label for="chatInput" class="sr-only">Type your soap making question</label>
-                    <input type="text" id="chatInput" class="chat-input"
-                        placeholder="Ask about soap making (e.g., 'How do I make lavender soap?')" autocomplete="off"
-                        aria-label="Type your soap making question" aria-describedby="chatSuggestions" />
-                    <button id="sendButton" class="chat-send-button" aria-label="Send message">Send</button>
-                </div>
+                    <div class="chat-container" role="region" aria-label="Soap making chat assistant">
+                        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-atomic="false">
+                            <div class="message bot-message">
+                                <div class="message-content">
+                                    <span class="bot-icon" aria-hidden="true">🧼</span>
+                                    <div class="bot-text">
+                                        Hello! I'm your soap making assistant with a built-in SoapCalc-style calculator. I can
+                                        create <strong>accurate, safe recipes</strong> with exact lye calculations and detailed
+                                        soap properties. Just tell me what oils you want to use or ask for a recipe
+                                        recommendation. I also answer questions about saponification, techniques, and
+                                        troubleshooting!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="chat-suggestions" id="chatSuggestions">
-                    <p>Try asking:</p>
-                    <div class="suggestion-buttons" role="group" aria-label="Quick question suggestions">
-                        <button class="suggestion-btn" data-question="Create a beginner soap recipe for 500g batch"
-                            aria-label="Ask: Create a beginner soap recipe for 500g batch">Calculate Recipe 🧮</button>
-                        <button class="suggestion-btn" data-question="What oils are available in your database?"
-                            aria-label="Ask: What oils are available in your database?">Available Oils 🌿</button>
-                        <button class="suggestion-btn" data-question="What do the soap properties mean?"
-                            aria-label="Ask: What do the soap properties mean?">Soap Properties 📊</button>
-                        <button class="suggestion-btn" data-question="Make me a conditioning soap recipe"
-                            aria-label="Ask: Make me a conditioning soap recipe">Conditioning Recipe 💧</button>
+                        <div class="chat-input-container">
+                            <label for="chatInput" class="sr-only">Type your soap making question</label>
+                            <input type="text" id="chatInput" class="chat-input"
+                                placeholder="Ask about soap making (e.g., 'How do I make lavender soap?')" autocomplete="off"
+                                aria-label="Type your soap making question" aria-describedby="chatSuggestions" />
+                            <button id="sendButton" class="chat-send-button" aria-label="Send message">Send</button>
+                        </div>
+
+                        <div class="chat-suggestions" id="chatSuggestions">
+                            <p>Try asking:</p>
+                            <div class="suggestion-buttons" role="group" aria-label="Quick question suggestions">
+                                <button class="suggestion-btn" data-question="Create a beginner soap recipe for 500g batch"
+                                    aria-label="Ask: Create a beginner soap recipe for 500g batch">Calculate Recipe 🧮</button>
+                                <button class="suggestion-btn" data-question="What oils are available in your database?"
+                                    aria-label="Ask: What oils are available in your database?">Available Oils 🌿</button>
+                                <button class="suggestion-btn" data-question="What do the soap properties mean?"
+                                    aria-label="Ask: What do the soap properties mean?">Soap Properties 📊</button>
+                                <button class="suggestion-btn" data-question="Make me a conditioning soap recipe"
+                                    aria-label="Ask: Make me a conditioning soap recipe">Conditioning Recipe 💧</button>
+                            </div>
+                            <p class="keyboard-shortcuts-hint">⌨️ <strong>Shortcuts:</strong> Enter to send • Esc to clear •
+                                Ctrl/Cmd+K to start over</p>
+                        </div>
                     </div>
-                    <p class="keyboard-shortcuts-hint">⌨️ <strong>Shortcuts:</strong> Enter to send • Esc to clear •
-                        Ctrl/Cmd+K to start over</p>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="project-overview">
-            <h2>Overview</h2>
-            <p>Saponify AI is an AI-powered application that leverages natural language processing and advanced prompt
-                engineering to create efficient workflows and transform concepts into deployable solutions. Built with
-                an AI-first mindset, this project demonstrates the power of orchestrating multiple AI models to rapidly
-                architect and deploy creative solutions.</p>
-        </section>
-
-        <section id="project-tech-stack">
-            <h2>Technology Stack</h2>
-            <ul class="tech-stack-list">
-                <li><strong>AI Models:</strong> Claude Code, Gemini Flash 2.5</li>
-                <li><strong>Core Technologies:</strong> Natural Language Processing, Prompt Engineering</li>
-                <li><strong>Development Tools:</strong> VS Code, GitHub, GitHub Copilot</li>
-                <li><strong>Methodology:</strong> AI-First Development, Rapid Prototyping</li>
-            </ul>
-        </section>
-
-        <section id="project-impact">
-            <h2>Impact & Results</h2>
-            <p>Saponify AI demonstrates the transformative power of AI-first engineering, showcasing how intelligent
-                orchestration of multiple AI models can dramatically accelerate development workflows and enable rapid
-                concept-to-deployment cycles. This project exemplifies modern AI engineering practices and the future of
-                software development.</p>
-        </section>
-
-        <section id="project-cta">
-            <div class="project-cta-content">
-                <h2>Ready to See Some Serious Suds?</h2>
-                <p>Your workflows are due for a deep clean. Let's discuss how AI solutions can cut through the grime and
-                    generate powerful, lasting efficiency.</p>
-                <div class="cta-buttons">
-                    <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
-                    <a href="projects.html" class="cta-button-secondary">View All Projects</a>
+            <section id="project-overview">
+                <div class="section-frame pixel-border">
+                    <h2>Overview</h2>
+                    <p>Saponify AI is an AI-powered application that leverages natural language processing and advanced prompt
+                        engineering to create efficient workflows and transform concepts into deployable solutions. Built with
+                        an AI-first mindset, this project demonstrates the power of orchestrating multiple AI models to rapidly
+                        architect and deploy creative solutions.</p>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
 
+            <section id="project-tech-stack">
+                <div class="section-frame pixel-border">
+                    <h2>Technology Stack</h2>
+                    <ul class="tech-stack-list">
+                        <li><strong>AI Models:</strong> Claude Code, Gemini Flash 2.5</li>
+                        <li><strong>Core Technologies:</strong> Natural Language Processing, Prompt Engineering</li>
+                        <li><strong>Development Tools:</strong> VS Code, GitHub, GitHub Copilot</li>
+                        <li><strong>Methodology:</strong> AI-First Development, Rapid Prototyping</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="project-impact">
+                <div class="section-frame pixel-border">
+                    <h2>Impact & Results</h2>
+                    <p>Saponify AI demonstrates the transformative power of AI-first engineering, showcasing how intelligent
+                        orchestration of multiple AI models can dramatically accelerate development workflows and enable rapid
+                        concept-to-deployment cycles. This project exemplifies modern AI engineering practices and the future of
+                        software development.</p>
+                </div>
+            </section>
+
+            <section id="project-cta">
+                <div class="section-frame pixel-border">
+                    <div class="project-cta-content">
+                        <h2>Ready to See Some Serious Suds?</h2>
+                        <p>Your workflows are due for a deep clean. Let's discuss how AI solutions can cut through the grime and
+                            generate powerful, lasting efficiency.</p>
+                        <div class="cta-buttons">
+                            <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
+                            <a href="projects.html" class="cta-button-secondary">View All Projects</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
     <footer>
         <p>&copy; 2025 Victoria Ruiz Griffith. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 16px;">Built with pixel-perfect precision ✨</p>
     </footer>
 
     <!-- Save Recipe Modal -->
@@ -237,6 +996,19 @@
 
     <!-- Recipe Saving UI -->
     <script src="recipe-ui.js"></script>
+
+    <script>
+        // Update time display
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
 </body>
 
 </html>
