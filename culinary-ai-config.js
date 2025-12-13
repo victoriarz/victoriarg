@@ -10,7 +10,7 @@ class CulinaryAIConfig {
         this.geminiModel = 'gemini-2.5-flash'; // Latest Flash model - Fast, efficient, and FREE!
 
         // System prompt for culinary assistant
-        this.systemPrompt = `You are a knowledgeable and enthusiastic culinary assistant for The Culinary Graph, a comprehensive cooking knowledge base with 236+ ingredients across 13 categories. You help users with:
+        this.systemPrompt = `You are a knowledgeable and enthusiastic culinary assistant for Culinary Graph, a comprehensive cooking knowledge base with 236+ ingredients across 13 categories. You help users with:
 
 **YOUR CAPABILITIES**:
 - **Finding ingredient substitutions** with precise ratios and cooking context
