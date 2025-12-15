@@ -38,7 +38,7 @@ function openSaveRecipeModal() {
 
     // Open modal
     const modal = document.getElementById('saveRecipeModal');
-    modal.classList.add('show');
+    modal.classList.add('active');
 
     // Clear form
     document.getElementById('recipeName').value = '';
@@ -55,7 +55,7 @@ function openSaveRecipeModal() {
  */
 function closeSaveRecipeModal() {
     const modal = document.getElementById('saveRecipeModal');
-    modal.classList.remove('show');
+    modal.classList.remove('active');
 }
 
 /**
@@ -129,7 +129,7 @@ function openRecipeLibrary() {
         return;
     }
 
-    modal.classList.add('show');
+    modal.classList.add('active');
 
     // Load and display recipes
     refreshRecipeLibrary();
@@ -140,7 +140,7 @@ function openRecipeLibrary() {
  */
 function closeRecipeLibrary() {
     const modal = document.getElementById('recipeLibraryModal');
-    modal.classList.remove('show');
+    modal.classList.remove('active');
 
     // Clear search
     document.getElementById('librarySearchInput').value = '';
@@ -332,24 +332,3 @@ function confirmDeleteRecipe(recipeId, recipeName) {
     }
 }
 
-// ============================================
-// UPDATE RECIPE DISPLAY WITH SAVE BUTTON
-// ============================================
-
-// Override formatCalculatedRecipe to add save button
-// Store original function
-const originalFormatCalculatedRecipe = formatCalculatedRecipe;
-
-// Replace with enhanced version
-formatCalculatedRecipe = function(result) {
-    const output = originalFormatCalculatedRecipe(result);
-
-    // Add save button to recipe actions
-    const saveButton = `<button onclick="openSaveRecipeModal()" class="recipe-action-btn">💾 Save Recipe</button>\n`;
-
-    // Insert save button after "Copy Recipe" button
-    return output.replace(
-        '<button onclick="copyRecipeToClipboard()" class="recipe-action-btn">📋 Copy Recipe</button>',
-        '<button onclick="copyRecipeToClipboard()" class="recipe-action-btn">📋 Copy Recipe</button>\n' + saveButton
-    );
-};
