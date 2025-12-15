@@ -3538,7 +3538,7 @@ function updateAIStatus(isBackendHealthy) {
             statusBadge.textContent = '🤖 AI: Gemini (Active)';
             statusBadge.className = 'ai-status-badge active';
         } else {
-            statusBadge.textContent = '🤖 AI: Offline (Local Mode)';
+            statusBadge.textContent = '🤖 AI';
             statusBadge.className = 'ai-status-badge';
         }
     }

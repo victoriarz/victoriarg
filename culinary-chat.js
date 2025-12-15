@@ -1006,7 +1006,7 @@ function updateAIStatus(isBackendHealthy) {
             statusBadge.className = 'ai-status-badge active';
             useAI = true;
         } else {
-            statusBadge.textContent = '🤖 AI: Offline (Local Mode)';
+            statusBadge.textContent = '🤖 AI';
             statusBadge.className = 'ai-status-badge';
             useAI = false;
         }
