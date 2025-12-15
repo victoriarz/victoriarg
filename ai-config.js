@@ -9,7 +9,7 @@ class AIConfig {
         // Default Gemini API key for direct calls (fallback when backend unavailable)
         // Get a free key at: https://aistudio.google.com/app/apikey
         // Note: Free tier has generous limits (60 requests/minute)
-        this.defaultGeminiKey = 'YOUR_GEMINI_API_KEY_HERE'; // Replace with your key
+        this.defaultGeminiKey = 'AIzaSyA9VKr-gBS7Vl4Q8s5GOGBegmgkr0_qPNE'; // Replace with your key
 
         // Model settings
         this.geminiModel = 'gemini-2.0-flash-exp'; // Latest Flash model - Fast, efficient, and FREE!
