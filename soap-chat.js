@@ -217,21 +217,30 @@ function generateUserFriendlyError(error, userMessage) {
             `Or just list your oils and I'll suggest amounts!`;
     }
 
-    // Generic fallback - knowledge base was already checked at the top
-    return `**I didn't quite catch that**\n\n` +
-        `Try rephrasing your question. Here are some formats I understand well:\n\n` +
-        `**Questions:**\n` +
+    // CORS error detection (common when running from file://)
+    if (errorMsg.includes('CORS') || errorMsg.includes('cross-origin') ||
+        errorMsg.includes('NetworkError') || errorMsg.includes('Failed to fetch')) {
+        console.error('🚫 CORS/Network error detected. Protocol:', window.location.protocol);
+        return `**Connection Issue**\n\n` +
+            `I couldn't reach the AI service due to a network restriction.\n\n` +
+            `**Try one of these:**\n` +
+            `- Refresh the page and try again\n` +
+            `- If running locally, try opening the live site instead\n\n` +
+            `**I can still help with:**\n` +
+            `- "Create a beginner soap recipe"\n` +
+            `- "What is saponification?"\n` +
+            `- "Calculate a 500g batch with olive and coconut oil"`;
+    }
+
+    // Generic fallback with actual error for debugging
+    console.error('🔥 Unhandled error in generateUserFriendlyError:', errorMsg);
+    return `**Something went wrong**\n\n` +
+        `The AI service had an issue processing your request.\n\n` +
+        `**Try asking something like:**\n` +
+        `• "Create a beginner soap recipe"\n` +
         `• "What is saponification?"\n` +
-        `• "How do I add fragrance to soap?"\n` +
-        `• "Why is my soap soft?"\n\n` +
-        `**Recipe requests:**\n` +
-        `• "Create a beginner recipe"\n` +
-        `• "Calculate a 1000g batch"\n` +
-        `• "Suggest a conditioning soap"\n\n` +
-        `**Or just tell me:**\n` +
-        `• The oils you want to use\n` +
-        `• A topic you want to learn about\n\n` +
-        `What were you trying to ask?`;
+        `• "What oils are good for soap?"\n\n` +
+        `*(Error: ${errorMsg.substring(0, 100)})*`;
 }
 
 /**
