@@ -626,6 +626,31 @@ function searchKnowledgeBank(userInput) {
     const input = userInput.toLowerCase();
     const kb = SOAP_KNOWLEDGE_BANK;
 
+    // QUICK ANSWERS: Handle "smell like X" questions with direct, concise responses
+    const smellLikeMatch = input.match(/smell\s+(like|of)\s+(\w+)/i);
+    if (smellLikeMatch) {
+        const scent = smellLikeMatch[2].toLowerCase();
+        const fruitScents = ['strawberry', 'strawberries', 'mango', 'peach', 'apple', 'banana', 'cherry', 'watermelon', 'grape', 'coconut', 'pineapple', 'berry', 'berries', 'fruit'];
+        const bakeryScents = ['chocolate', 'vanilla', 'coffee', 'caramel', 'honey', 'cinnamon', 'cookie', 'cake', 'cupcake'];
+        const floralScents = ['lavender', 'rose', 'jasmine', 'gardenia', 'lilac', 'honeysuckle'];
+        const freshScents = ['mint', 'peppermint', 'eucalyptus', 'tea tree', 'lemon', 'orange', 'citrus', 'lime', 'grapefruit'];
+
+        let answer = '';
+        if (fruitScents.includes(scent)) {
+            answer = `**For ${scent} scent:** Use a **fragrance oil** - fruit scents like ${scent} aren't available as essential oils. Add 0.7 oz per pound of oils at trace. Test in a small batch first as some fruit FOs can accelerate trace.`;
+        } else if (bakeryScents.includes(scent)) {
+            answer = `**For ${scent} scent:** Use a **fragrance oil** - bakery/dessert scents require FOs. Add 0.7 oz per pound of oils at trace. Note: vanilla-based scents will discolor your soap brown over time.`;
+        } else if (floralScents.includes(scent)) {
+            answer = `**For ${scent} scent:** You can use **${scent} essential oil** (natural) or a **${scent} fragrance oil**. EO: 0.5-0.7 oz per pound. FO: 0.7 oz per pound. Add at trace.`;
+        } else if (freshScents.includes(scent)) {
+            answer = `**For ${scent} scent:** Use **${scent} essential oil** for a natural option. These are "top notes" that fade faster - pair with a base note like cedarwood to help it last. Use 0.5-0.7 oz per pound at trace.`;
+        } else {
+            answer = `**For ${scent} scent:** Check if there's a **fragrance oil** available - most unique scents come as FOs. Use 0.7 oz per pound of oils, added at trace before pouring.`;
+        }
+
+        return { response: answer, category: 'Fragrance' };
+    }
+
     // Check if this is an explicit knowledge-seeking question (even during recipe building)
     const isExplicitKnowledgeQuestion = isKnowledgeSeekingQuestion(input);
 
