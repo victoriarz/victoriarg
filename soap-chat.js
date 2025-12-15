@@ -174,8 +174,21 @@ function generateUserFriendlyError(error, userMessage) {
             `Try your question again, or ask about something specific like "calculate a recipe with olive oil and coconut oil".`;
     }
 
-    // API key/auth errors
-    if (errorMsg.includes('401') || errorMsg.includes('403') || errorMsg.includes('API key') || errorMsg.includes('unauthorized')) {
+    // API key/auth errors or no API configured
+    if (errorMsg.includes('401') || errorMsg.includes('403') || errorMsg.includes('API key') || errorMsg.includes('unauthorized') || errorMsg.includes('AI not available')) {
+        const hasKey = typeof aiConfig !== 'undefined' && aiConfig.hasDirectApiKey && aiConfig.hasDirectApiKey();
+        if (!hasKey && window.location.protocol === 'file:') {
+            return `**Enable AI for Smarter Answers**\n\n` +
+                `I couldn't find this in my knowledge base, and AI isn't set up yet.\n\n` +
+                `**To enable AI (free!):**\n` +
+                `1. Get a free API key at [Google AI Studio](https://aistudio.google.com/app/apikey)\n` +
+                `2. Open browser console (F12) and run:\n` +
+                `   \`aiConfig.setGeminiApiKey("your-key")\`\n\n` +
+                `**Without AI, I can still help with:**\n` +
+                `- Calculating soap recipes\n` +
+                `- Common soap making questions\n\n` +
+                `Try asking: "Create a beginner recipe" or "What is saponification?"`;
+        }
         return `**AI Service Unavailable**\n\n` +
             `The AI service isn't available right now, but no worries!\n\n` +
             `**I can still help you with:**\n` +
@@ -1493,18 +1506,32 @@ async function callGemini(messages) {
     }
 }
 
-// Main LLM call via backend proxy
+// Main LLM call - tries direct API first, then backend proxy
 async function getLLMResponse(userMessage) {
-    // Build conversation history
-    const messages = [
-        { role: 'system', content: aiConfig.getSystemPrompt() },
-        ...conversationHistory,
-        { role: 'user', content: userMessage }
-    ];
+    // OPTION 1: Try direct Gemini API if key is configured (works from file://)
+    if (aiConfig.hasDirectApiKey()) {
+        try {
+            console.log('🤖 Trying direct Gemini API...');
+            const response = await aiConfig.callGeminiDirect(userMessage);
+            return { response, provider: 'Gemini 2.0 Flash (Direct)' };
+        } catch (error) {
+            console.warn('Direct Gemini call failed, trying backend:', error.message);
+        }
+    }
 
-    // Call Gemini API directly
-    const response = await callGemini(messages);
-    return { response, provider: 'Gemini 2.0 Flash' };
+    // OPTION 2: Try backend proxy (works when deployed)
+    if (window.location.protocol !== 'file:') {
+        const messages = [
+            { role: 'system', content: aiConfig.getSystemPrompt() },
+            ...conversationHistory,
+            { role: 'user', content: userMessage }
+        ];
+        const response = await callGemini(messages);
+        return { response, provider: 'Gemini 2.0 Flash' };
+    }
+
+    // OPTION 3: No AI available
+    throw new Error('AI not available. Set up an API key with: aiConfig.setGeminiApiKey("your-key")');
 }
 
 // DOM elements

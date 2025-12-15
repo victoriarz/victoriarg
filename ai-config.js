@@ -208,6 +208,64 @@ Then present the calculated recipe with:
         // This method exists for compatibility but returns null
         return null;
     }
+
+    // Direct Gemini API key (optional - for when backend is unavailable)
+    // Users can set this via: aiConfig.setGeminiApiKey('your-key')
+    // Get a free key at: https://aistudio.google.com/app/apikey
+    setGeminiApiKey(key) {
+        this.directGeminiApiKey = key;
+        localStorage.setItem('saponify_gemini_key', key);
+        console.log('✅ Gemini API key set - direct AI calls enabled');
+    }
+
+    getGeminiApiKey() {
+        if (!this.directGeminiApiKey) {
+            this.directGeminiApiKey = localStorage.getItem('saponify_gemini_key');
+        }
+        return this.directGeminiApiKey;
+    }
+
+    clearGeminiApiKey() {
+        this.directGeminiApiKey = null;
+        localStorage.removeItem('saponify_gemini_key');
+        console.log('🗑️ Gemini API key cleared');
+    }
+
+    // Call Gemini API directly (bypasses backend)
+    async callGeminiDirect(prompt) {
+        const apiKey = this.getGeminiApiKey();
+        if (!apiKey) {
+            throw new Error('No Gemini API key configured');
+        }
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{ text: this.getSystemPrompt() + '\n\nUser: ' + prompt }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 500
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.message || 'Gemini API error');
+        }
+
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated';
+    }
+
+    hasDirectApiKey() {
+        return !!this.getGeminiApiKey();
+    }
 }
 
 // Export as global
