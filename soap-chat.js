@@ -2104,7 +2104,7 @@ function extractOilsFromText(text) {
 function parseBatchSize(text) {
     const input = text.toLowerCase();
 
-    // Common word-based sizes
+    // Common word-based sizes (check longer phrases first to avoid partial matches)
     const wordSizes = {
         'small batch': 500,
         'medium batch': 1000,
@@ -2115,7 +2115,11 @@ function parseBatchSize(text) {
         '1 kilo': 1000,
         'a kilo': 1000,
         'two kilos': 2000,
-        '2 kilos': 2000
+        '2 kilos': 2000,
+        // Single-word shortcuts
+        'small': 500,
+        'medium': 1000,
+        'large': 1500
     };
 
     for (const [phrase, grams] of Object.entries(wordSizes)) {
