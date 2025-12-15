@@ -133,6 +133,30 @@ victoriarg/
 2. Check all uses of colors in style.css
 3. Ensure sufficient contrast for accessibility
 
+### Cache Busting for JavaScript Files
+
+To ensure users get the latest JavaScript code without browser caching issues, all local JS files in `saponifyai.html` use version query strings:
+
+```html
+<script src="soap-chat.js?v=1.0.4"></script>
+```
+
+**When to update versions:**
+- Increment the version number when making changes to any JavaScript file
+- Use semantic versioning: `?v=MAJOR.MINOR.PATCH`
+- Example: `1.0.4` → `1.0.5` for bug fixes, `1.0.4` → `1.1.0` for new features
+
+**Current JavaScript files with versions:**
+- `soap-calculator.js` - Soap calculation engine
+- `recipe-validator.js` - Recipe validation
+- `recipe-storage.js` - localStorage recipe management
+- `soap-knowledge-bank.js` - Local knowledge base
+- `ai-config.js` - AI/Gemini configuration
+- `soap-chat.js` - Main chat logic
+- `recipe-ui.js` - Recipe save/load UI
+
+**How it works:** The `?v=X.X.X` query string makes browsers treat the file as different from cached versions, forcing a fresh download.
+
 ## Deployment
 
 This site is deployed via **GitHub Pages**:
