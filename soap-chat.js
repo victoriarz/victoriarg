@@ -1990,25 +1990,32 @@ function checkRecipeIntent(userInput) {
 
     console.log('🧮 Recipe intent detected in:', input.substring(0, 50));
 
-    // Try to extract batch size if provided
+    // Try to extract batch size if provided (use parseBatchSize for "small", "medium", "large" support)
+    const batchSizeResult = parseBatchSize(input);
     const batchSizeMatch = input.match(/(\d+)\s*(g|grams?|oz|ounces?|lbs?|pounds?)\b/i);
 
     // Try to extract oils if mentioned
     const mentionedOils = extractOilsFromText(input);
 
     // If user provided both batch size AND oils, try to start calculation directly
-    if (batchSizeMatch && mentionedOils.length > 0) {
-        return handleDirectRecipeRequest(batchSizeMatch, mentionedOils, input);
+    if ((batchSizeResult || batchSizeMatch) && mentionedOils.length > 0) {
+        // Use parseBatchSize result if available, otherwise fall back to regex
+        const grams = batchSizeResult ? batchSizeResult.grams : null;
+        return handleDirectRecipeRequest(batchSizeMatch, mentionedOils, input, grams);
     }
 
     // If user provided batch size but no oils, ask for oils
-    if (batchSizeMatch) {
-        const size = parseInt(batchSizeMatch[1]);
-        const unit = batchSizeMatch[2].toLowerCase();
-        let grams = size;
-
-        if (unit.startsWith('oz')) grams = Math.round(size * 28.35);
-        else if (unit.startsWith('lb') || unit === 'pounds') grams = Math.round(size * 453.6);
+    if (batchSizeResult || batchSizeMatch) {
+        let grams;
+        if (batchSizeResult) {
+            grams = batchSizeResult.grams;
+        } else {
+            const size = parseInt(batchSizeMatch[1]);
+            const unit = batchSizeMatch[2].toLowerCase();
+            grams = size;
+            if (unit.startsWith('oz')) grams = Math.round(size * 28.35);
+            else if (unit.startsWith('lb') || unit === 'pounds') grams = Math.round(size * 453.6);
+        }
 
         recipeState.active = true;
         recipeState.batchSizeGrams = grams;
@@ -2241,13 +2248,21 @@ function parseLyeConcentration(text) {
 /**
  * Handle direct recipe request with batch size and oils
  */
-function handleDirectRecipeRequest(batchSizeMatch, mentionedOils, input) {
-    const size = parseInt(batchSizeMatch[1]);
-    const unit = batchSizeMatch[2].toLowerCase();
-    let batchGrams = size;
+function handleDirectRecipeRequest(batchSizeMatch, mentionedOils, input, parsedGrams = null) {
+    let batchGrams;
 
-    if (unit.startsWith('oz')) batchGrams = Math.round(size * 28.35);
-    else if (unit.startsWith('lb') || unit === 'pounds') batchGrams = Math.round(size * 453.6);
+    // Use pre-parsed grams if provided (from parseBatchSize for "small", "medium", etc.)
+    if (parsedGrams) {
+        batchGrams = parsedGrams;
+    } else if (batchSizeMatch) {
+        const size = parseInt(batchSizeMatch[1]);
+        const unit = batchSizeMatch[2].toLowerCase();
+        batchGrams = size;
+        if (unit.startsWith('oz')) batchGrams = Math.round(size * 28.35);
+        else if (unit.startsWith('lb') || unit === 'pounds') batchGrams = Math.round(size * 453.6);
+    } else {
+        batchGrams = 500; // Default fallback
+    }
 
     // Try to extract amounts for each oil
     const oilsWithAmounts = parseOilAmounts(input, mentionedOils, batchGrams);
