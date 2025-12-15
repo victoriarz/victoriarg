@@ -205,15 +205,20 @@ function generateUserFriendlyError(error, userMessage) {
     }
 
     // Generic fallback - knowledge base was already checked at the top
-    return `**Hmm, something went wrong**\n\n` +
-        `I couldn't process that request, but I'm still here to help!\n\n` +
-        `**Try asking about:**\n` +
-        `- Creating a soap recipe\n` +
-        `- Oil properties and recommendations\n` +
-        `- Cold process vs hot process\n` +
-        `- Troubleshooting soap problems\n` +
-        `- Lye safety\n\n` +
-        `What would you like to know?`;
+    return `**I didn't quite catch that**\n\n` +
+        `Try rephrasing your question. Here are some formats I understand well:\n\n` +
+        `**Questions:**\n` +
+        `• "What is saponification?"\n` +
+        `• "How do I add fragrance to soap?"\n` +
+        `• "Why is my soap soft?"\n\n` +
+        `**Recipe requests:**\n` +
+        `• "Create a beginner recipe"\n` +
+        `• "Calculate a 1000g batch"\n` +
+        `• "Suggest a conditioning soap"\n\n` +
+        `**Or just tell me:**\n` +
+        `• The oils you want to use\n` +
+        `• A topic you want to learn about\n\n` +
+        `What were you trying to ask?`;
 }
 
 /**
@@ -2744,9 +2749,20 @@ function findResponse(userInput) {
         }
     }
 
-    // Default response if no match found
+    // Default response if no match found - suggest alternative phrasings
     return {
-        response: "That's a great question about soap making! I can help you with:\n• Calculating a custom soap recipe (say 'calculate recipe')\n• Saponification process\n• Oils and ingredients\n• Cold/hot process techniques\n• Troubleshooting\n• Essential oils and colorants\n\nTry asking: 'Calculate a recipe' or 'What is saponification?'",
+        response: "I'm not sure I understood that. Here are some ways to rephrase:\n\n" +
+            "**For recipes:**\n" +
+            "• \"Create a beginner soap recipe\"\n" +
+            "• \"Calculate a 500g batch with olive and coconut oil\"\n\n" +
+            "**For information:**\n" +
+            "• \"What is [topic]?\" (e.g., \"What is saponification?\")\n" +
+            "• \"How do I [task]?\" (e.g., \"How do I cure soap?\")\n" +
+            "• \"Tell me about [topic]\" (e.g., \"Tell me about cold process\")\n\n" +
+            "**For scents/colors:**\n" +
+            "• \"How can I make my soap smell like lavender?\"\n" +
+            "• \"What colorants can I use?\"\n\n" +
+            "What were you trying to ask?",
         category: null
     };
 }
