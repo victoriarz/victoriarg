@@ -1516,30 +1516,31 @@ async function callGemini(messages) {
 
 // Main LLM call - tries direct API first, then backend proxy
 async function getLLMResponse(userMessage) {
-    // OPTION 1: Try direct Gemini API if key is configured (works from file://)
+    // OPTION 1: Try direct Gemini API if user has configured their own key
     if (aiConfig.hasDirectApiKey()) {
         try {
             console.log('🤖 Trying direct Gemini API...');
             const response = await aiConfig.callGeminiDirect(userMessage);
-            return { response, provider: 'Gemini 2.0 Flash (Direct)' };
+            return { response, provider: 'Gemini 2.5 Flash-Lite (Direct)' };
         } catch (error) {
             console.warn('Direct Gemini call failed, trying backend:', error.message);
         }
     }
 
-    // OPTION 2: Try backend proxy (works when deployed)
-    if (window.location.protocol !== 'file:') {
+    // OPTION 2: Try backend proxy (works from any protocol including file://)
+    try {
+        console.log('🌐 Trying backend proxy...');
         const messages = [
             { role: 'system', content: aiConfig.getSystemPrompt() },
             ...conversationHistory,
             { role: 'user', content: userMessage }
         ];
         const response = await callGemini(messages);
-        return { response, provider: 'Gemini 2.0 Flash' };
+        return { response, provider: 'Gemini 2.5 Flash' };
+    } catch (error) {
+        console.error('Backend proxy failed:', error.message);
+        throw new Error('AI service unavailable. Please try again later.');
     }
-
-    // OPTION 3: No AI available
-    throw new Error('AI not available. Set up an API key with: aiConfig.setGeminiApiKey("your-key")');
 }
 
 // DOM elements
