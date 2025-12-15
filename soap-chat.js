@@ -1993,8 +1993,14 @@ function checkRecipeIntent(userInput) {
     // Check for unusual/invalid ingredients that aren't used in soap making
     const unusualIngredient = detectUnusualIngredient(input);
     if (unusualIngredient) {
+        // Set up recipe state so user can continue with a traditional recipe
+        recipeState.active = true;
+        recipeState.batchSizeGrams = 0;
+        recipeState.oils = [];
+        recipeState.superfat = 5;
+
         return {
-            response: `I appreciate your creativity, but **${unusualIngredient}** isn't typically used in soap making! 🧼\n\nSoap requires fats/oils that can undergo saponification (reaction with lye). Common soap-making ingredients include:\n\n**Oils:** Olive oil, coconut oil, palm oil, castor oil, sunflower oil, avocado oil\n**Butters:** Shea butter, cocoa butter, mango butter\n**Animal fats:** Lard, tallow\n\nWould you like me to suggest a recipe using traditional soap-making oils instead?`,
+            response: `I appreciate your creativity, but **${unusualIngredient}** isn't typically used in soap making! 🧼\n\nSoap requires fats/oils that can undergo saponification (reaction with lye). Common soap-making ingredients include:\n\n**Oils:** Olive oil, coconut oil, palm oil, castor oil, sunflower oil, avocado oil\n**Butters:** Shea butter, cocoa butter, mango butter\n**Animal fats:** Lard, tallow\n\nLet's make a recipe with proper soap-making oils! How much soap do you want to make?\n- **Small batch:** 500g\n- **Medium batch:** 1000g\n- **Large batch:** 1500g\n\nOr say "**suggest a recipe**" for a beginner-friendly blend!`,
             category: 'recipe'
         };
     }
@@ -2522,9 +2528,14 @@ function handleActiveRecipeConversation(input) {
         };
     }
 
-    // Check for "suggest a recipe" during recipe building
-    if (/\b(suggest|recommend|beginner|default)\b.*\b(recipe|blend|mix)\b/i.test(input) ||
-        /\b(suggest|recommend)\b/i.test(input) && recipeState.oils.length === 0) {
+    // Check for "suggest a recipe" or simple affirmative during recipe building
+    const wantsSuggestion = /\b(suggest|recommend|beginner|default)\b.*\b(recipe|blend|mix)\b/i.test(input) ||
+        (/\b(suggest|recommend)\b/i.test(input) && recipeState.oils.length === 0) ||
+        // Handle simple affirmatives when no oils/batch set (e.g., after unusual ingredient message)
+        (/^(yes|yeah|yep|sure|ok|okay|please|yea|sounds good|let'?s do it)\.?!?$/i.test(input.trim()) &&
+         recipeState.oils.length === 0 && recipeState.batchSizeGrams === 0);
+
+    if (wantsSuggestion) {
 
         const batchSize = recipeState.batchSizeGrams || 500;
         const beginnerOils = [
