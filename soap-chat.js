@@ -537,6 +537,61 @@ const soapKnowledge = {
 // ===========================================
 
 /**
+ * Detect if user is asking an explicit knowledge-seeking question
+ * These should be answered even during active recipe conversations
+ * Examples: "what is saponification?", "explain cold process", "tell me about safety"
+ */
+function isKnowledgeSeekingQuestion(input) {
+    // Patterns that indicate user wants information, not recipe building
+    const knowledgePatterns = [
+        // "What is/are..." questions
+        /\bwhat\s+(is|are|does|do)\b/i,
+        // "How does... work" (not "how much" which is recipe-related)
+        /\bhow\s+(does|do|is)\b.*\bwork\b/i,
+        // "Explain..." or "Tell me about..."
+        /\b(explain|tell me about|describe|what's the difference)\b/i,
+        // "Why..." questions about concepts
+        /\bwhy\s+(is|are|do|does|should)\b/i,
+        // "Can you explain..." or "Could you tell me..."
+        /\b(can|could)\s+you\s+(explain|tell|describe)\b/i,
+        // Direct topic questions: "what about saponification", "about cold process"
+        /\babout\s+(saponification|cold process|hot process|lye safety|curing|trace|superfat|dos|soda ash)\b/i,
+        // "Quick question" or "just wondering"
+        /\b(quick question|just wondering|curious about|want to know)\b/i,
+        // "What's the deal with..." or "What are the..."
+        /\bwhat('s| is) the\b/i,
+        // Safety questions
+        /\b(is it safe|safety|dangerous|precaution|first aid)\b/i,
+        // Troubleshooting questions (not during recipe building about the current recipe)
+        /\b(why did my|what went wrong|problem with|troubleshoot|help my soap)\b/i,
+        // Definition requests
+        /\bdefin(e|ition)\b/i,
+        // Method comparisons
+        /\b(difference between|compare|vs|versus)\b/i
+    ];
+
+    return knowledgePatterns.some(pattern => pattern.test(input));
+}
+
+/**
+ * Check if the input contains explicit recipe creation action words
+ * These override knowledge question detection when present
+ * Examples: "calculate", "create a recipe", "make me a batch"
+ */
+function hasExplicitRecipeActionWord(input) {
+    const recipeActionPatterns = [
+        /\b(calculate|create|make|build|formulate)\s+(a\s+)?(recipe|batch|soap)\b/i,
+        /\bgive me\s+(a\s+)?recipe\b/i,
+        /\b(start|begin)\s+(a\s+)?(new\s+)?recipe\b/i,
+        /\brecipe\s+calculator\b/i,
+        /\bcalculate\s+(the\s+)?lye\b/i,
+        /\b(\d+)\s*(g|grams?|oz)\s+(batch|recipe)\b/i
+    ];
+
+    return recipeActionPatterns.some(pattern => pattern.test(input));
+}
+
+/**
  * Search the comprehensive knowledge bank for relevant information
  * Returns a formatted response if found, null if no good match
  */
@@ -547,15 +602,22 @@ function searchKnowledgeBank(userInput) {
         return null;
     }
 
-    // IMPORTANT: Skip knowledge bank search if user is in the middle of a recipe conversation
+    const input = userInput.toLowerCase();
+    const kb = SOAP_KNOWLEDGE_BANK;
+
+    // Check if this is an explicit knowledge-seeking question (even during recipe building)
+    const isExplicitKnowledgeQuestion = isKnowledgeSeekingQuestion(input);
+
+    // If recipe building is active, only allow explicit knowledge questions through
     // This prevents oil names like "coconut" from triggering info lookups instead of recipe building
-    if (recipeState.active) {
-        console.log('📚 Recipe conversation active - skipping knowledge bank search');
+    if (recipeState.active && !isExplicitKnowledgeQuestion) {
+        console.log('📚 Recipe conversation active - skipping knowledge bank search (not an explicit knowledge question)');
         return null;
     }
 
-    const input = userInput.toLowerCase();
-    const kb = SOAP_KNOWLEDGE_BANK;
+    if (recipeState.active && isExplicitKnowledgeQuestion) {
+        console.log('📚 Explicit knowledge question detected during recipe - allowing knowledge bank search');
+    }
 
     // Define keyword mappings to knowledge bank sections
     const searchMappings = [
@@ -1862,6 +1924,11 @@ function checkRecipeIntent(userInput) {
 
     // If recipe building is already active, handle that conversation
     if (recipeState.active) {
+        // But first check if user is asking a knowledge question mid-recipe
+        if (isKnowledgeSeekingQuestion(input)) {
+            console.log('🔍 Knowledge question detected during recipe - deferring to knowledge bank');
+            return null; // Let knowledge bank handle it
+        }
         return handleActiveRecipeConversation(input);
     }
 
@@ -1869,6 +1936,14 @@ function checkRecipeIntent(userInput) {
     const modificationResult = checkRecipeModificationIntent(input);
     if (modificationResult) {
         return modificationResult;
+    }
+
+    // IMPORTANT: If this is clearly an information-seeking question, don't treat it as recipe intent
+    // This prevents "what oils should I use for conditioning soap?" from starting a recipe flow
+    // when the user just wants information
+    if (isKnowledgeSeekingQuestion(input) && !hasExplicitRecipeActionWord(input)) {
+        console.log('🔍 Knowledge question detected - deferring to knowledge bank');
+        return null;
     }
 
     // Patterns that indicate user wants to CREATE a recipe (not just learn about something)
@@ -2341,12 +2416,54 @@ function calculateAndFormatRecipe(oils, superfatPercent) {
  * Handle conversation when recipe building is active
  */
 function handleActiveRecipeConversation(input) {
-    // Check for cancel/abort
-    if (/\b(cancel|stop|abort|nevermind|never mind)\b/i.test(input)) {
+    // Check for cancel/abort/start over
+    if (/\b(cancel|stop|abort|nevermind|never mind|start over|restart)\b/i.test(input)) {
+        const wasInProgress = recipeState.batchSizeGrams > 0 || recipeState.oils.length > 0;
         recipeState = { active: false, batchSizeGrams: 0, oils: [], superfat: 5 };
         clearRecipeDraft(); // Clear saved draft
+
+        if (/\b(start over|restart)\b/i.test(input)) {
+            // User wants to start a new recipe
+            recipeState.active = true;
+            return {
+                response: "Starting fresh! 🧼\n\nHow much soap do you want to make?\n- **500g** (small, ~6 bars)\n- **1000g** (medium, ~12 bars)\n- **1500g** (large, ~18 bars)",
+                category: 'recipe'
+            };
+        }
+
         return {
-            response: "No problem! Recipe cancelled. What else can I help you with?",
+            response: wasInProgress
+                ? "Recipe cancelled. No worries! What else can I help you with?"
+                : "No problem! What else can I help you with?",
+            category: 'recipe'
+        };
+    }
+
+    // Check for "suggest a recipe" during recipe building
+    if (/\b(suggest|recommend|beginner|default)\b.*\b(recipe|blend|mix)\b/i.test(input) ||
+        /\b(suggest|recommend)\b/i.test(input) && recipeState.oils.length === 0) {
+
+        const batchSize = recipeState.batchSizeGrams || 500;
+        const beginnerOils = [
+            { name: 'Olive Oil', grams: Math.round(batchSize * 0.35) },
+            { name: 'Coconut Oil', grams: Math.round(batchSize * 0.30) },
+            { name: 'Shea Butter', grams: Math.round(batchSize * 0.25) },
+            { name: 'Castor Oil', grams: Math.round(batchSize * 0.10) }
+        ];
+
+        recipeState.batchSizeGrams = batchSize;
+        recipeState.oils = beginnerOils;
+        recipeState.superfat = 5;
+        saveRecipeDraft();
+
+        return {
+            response: `Here's a great **beginner-friendly recipe** for a ${batchSize}g batch:\n\n` +
+                `- **Olive Oil:** ${beginnerOils[0].grams}g (35%) - conditioning\n` +
+                `- **Coconut Oil:** ${beginnerOils[1].grams}g (30%) - cleansing & lather\n` +
+                `- **Shea Butter:** ${beginnerOils[2].grams}g (25%) - hardness & luxury\n` +
+                `- **Castor Oil:** ${beginnerOils[3].grams}g (10%) - lather boost\n\n` +
+                `Ready to calculate with **5% superfat**? Say "**yes**" or "**calculate**"!\n\n` +
+                `Or say "**change**" to adjust oils, or "**7% superfat**" for a different superfat.`,
             category: 'recipe'
         };
     }
@@ -2419,23 +2536,51 @@ function handleActiveRecipeConversation(input) {
         }
     }
 
-    // Didn't understand - provide guidance
+    // Didn't understand - provide context-aware guidance
     if (recipeState.batchSizeGrams === 0) {
+        // Check if they typed something that looks like an attempt at batch size
+        const hasNumber = /\d/.test(input);
+        const hasUnit = /\b(gram|ounce|pound|kilo|batch)\b/i.test(input);
+
+        if (hasNumber && !hasUnit) {
+            return {
+                response: `I see a number but need a unit! Try:\n- "**500g**" or "**500 grams**"\n- "**16 oz**" or "**1 pound**"\n- "**small batch**" (500g), "**medium batch**" (1000g)\n\nOr say "**cancel**" to start over.`,
+                category: 'recipe'
+            };
+        }
+
         return {
-            response: "I need to know the batch size first. How much soap do you want to make?\n\nExamples: \"500g\", \"1 pound\", \"32 oz\", \"small batch\", \"1 kilo\"",
+            response: `I need to know the batch size first. How much soap do you want to make?\n\n**Quick options:**\n- **500g** (small, ~6 bars)\n- **1000g** (medium, ~12 bars)\n- **1500g** (large, ~18 bars)\n\nOr type your own size like "32 oz" or "2 pounds".\n\n💡 *Say "cancel" anytime to exit recipe mode.*`,
             category: 'recipe'
         };
     }
 
     if (recipeState.oils.length === 0) {
+        // Check if they mentioned something that isn't an oil
+        const mentionedOils = extractOilsFromText(input);
+        const hasPercentOrGrams = /\d+\s*(%|g|grams?)/i.test(input);
+
+        if (mentionedOils.length === 0 && hasPercentOrGrams) {
+            return {
+                response: `I didn't recognize those oils. Here are oils I can work with:\n\n**Popular choices:** Olive Oil, Coconut Oil, Palm Oil, Castor Oil, Shea Butter\n\n**Example:** "35% olive oil, 30% coconut, 25% shea butter, 10% castor"\n\n💡 *Say "cancel" to exit, or "suggest a recipe" for a beginner blend!*`,
+                category: 'recipe'
+            };
+        }
+
+        const availableOils = soapCalculator
+            ? soapCalculator.getAvailableOils().slice(0, 10).map(o => o.name).join(', ')
+            : 'Olive Oil, Coconut Oil, Palm Oil, Castor Oil, Shea Butter, Cocoa Butter, Sweet Almond Oil, Avocado Oil';
+
         return {
-            response: "What oils would you like to use? List them with amounts (e.g., \"300g olive oil, 150g coconut oil\") or just the names and I'll suggest amounts.",
+            response: `What oils would you like to use for your **${recipeState.batchSizeGrams}g** batch?\n\n**Options:**\n- List oils with amounts: "200g olive, 150g coconut, 50g castor"\n- List oils with percentages: "40% olive, 35% coconut, 25% shea"\n- Just name oils: "olive, coconut, castor" (I'll suggest amounts)\n- Say "**suggest a recipe**" for a beginner-friendly blend\n\n**Available oils:** ${availableOils}\n\n💡 *Say "cancel" to exit recipe mode.*`,
             category: 'recipe'
         };
     }
 
+    // We have oils but user said something unexpected
+    const currentOilsList = recipeState.oils.map(o => `${o.name}: ${o.grams}g`).join(', ');
     return {
-        response: "Ready to calculate! Just say \"yes\" or \"calculate\" to proceed with 5% superfat, or specify a different superfat like \"7% superfat\" or \"lye discount 8%\".",
+        response: `Almost there! Your current recipe:\n- **Oils:** ${currentOilsList}\n- **Superfat:** ${recipeState.superfat}%\n\n**What would you like to do?**\n- Say "**yes**" or "**calculate**" to get your recipe\n- Say "**7% superfat**" to change the superfat\n- Say "**add castor oil**" to add another oil\n- Say "**start over**" or "**cancel**" to begin again`,
         category: 'recipe'
     };
 }
@@ -2532,7 +2677,8 @@ async function processAIResponseForRecipe(aiResponse, originalQuestion) {
 
     if (!extractedRecipe || extractedRecipe.oils.length === 0) {
         console.log('⚠️ Could not extract recipe from AI response');
-        return aiResponse; // Return original if can't extract
+        // Provide helpful guidance to get a calculated recipe
+        return aiResponse + `\n\n---\n\n> **💡 Want exact lye amounts?** I mentioned some oils above but couldn't auto-calculate. To get a safe, calculated recipe with precise lye and water amounts, try saying:\n> - "Calculate a 500g batch with those oils"\n> - "Create a recipe with 35% olive, 30% coconut, 25% palm, 10% castor"\n> - Or just say "calculate recipe" and I'll guide you step by step!`;
     }
 
     // Try to extract or default batch size
@@ -2576,8 +2722,9 @@ async function processAIResponseForRecipe(aiResponse, originalQuestion) {
 
     } catch (error) {
         console.error('❌ Failed to calculate recipe from AI response:', error);
-        // Return original AI response if calculation fails
-        return aiResponse + `\n\n> **Note:** I suggested a recipe above. To get exact lye and water amounts, say "calculate recipe" and I'll walk you through the safe calculation process.`;
+        // Provide more helpful guidance when calculation fails
+        const oilNames = extractedRecipe.oils.map(o => o.name).join(', ');
+        return aiResponse + `\n\n---\n\n> **⚠️ Calculation Error:** I couldn't auto-calculate this recipe (${error.message}).\n>\n> **To get safe lye amounts**, say one of these:\n> - "Calculate a ${batchSize}g batch with ${oilNames}"\n> - "Calculate recipe" (I'll guide you step by step)\n>\n> **Never guess lye amounts** - incorrect calculations can make caustic, dangerous soap!`;
     }
 }
 
@@ -2585,7 +2732,7 @@ async function processAIResponseForRecipe(aiResponse, originalQuestion) {
  * Extract oil names and percentages from AI response text
  */
 function extractRecipeFromAIResponse(text) {
-    const oils = [];
+    let oils = [];
     let superfat = 5; // Default
     let batchSize = null;
 
@@ -2613,6 +2760,46 @@ function extractRecipeFromAIResponse(text) {
         'apricot': 'Apricot Kernel Oil'
     };
 
+    // FIRST: Try to parse structured format (from AI prompt instructions)
+    // Format: RECIPE: name, BATCH SIZE: Xg, OILS: - Oil Name: X%, SUPERFAT: X%
+    const structuredMatch = text.match(/RECIPE:.*?BATCH SIZE:\s*(\d+)\s*g.*?OILS:([\s\S]*?)SUPERFAT:\s*(\d+)\s*%/i);
+    if (structuredMatch) {
+        console.log('📋 Found structured recipe format from AI');
+        batchSize = parseInt(structuredMatch[1]);
+        superfat = parseInt(structuredMatch[3]);
+
+        // Parse oils from the OILS section
+        const oilsSection = structuredMatch[2];
+        const oilLinePattern = /-\s*([^:]+):\s*(\d+)\s*%/g;
+        let oilMatch;
+        while ((oilMatch = oilLinePattern.exec(oilsSection)) !== null) {
+            const oilName = oilMatch[1].trim();
+            const percent = parseInt(oilMatch[2]);
+
+            // Try to match to standardized name
+            let standardName = null;
+            for (const [key, name] of Object.entries(oilNameMap)) {
+                if (oilName.toLowerCase().includes(key)) {
+                    standardName = name;
+                    break;
+                }
+            }
+
+            if (standardName && !oils.find(o => o.name === standardName)) {
+                oils.push({ name: standardName, percent });
+            } else if (!standardName) {
+                // Use the name as-is if not in our map (might still work)
+                oils.push({ name: oilName, percent });
+            }
+        }
+
+        if (oils.length > 0) {
+            console.log(`✅ Extracted ${oils.length} oils from structured format`);
+            return { oils, superfat, batchSize };
+        }
+    }
+
+    // FALLBACK: Try legacy patterns for unstructured AI responses
     // Try first pattern: "Oil Name: XX%"
     let match;
     const pattern1 = /(\w+(?:\s+\w+)?)\s*(?:oil|butter)?[\s:–-]+(\d+)\s*%/gi;

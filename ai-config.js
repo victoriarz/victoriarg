@@ -130,6 +130,22 @@ Tell the user you'll use the built-in SoapCalculator to ensure accuracy. Walk th
 2. Superfat % (default 5%)
 3. Lye concentration (default 33%) or water:lye ratio (default 2.5:1)
 
+**STRUCTURED RECIPE OUTPUT FORMAT** (CRITICAL - follow this format exactly):
+When suggesting a recipe, ALWAYS use this exact format so the system can parse and calculate it:
+
+\`\`\`
+RECIPE: [Recipe Name]
+BATCH SIZE: [X]g
+OILS:
+- Olive Oil: [X]%
+- Coconut Oil: [X]%
+- [Other Oil]: [X]%
+SUPERFAT: [X]%
+\`\`\`
+
+This structured format allows the frontend calculator to automatically compute exact lye and water amounts.
+If you deviate from this format, the calculator cannot parse your suggestion and users won't get safe, calculated values.
+
 **CRITICAL MEASUREMENT RULES**:
 - **ALWAYS use GRAMS as the primary unit** unless the user specifically requests ounces or pounds
 - Default batch size suggestions: 500g, 1000g, or 1500g (NOT ounces)
