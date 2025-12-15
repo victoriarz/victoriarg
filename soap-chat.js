@@ -2545,10 +2545,17 @@ function handleActiveRecipeConversation(input) {
     }
 
     // Check for "suggest a recipe" or simple affirmative during recipe building
+    // Be flexible with variations like "give your suggestion", "what do you suggest", etc.
     const wantsSuggestion = /\b(suggest|recommend|beginner|default)\b.*\b(recipe|blend|mix)\b/i.test(input) ||
-        (/\b(suggest|recommend)\b/i.test(input) && recipeState.oils.length === 0) ||
+        // Match "suggestion", "suggest", "recommend", "recommendation"
+        (/\b(suggest(ion)?|recommend(ation)?)\b/i.test(input) && recipeState.oils.length === 0) ||
+        // Match "give your/me a suggestion", "your suggestion", "what do you suggest"
+        /\b(give|your|make)\b.*\bsuggest/i.test(input) ||
+        /\bwhat\s+(do\s+you|would\s+you)\s+(suggest|recommend)\b/i.test(input) ||
+        // Match "you choose", "you decide", "you pick", "surprise me"
+        /\b(you\s+(choose|decide|pick)|surprise\s+me|dealer'?s?\s+choice)\b/i.test(input) ||
         // Handle simple affirmatives when no oils/batch set (e.g., after unusual ingredient message)
-        (/^(yes|yeah|yep|sure|ok|okay|please|yea|sounds good|let'?s do it)\.?!?$/i.test(input.trim()) &&
+        (/^(yes|yeah|yep|sure|ok|okay|please|yea|go ahead|sounds good|let'?s do it|do it)\.?!?$/i.test(input.trim()) &&
          recipeState.oils.length === 0 && recipeState.batchSizeGrams === 0);
 
     if (wantsSuggestion) {
