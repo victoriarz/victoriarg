@@ -88,6 +88,13 @@ function searchKnowledgeBank(userInput) {
         return null;
     }
 
+    // IMPORTANT: Skip knowledge bank search if user is in the middle of a recipe conversation
+    // This prevents oil names like "coconut" from triggering info lookups instead of recipe building
+    if (recipeState.active) {
+        console.log('📚 Recipe conversation active - skipping knowledge bank search');
+        return null;
+    }
+
     const input = userInput.toLowerCase();
     const kb = SOAP_KNOWLEDGE_BANK;
 
