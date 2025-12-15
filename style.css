@@ -3325,78 +3325,91 @@ footer p {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Recipe action buttons */
+/* Recipe action buttons - pixel-art style */
 .recipe-actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     margin: 20px 0;
     flex-wrap: wrap;
 }
 
 .recipe-action-btn {
-    padding: 10px 20px;
-    background-color: #7fa563;
-    color: #ffffff;
+    padding: 10px 16px;
+    background: #7fa563;
+    color: #faf6f0;
     border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 12px;
+    font-family: 'Press Start 2P', monospace;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.1s;
+    box-shadow:
+        0 0 0 2px #7a6550,
+        0 4px 0 2px #6b8a54;
 }
 
 .recipe-action-btn:hover {
-    background-color: #6b8a54;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(2px);
+    box-shadow:
+        0 0 0 2px #7a6550,
+        0 2px 0 2px #6b8a54;
+    background: #6b8a54;
 }
 
 .recipe-action-btn:active {
-    transform: translateY(0);
+    transform: translateY(4px);
+    box-shadow:
+        0 0 0 2px #7a6550,
+        0 0 0 2px #6b8a54;
 }
 
-/* Recipe scaling buttons */
+/* Recipe scaling buttons - pixel-art style */
 .recipe-scaling {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     margin: 15px 0;
     padding: 15px;
     background-color: #f5ede3;
-    border-radius: 8px;
     flex-wrap: wrap;
+    box-shadow: 0 0 0 3px #7a6550;
 }
 
 .scaling-label {
-    font-weight: 600;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
     color: #6b5d52;
-    font-size: 0.95rem;
     margin-right: 5px;
 }
 
 .scaling-btn {
-    padding: 8px 16px;
-    background-color: #ffffff;
-    color: #d4a574;
-    border: 2px solid #d4a574;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    padding: 8px 12px;
+    background: #faf6f0;
+    color: #7a6550;
+    border: none;
+    font-size: 10px;
+    font-family: 'Press Start 2P', monospace;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.1s;
     white-space: nowrap;
+    box-shadow:
+        0 0 0 2px #d4a574,
+        0 3px 0 2px #c89563;
 }
 
 .scaling-btn:hover {
-    background-color: #d4a574;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+    transform: translateY(2px);
+    box-shadow:
+        0 0 0 2px #d4a574,
+        0 1px 0 2px #c89563;
+    background: #d4a574;
+    color: #faf6f0;
 }
 
 .scaling-btn:active {
-    transform: translateY(0);
+    transform: translateY(3px);
+    box-shadow:
+        0 0 0 2px #d4a574,
+        0 0 0 2px #c89563;
 }
 
 /* Mobile adjustments for quick wins */
