@@ -5,6 +5,58 @@ class RecipeStorage {
     constructor() {
         this.storageKey = 'saponifyai_saved_recipes';
         this.maxRecipes = 50; // Limit to prevent localStorage overflow
+        this.expirationDays = 30; // Recipes expire after 30 days
+
+        // Clean up expired recipes on initialization
+        this.cleanupExpiredRecipes();
+    }
+
+    /**
+     * Check if a recipe has expired
+     * @param {Object} recipe - Recipe record
+     * @returns {boolean} True if expired
+     */
+    isExpired(recipe) {
+        const expirationMs = this.expirationDays * 24 * 60 * 60 * 1000;
+        const now = Date.now();
+        return (now - recipe.createdAt) > expirationMs;
+    }
+
+    /**
+     * Get days remaining before recipe expires
+     * @param {Object} recipe - Recipe record
+     * @returns {number} Days remaining (0 if expired)
+     */
+    getDaysRemaining(recipe) {
+        const expirationMs = this.expirationDays * 24 * 60 * 60 * 1000;
+        const expiresAt = recipe.createdAt + expirationMs;
+        const remaining = expiresAt - Date.now();
+        return Math.max(0, Math.ceil(remaining / (24 * 60 * 60 * 1000)));
+    }
+
+    /**
+     * Remove expired recipes from storage
+     * @returns {number} Number of recipes removed
+     */
+    cleanupExpiredRecipes() {
+        try {
+            const data = localStorage.getItem(this.storageKey);
+            if (!data) return 0;
+
+            const recipes = JSON.parse(data);
+            const validRecipes = recipes.filter(r => !this.isExpired(r));
+            const removedCount = recipes.length - validRecipes.length;
+
+            if (removedCount > 0) {
+                localStorage.setItem(this.storageKey, JSON.stringify(validRecipes));
+                console.log(`Cleaned up ${removedCount} expired recipe(s)`);
+            }
+
+            return removedCount;
+        } catch (error) {
+            console.error('Error cleaning up expired recipes:', error);
+            return 0;
+        }
     }
 
     /**

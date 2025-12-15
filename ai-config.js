@@ -184,6 +184,12 @@ Then present the calculated recipe with:
 
     // Check backend health (returns true if backend is reachable)
     async checkBackendHealth() {
+        // Skip health check when running from file:// to avoid CORS errors in console
+        if (window.location.protocol === 'file:') {
+            console.log('Skipping backend health check (running from file://)');
+            return false;
+        }
+
         try {
             const response = await fetch(`${this.backendUrl}/health`, {
                 method: 'GET',

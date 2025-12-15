@@ -149,7 +149,21 @@ function checkForSavedDraft() {
 function generateUserFriendlyError(error, userMessage) {
     const errorMsg = error.message || '';
 
-    // Network/API errors
+    // FIRST: Try to answer from knowledge base before showing any error
+    const legacyResult = findResponse(userMessage);
+    if (legacyResult.category !== null) {
+        console.log('✅ Found answer in knowledge base despite API error');
+        return legacyResult.response;
+    }
+
+    // Also try the comprehensive knowledge bank
+    const knowledgeResult = searchKnowledgeBank(userMessage);
+    if (knowledgeResult && knowledgeResult.response) {
+        console.log('✅ Found answer in knowledge bank despite API error');
+        return knowledgeResult.response;
+    }
+
+    // Network/API errors - only show if we couldn't answer from knowledge base
     if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('Failed to fetch')) {
         return `**Connection Issue**\n\n` +
             `I couldn't reach the AI service. This might be a temporary network issue.\n\n` +
@@ -190,13 +204,7 @@ function generateUserFriendlyError(error, userMessage) {
             `Or just list your oils and I'll suggest amounts!`;
     }
 
-    // Generic fallback with helpful suggestions
-    const legacyResult = findResponse(userMessage);
-
-    if (legacyResult.category !== null) {
-        return legacyResult.response;
-    }
-
+    // Generic fallback - knowledge base was already checked at the top
     return `**Hmm, something went wrong**\n\n` +
         `I couldn't process that request, but I'm still here to help!\n\n` +
         `**Try asking about:**\n` +
@@ -506,8 +514,8 @@ const soapKnowledge = {
         response: "Different oils create different soap properties! Hard oils (coconut, palm): create hard bars and lather. Soft oils (olive, avocado, sweet almond): moisturizing and gentle. Luxury oils (castor, jojoba, shea butter): add special properties. A balanced recipe typically uses 60-70% hard oils, 25-35% soft oils, and 5% castor for bubbles. Coconut oil creates great lather but can dry skin over 30%. Olive oil (Castile soap) is super gentle but takes longer to cure!"
     },
     'essential_oils': {
-        keywords: ['essential oil', 'fragrance', 'scent', 'smell', 'aroma'],
-        response: "Essential oils add natural fragrance! Use 0.5-1 oz per pound of soap. Popular choices: Lavender (calming, anchors well), Peppermint (refreshing), Tea Tree (antimicrobial), Lemongrass (citrusy), Eucalyptus (spa-like). Some fade quickly (citrus), so pair them with anchoring oils like patchouli or cedarwood. Always check if an EO is skin-safe. Fragrance oils are synthetic alternatives that often last longer. Add at trace before pouring!"
+        keywords: ['essential oil', 'fragrance', 'scent', 'smell', 'aroma', 'chocolate', 'vanilla', 'lavender', 'peppermint', 'citrus'],
+        response: "To scent your soap, you have several options:\n\n**Essential Oils** (natural): Use 0.5-1 oz per pound of soap. Popular choices: Lavender, Peppermint, Tea Tree, Lemongrass, Eucalyptus.\n\n**Fragrance Oils** (synthetic): Often last longer and come in more varieties like chocolate, vanilla, bakery scents. Use 0.7 oz per pound.\n\n**For chocolate scent specifically**: Use a chocolate fragrance oil, OR add cocoa butter (gives subtle natural chocolate scent) + cocoa powder for color. Vanilla-based scents may discolor soap brown over time.\n\nAdd fragrances at trace, right before pouring!"
     },
     'lye': {
         keywords: ['lye', 'sodium hydroxide', 'caustic', 'dangerous'],
@@ -546,8 +554,13 @@ function isKnowledgeSeekingQuestion(input) {
     const knowledgePatterns = [
         // "What is/are..." questions
         /\bwhat\s+(is|are|does|do)\b/i,
+        // "Which..." questions (e.g., "which oils should I use", "which fragrance...")
+        /\bwhich\s+(oil|essential|fragrance|scent|butter|additive|colorant|method)\b/i,
         // "How does... work" (not "how much" which is recipe-related)
         /\bhow\s+(does|do|is)\b.*\bwork\b/i,
+        // "How can I make it smell/scent" - fragrance questions, not recipe building
+        /\b(smell|scent)\s+(like|of)\b/i,
+        /\bmake\s+(it|my|the|soap)\s+smell\b/i,
         // "Explain..." or "Tell me about..."
         /\b(explain|tell me about|describe|what's the difference)\b/i,
         // "Why..." questions about concepts
@@ -567,7 +580,10 @@ function isKnowledgeSeekingQuestion(input) {
         // Definition requests
         /\bdefin(e|ition)\b/i,
         // Method comparisons
-        /\b(difference between|compare|vs|versus)\b/i
+        /\b(difference between|compare|vs|versus)\b/i,
+        // Fragrance/scent/smell questions with specific scents
+        /\b(fragrance|essential oil|scent|smell|aroma)\b.*\b(chocolate|vanilla|lavender|citrus|mint|coffee|honey)\b/i,
+        /\b(chocolate|vanilla|lavender|citrus|mint|coffee|honey)\b.*\b(fragrance|scent|smell)\b/i
     ];
 
     return knowledgePatterns.some(pattern => pattern.test(input));

@@ -1181,6 +1181,22 @@
             color: var(--dark-brown);
         }
 
+        .recipe-expiration {
+            font-size: 14px;
+            color: var(--brown);
+            margin-bottom: 10px;
+            padding: 4px 8px;
+            background: var(--wood);
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .recipe-expiration.expiring-soon {
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+        }
+
         .recipe-card-actions {
             display: flex;
             gap: 5px;

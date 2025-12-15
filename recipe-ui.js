@@ -194,6 +194,11 @@ function createRecipeCard(record) {
     const recipe = record.recipe;
     const date = recipeStorage.formatDate(record.createdAt);
 
+    // Get expiration info
+    const daysRemaining = recipeStorage.getDaysRemaining(record);
+    const expirationClass = daysRemaining <= 7 ? 'expiring-soon' : '';
+    const expirationText = daysRemaining === 1 ? '1 day left' : `${daysRemaining} days left`;
+
     // Get key info
     const totalOils = recipe.oils.length;
     const batchSize = recipe.totalBatchSize.grams;
@@ -212,6 +217,7 @@ function createRecipeCard(record) {
                 <h3 class="recipe-card-title">${escapeHtml(record.name)}</h3>
                 <span class="recipe-card-date">${date}</span>
             </div>
+            <div class="recipe-expiration ${expirationClass}">⏱️ ${expirationText}</div>
             <div class="recipe-card-info">
                 <span class="recipe-card-detail"><strong>${batchSize}g</strong> batch</span>
                 <span class="recipe-card-detail"><strong>${totalOils}</strong> oils</span>
