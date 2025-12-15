@@ -6,6 +6,11 @@ class AIConfig {
         // Backend proxy URL (deployed on Render)
         this.backendUrl = 'https://saponify-ai-backend.onrender.com';
 
+        // Default Gemini API key for direct calls (fallback when backend unavailable)
+        // Get a free key at: https://aistudio.google.com/app/apikey
+        // Note: Free tier has generous limits (60 requests/minute)
+        this.defaultGeminiKey = 'YOUR_GEMINI_API_KEY_HERE'; // Replace with your key
+
         // Model settings
         this.geminiModel = 'gemini-2.0-flash-exp'; // Latest Flash model - Fast, efficient, and FREE!
 
@@ -219,8 +224,13 @@ Then present the calculated recipe with:
     }
 
     getGeminiApiKey() {
+        // Check for user-set key first (from localStorage)
         if (!this.directGeminiApiKey) {
             this.directGeminiApiKey = localStorage.getItem('saponify_gemini_key');
+        }
+        // Fall back to default key if available
+        if (!this.directGeminiApiKey && this.defaultGeminiKey && this.defaultGeminiKey !== 'YOUR_GEMINI_API_KEY_HERE') {
+            return this.defaultGeminiKey;
         }
         return this.directGeminiApiKey;
     }
