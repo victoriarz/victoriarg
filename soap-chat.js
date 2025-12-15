@@ -664,6 +664,14 @@ function searchKnowledgeBank(userInput) {
         return { response: answer, category: 'Fragrance' };
     }
 
+    // COMPARISON QUESTIONS: Route to Gemini for "difference between", "vs", "compare" questions
+    // These need AI to synthesize a comparison, not dump a knowledge bank section
+    const comparisonMatch = input.match(/\b(difference\s+between|what'?s?\s+the\s+difference|compare|vs\.?|versus)\b/i);
+    if (comparisonMatch) {
+        console.log('📚 Comparison question detected - routing to Gemini for better answer');
+        return null; // Let Gemini handle comparison questions
+    }
+
     // Check if this is an explicit knowledge-seeking question (even during recipe building)
     const isExplicitKnowledgeQuestion = isKnowledgeSeekingQuestion(input);
 
