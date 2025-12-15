@@ -19,6 +19,209 @@ let recipeState = {
     superfat: 5
 };
 
+// Conversation context tracking for follow-up questions
+let conversationContext = {
+    lastTopic: null,           // 'recipe', 'troubleshooting', 'oils', 'safety', etc.
+    lastOilMentioned: null,    // Track last oil discussed for follow-ups
+    lastRecipeDiscussed: null, // Store recipe details for modifications
+    questionCount: 0           // Track depth of conversation on topic
+};
+
+/**
+ * Update conversation context based on response category and content
+ */
+function updateConversationContext(category, userMessage) {
+    // Track topic
+    if (category) {
+        if (conversationContext.lastTopic === category) {
+            conversationContext.questionCount++;
+        } else {
+            conversationContext.lastTopic = category;
+            conversationContext.questionCount = 1;
+        }
+    }
+
+    // Extract and track oil mentions
+    const mentionedOils = extractOilsFromText(userMessage);
+    if (mentionedOils.length > 0) {
+        conversationContext.lastOilMentioned = mentionedOils[mentionedOils.length - 1];
+    }
+
+    // Track recipe context
+    if (lastCalculatedRecipe) {
+        conversationContext.lastRecipeDiscussed = {
+            timestamp: lastCalculatedRecipeTime,
+            oils: lastCalculatedRecipe.recipe.oils.map(o => o.name),
+            superfat: lastCalculatedRecipe.recipe.superfat
+        };
+    }
+}
+
+/**
+ * Check for follow-up questions that reference previous context
+ * Handles: "what about...", "and coconut?", "tell me more", etc.
+ */
+function checkFollowUpQuestion(input) {
+    const followUpPatterns = {
+        // "Tell me more" / "More details"
+        moreInfo: /\b(tell me more|more (info|details|about)|elaborate|explain more|go on)\b/i,
+        // "What about X?" - referencing a different oil/topic
+        whatAbout: /\bwhat about\b/i,
+        // "And X?" - adding to previous question
+        andQuestion: /^and\s+(\w+)/i,
+        // "How about X instead?"
+        howAbout: /\bhow about\b/i,
+        // "Is that good?" / "Is that safe?" - referencing previous recipe
+        isQuestion: /\bis (that|it|this)\s+(good|safe|okay|ok|right)\b/i,
+        // "Why?" / "Why not?" - asking for explanation of previous answer
+        why: /^why\b(?!\s+do|\s+should|\s+would)/i,
+        // "Can I use X instead?"
+        canI: /\bcan i\s+(use|substitute|swap|replace)\b/i
+    };
+
+    // Check if there's context to reference
+    if (!conversationContext.lastTopic && !lastCalculatedRecipe) {
+        return null;
+    }
+
+    // "Tell me more" about current topic
+    if (followUpPatterns.moreInfo.test(input) && conversationContext.lastTopic) {
+        return handleMoreInfoRequest(conversationContext.lastTopic);
+    }
+
+    // "What about [oil]?" when discussing oils
+    if (followUpPatterns.whatAbout.test(input)) {
+        const oils = extractOilsFromText(input);
+        if (oils.length > 0) {
+            return getOilInfo(oils[0]);
+        }
+    }
+
+    // "And coconut?" style questions
+    const andMatch = input.match(followUpPatterns.andQuestion);
+    if (andMatch && conversationContext.lastTopic === 'oils') {
+        const oils = extractOilsFromText(input);
+        if (oils.length > 0) {
+            return getOilInfo(oils[0]);
+        }
+    }
+
+    // "Is that safe?" after a recipe
+    if (followUpPatterns.isQuestion.test(input) && lastCalculatedRecipe) {
+        const recipe = lastCalculatedRecipe.recipe;
+        if (recipeValidator) {
+            const validation = recipeValidator.validateRecipe(recipe);
+            if (validation.valid && validation.warnings.length === 0) {
+                return {
+                    response: `Yes! Your recipe looks good. It has balanced properties and is safe to make. Just remember to:\n\n` +
+                        `- Wear safety gear (goggles, gloves)\n` +
+                        `- Add lye to water, never water to lye\n` +
+                        `- Work in a well-ventilated area\n` +
+                        `- Cure for 4-6 weeks before use`,
+                    category: 'safety'
+                };
+            } else {
+                return {
+                    response: recipeValidator.formatValidationMessage(validation) +
+                        `\nWould you like me to help adjust the recipe?`,
+                    category: 'recipe'
+                };
+            }
+        }
+    }
+
+    // "Can I use X instead?" - oil substitution
+    if (followUpPatterns.canI.test(input) && lastCalculatedRecipe) {
+        const oils = extractOilsFromText(input);
+        if (oils.length > 0) {
+            return handleOilSwapRequest(input, lastCalculatedRecipe.recipe);
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Handle "tell me more" requests based on topic
+ */
+function handleMoreInfoRequest(topic) {
+    const moreInfoResponses = {
+        'recipe': {
+            response: `Here's more about soap recipe formulation:\n\n` +
+                `**Key principles:**\n` +
+                `- **Hard oils** (coconut, palm, butters): 30-50% for bar hardness\n` +
+                `- **Soft oils** (olive, sweet almond): 40-60% for conditioning\n` +
+                `- **Castor oil**: 5-10% to boost lather\n\n` +
+                `**Superfat** (5-8%): Extra oils for moisturizing\n` +
+                `**Lye concentration** (28-33%): Higher = faster trace, faster unmold\n\n` +
+                `Would you like me to explain any of these in more detail?`,
+            category: 'recipe'
+        },
+        'oils': {
+            response: `More about soap-making oils:\n\n` +
+                `**For hardness**: Coconut, Palm, Cocoa Butter, Tallow, Lard\n` +
+                `**For conditioning**: Olive, Avocado, Sweet Almond, Shea Butter\n` +
+                `**For lather**: Coconut (bubbly), Castor (boosts all lather)\n` +
+                `**Budget-friendly**: Canola, Sunflower, Lard\n` +
+                `**Luxury**: Jojoba, Argan, Hemp Seed\n\n` +
+                `Each oil has unique fatty acids that affect the final soap. Ask about any specific oil!`,
+            category: 'oils'
+        },
+        'safety': {
+            response: `More on soap-making safety:\n\n` +
+                `**Lye handling:**\n` +
+                `- Always add lye TO water (snow falls on the lake)\n` +
+                `- Mix in ventilated area - fumes are caustic\n` +
+                `- Solution reaches 200°F+ initially\n\n` +
+                `**PPE required:**\n` +
+                `- Chemical splash goggles (not just glasses)\n` +
+                `- Long rubber gloves\n` +
+                `- Long sleeves, closed-toe shoes\n\n` +
+                `**First aid:** Flush with water 15+ minutes for any contact. Eye contact = ER immediately.`,
+            category: 'safety'
+        },
+        'troubleshooting': {
+            response: `Common soap problems and solutions:\n\n` +
+                `**Soap won't trace:** Blend longer, check temps (100-120°F), verify lye measurements\n` +
+                `**Soft/sticky bars:** Too much soft oil, not enough lye, or needs more cure time\n` +
+                `**Crumbly/brittle:** Too much lye or cooked too hot\n` +
+                `**White powder (soda ash):** Cosmetic only - wash off or prevent by covering mold\n` +
+                `**Orange spots (DOS):** Rancid oils - use fresh oils and add vitamin E\n\n` +
+                `What specific issue are you experiencing?`,
+            category: 'troubleshooting'
+        }
+    };
+
+    return moreInfoResponses[topic] || null;
+}
+
+/**
+ * Get detailed info about a specific oil
+ */
+function getOilInfo(oilName) {
+    if (!soapCalculator) return null;
+
+    const oilData = soapCalculator.findOil(oilName);
+    if (!oilData) return null;
+
+    const props = oilData.properties || {};
+    const response = `**${oilData.name}** properties:\n\n` +
+        `- **SAP Value (NaOH):** ${oilData.sapNaOH}\n` +
+        `- **Hardness:** ${props.hardness || 'N/A'}\n` +
+        `- **Cleansing:** ${props.cleansing || 'N/A'}\n` +
+        `- **Conditioning:** ${props.conditioning || 'N/A'}\n` +
+        `- **Bubbly lather:** ${props.bubbly || 'N/A'}\n` +
+        `- **Creamy lather:** ${props.creamy || 'N/A'}\n\n` +
+        `**Recommended %:** ${oilData.recommendedPercent || '5-30%'}\n\n` +
+        `Want to add this to a recipe or learn about another oil?`;
+
+    // Update context
+    conversationContext.lastOilMentioned = oilName;
+    conversationContext.lastTopic = 'oils';
+
+    return { response, category: 'oils' };
+}
+
 // Store last calculated recipe for quick wins
 let lastCalculatedRecipe = null;
 let lastCalculatedRecipeTime = null;
@@ -1082,6 +1285,271 @@ function findOilInDatabase(oilName) {
 // ===========================================
 
 /**
+ * Check if user wants to modify a recently calculated recipe
+ * Handles: "adjust that recipe", "make it bigger", "change superfat", "swap olive for avocado"
+ */
+function checkRecipeModificationIntent(input) {
+    // Only check if we have a recent recipe (within last 10 minutes)
+    const recipeAge = lastCalculatedRecipe ? (Date.now() - lastCalculatedRecipeTime) : Infinity;
+    const isRecentRecipe = recipeAge < 10 * 60 * 1000; // 10 minutes
+
+    if (!isRecentRecipe || !lastCalculatedRecipe) {
+        return null;
+    }
+
+    const recipe = lastCalculatedRecipe.recipe;
+
+    // Patterns for recipe modification
+    const modificationPatterns = {
+        // Scale/resize requests
+        scale: /\b(scale|resize|double|triple|halve|half|make it|change.*(size|batch)|bigger|smaller)\b/i,
+        // Superfat changes
+        superfat: /\b(change|adjust|increase|decrease|modify).*(superfat|super\s*fat|lye\s*discount)\b/i,
+        // Oil swap requests
+        swap: /\b(swap|replace|substitute|switch|change|use).*(oil|butter|instead)\b/i,
+        // Add/remove oil
+        addOil: /\b(add|include|put in)\b.*\b(oil|butter|castor|shea|coconut|olive|palm)\b/i,
+        removeOil: /\b(remove|take out|without|no)\b.*\b(oil|butter|castor|shea|coconut|olive|palm)\b/i,
+        // Generic modification
+        adjust: /\b(adjust|modify|change|tweak)\b.*(recipe|that|it)\b/i,
+        recalculate: /\b(recalculate|redo|again)\b/i
+    };
+
+    // Check for scale request
+    if (modificationPatterns.scale.test(input)) {
+        return handleScaleRequest(input, recipe);
+    }
+
+    // Check for superfat change
+    if (modificationPatterns.superfat.test(input)) {
+        const newSuperfat = parseSuperfat(input);
+        if (newSuperfat !== null) {
+            return recalculateWithNewSuperfat(recipe, newSuperfat);
+        }
+        return {
+            response: `The current recipe has **${recipe.superfat}% superfat**. What percentage would you like instead? (e.g., "7% superfat")`,
+            category: 'recipe'
+        };
+    }
+
+    // Check for oil swap
+    if (modificationPatterns.swap.test(input)) {
+        return handleOilSwapRequest(input, recipe);
+    }
+
+    // Check for add oil
+    if (modificationPatterns.addOil.test(input)) {
+        return handleAddOilRequest(input, recipe);
+    }
+
+    // Check for remove oil
+    if (modificationPatterns.removeOil.test(input)) {
+        return handleRemoveOilRequest(input, recipe);
+    }
+
+    // Generic adjust/modify request
+    if (modificationPatterns.adjust.test(input) || modificationPatterns.recalculate.test(input)) {
+        return {
+            response: `I can help you modify the recipe! What would you like to change?\n\n` +
+                `- **Scale**: "double it", "make it 1000g", "half the batch"\n` +
+                `- **Superfat**: "change to 7% superfat"\n` +
+                `- **Swap oils**: "replace palm with shea butter"\n` +
+                `- **Add oils**: "add 10% castor oil"\n` +
+                `- **Remove oils**: "remove the palm oil"\n\n` +
+                `Current recipe: ${recipe.totalBatchSize.grams}g with ${recipe.superfat}% superfat`,
+            category: 'recipe'
+        };
+    }
+
+    return null;
+}
+
+/**
+ * Handle recipe scaling request
+ */
+function handleScaleRequest(input, recipe) {
+    const currentGrams = recipe.totalBatchSize.grams;
+    let newGrams = currentGrams;
+
+    // Check for multipliers
+    if (/\bdouble\b/i.test(input)) {
+        newGrams = currentGrams * 2;
+    } else if (/\btriple\b/i.test(input)) {
+        newGrams = currentGrams * 3;
+    } else if (/\b(halve|half)\b/i.test(input)) {
+        newGrams = Math.round(currentGrams / 2);
+    } else if (/\bbigger\b/i.test(input)) {
+        newGrams = Math.round(currentGrams * 1.5);
+    } else if (/\bsmaller\b/i.test(input)) {
+        newGrams = Math.round(currentGrams * 0.75);
+    } else {
+        // Try to extract specific size
+        const batchResult = parseBatchSize(input);
+        if (batchResult) {
+            newGrams = batchResult.grams;
+        }
+    }
+
+    if (newGrams === currentGrams) {
+        return {
+            response: `What size would you like? The current recipe is **${currentGrams}g**.\n\nYou can say "double it", "half the batch", or specify a size like "1000g".`,
+            category: 'recipe'
+        };
+    }
+
+    // Scale the oils proportionally
+    const scaleFactor = newGrams / currentGrams;
+    const scaledOils = recipe.oils.map(oil => ({
+        name: oil.name,
+        grams: Math.round(oil.grams * scaleFactor)
+    }));
+
+    return calculateAndFormatRecipe(scaledOils, recipe.superfat);
+}
+
+/**
+ * Recalculate recipe with new superfat
+ */
+function recalculateWithNewSuperfat(recipe, newSuperfat) {
+    const oils = recipe.oils.map(oil => ({
+        name: oil.name,
+        grams: oil.grams
+    }));
+
+    return calculateAndFormatRecipe(oils, newSuperfat);
+}
+
+/**
+ * Handle oil swap request
+ */
+function handleOilSwapRequest(input, recipe) {
+    const mentionedOils = extractOilsFromText(input);
+
+    if (mentionedOils.length < 2) {
+        const currentOils = recipe.oils.map(o => o.name).join(', ');
+        return {
+            response: `Which oils do you want to swap? Current recipe has: **${currentOils}**\n\nSay something like "replace palm oil with shea butter" or "swap coconut for babassu".`,
+            category: 'recipe'
+        };
+    }
+
+    // Find which oil is being removed and which is being added
+    const [firstOil, secondOil] = mentionedOils;
+    const existingOil = recipe.oils.find(o => o.name === firstOil);
+    const existingOil2 = recipe.oils.find(o => o.name === secondOil);
+
+    let removeOil, addOil;
+    if (existingOil && !existingOil2) {
+        removeOil = firstOil;
+        addOil = secondOil;
+    } else if (existingOil2 && !existingOil) {
+        removeOil = secondOil;
+        addOil = firstOil;
+    } else {
+        return {
+            response: `I'm not sure which oil to remove and which to add. Please be more specific, like "replace ${firstOil} with ${secondOil}".`,
+            category: 'recipe'
+        };
+    }
+
+    // Create new oils array with swap
+    const swappedOils = recipe.oils.map(oil => {
+        if (oil.name === removeOil) {
+            return { name: addOil, grams: oil.grams };
+        }
+        return { name: oil.name, grams: oil.grams };
+    });
+
+    return calculateAndFormatRecipe(swappedOils, recipe.superfat);
+}
+
+/**
+ * Handle add oil request
+ */
+function handleAddOilRequest(input, recipe) {
+    const mentionedOils = extractOilsFromText(input);
+    const newOils = mentionedOils.filter(o => !recipe.oils.find(ro => ro.name === o));
+
+    if (newOils.length === 0) {
+        return {
+            response: `Which oil would you like to add? The recipe already contains: ${recipe.oils.map(o => o.name).join(', ')}`,
+            category: 'recipe'
+        };
+    }
+
+    // Try to extract percentage or grams for the new oil
+    const newOilName = newOils[0];
+    let newOilGrams = 0;
+
+    // Check for percentage
+    const percentMatch = input.match(/(\d+)\s*%/);
+    if (percentMatch) {
+        const percent = parseInt(percentMatch[1]);
+        newOilGrams = Math.round(recipe.totalBatchSize.grams * (percent / 100));
+    } else {
+        // Check for grams
+        const gramsMatch = input.match(/(\d+)\s*g/i);
+        if (gramsMatch) {
+            newOilGrams = parseInt(gramsMatch[1]);
+        } else {
+            // Default to 10% of batch
+            newOilGrams = Math.round(recipe.totalBatchSize.grams * 0.1);
+        }
+    }
+
+    // Add new oil, proportionally reduce others
+    const totalOldGrams = recipe.oils.reduce((sum, o) => sum + o.grams, 0);
+    const scaleFactor = (totalOldGrams - newOilGrams) / totalOldGrams;
+
+    const adjustedOils = recipe.oils.map(oil => ({
+        name: oil.name,
+        grams: Math.round(oil.grams * scaleFactor)
+    }));
+
+    adjustedOils.push({ name: newOilName, grams: newOilGrams });
+
+    return calculateAndFormatRecipe(adjustedOils, recipe.superfat);
+}
+
+/**
+ * Handle remove oil request
+ */
+function handleRemoveOilRequest(input, recipe) {
+    const mentionedOils = extractOilsFromText(input);
+    const oilsToRemove = mentionedOils.filter(o => recipe.oils.find(ro => ro.name === o));
+
+    if (oilsToRemove.length === 0) {
+        return {
+            response: `Which oil would you like to remove? Current recipe has: ${recipe.oils.map(o => o.name).join(', ')}`,
+            category: 'recipe'
+        };
+    }
+
+    if (oilsToRemove.length >= recipe.oils.length) {
+        return {
+            response: `I can't remove all the oils! You need at least one oil in your recipe.`,
+            category: 'recipe'
+        };
+    }
+
+    // Remove oil and scale others proportionally
+    const remainingOils = recipe.oils.filter(o => !oilsToRemove.includes(o.name));
+    const removedGrams = recipe.oils
+        .filter(o => oilsToRemove.includes(o.name))
+        .reduce((sum, o) => sum + o.grams, 0);
+
+    const totalRemainingGrams = remainingOils.reduce((sum, o) => sum + o.grams, 0);
+    const scaleFactor = (totalRemainingGrams + removedGrams) / totalRemainingGrams;
+
+    const adjustedOils = remainingOils.map(oil => ({
+        name: oil.name,
+        grams: Math.round(oil.grams * scaleFactor)
+    }));
+
+    return calculateAndFormatRecipe(adjustedOils, recipe.superfat);
+}
+
+/**
  * Check if user message indicates recipe creation intent
  * Returns response object if recipe intent detected, null otherwise
  */
@@ -1091,6 +1559,12 @@ function checkRecipeIntent(userInput) {
     // If recipe building is already active, handle that conversation
     if (recipeState.active) {
         return handleActiveRecipeConversation(input);
+    }
+
+    // Check for recipe modification requests FIRST (if we have a recent recipe)
+    const modificationResult = checkRecipeModificationIntent(input);
+    if (modificationResult) {
+        return modificationResult;
     }
 
     // Patterns that indicate user wants to CREATE a recipe (not just learn about something)
@@ -1234,6 +1708,148 @@ function extractOilsFromText(text) {
     }
 
     return foundOils;
+}
+
+// ===========================================
+// IMPROVED PARSING FUNCTIONS
+// Handle more natural language input formats
+// ===========================================
+
+/**
+ * Parse batch size from text with flexible format support
+ * Handles: "500g", "500 grams", "1 pound", "16 oz", "about 500g", "half a kilo", etc.
+ */
+function parseBatchSize(text) {
+    const input = text.toLowerCase();
+
+    // Common word-based sizes
+    const wordSizes = {
+        'small batch': 500,
+        'medium batch': 1000,
+        'large batch': 1500,
+        'half a kilo': 500,
+        'half kilo': 500,
+        'one kilo': 1000,
+        '1 kilo': 1000,
+        'a kilo': 1000,
+        'two kilos': 2000,
+        '2 kilos': 2000
+    };
+
+    for (const [phrase, grams] of Object.entries(wordSizes)) {
+        if (input.includes(phrase)) {
+            return { grams, original: phrase };
+        }
+    }
+
+    // Multiple regex patterns for flexibility
+    const patterns = [
+        // Standard: "500g", "500 g", "500 grams"
+        /(\d+(?:\.\d+)?)\s*(g|grams?)\b/i,
+        // Ounces: "16 oz", "16 ounces"
+        /(\d+(?:\.\d+)?)\s*(oz|ounces?)\b/i,
+        // Pounds: "1 lb", "2 lbs", "1 pound", "2 pounds"
+        /(\d+(?:\.\d+)?)\s*(lbs?|pounds?)\b/i,
+        // Kilograms: "1 kg", "1.5 kg", "1 kilogram"
+        /(\d+(?:\.\d+)?)\s*(kg|kilograms?)\b/i,
+        // With "about", "around", "approximately": "about 500g"
+        /(?:about|around|approximately|roughly|~)\s*(\d+(?:\.\d+)?)\s*(g|grams?|oz|ounces?|lbs?|pounds?|kg)?\b/i,
+        // Standalone number (assume grams if in recipe context)
+        /\b(\d{3,4})\b(?!\s*%)/  // 3-4 digit number not followed by %
+    ];
+
+    for (const pattern of patterns) {
+        const match = input.match(pattern);
+        if (match) {
+            const value = parseFloat(match[1]);
+            const unit = (match[2] || 'g').toLowerCase();
+
+            let grams = value;
+
+            // Convert to grams
+            if (unit.startsWith('oz') || unit === 'ounces') {
+                grams = Math.round(value * 28.35);
+            } else if (unit.startsWith('lb') || unit === 'pounds' || unit === 'pound') {
+                grams = Math.round(value * 453.6);
+            } else if (unit === 'kg' || unit.startsWith('kilo')) {
+                grams = Math.round(value * 1000);
+            }
+
+            // Sanity check - batch size should be reasonable (50g to 10kg)
+            if (grams >= 50 && grams <= 10000) {
+                return { grams, original: match[0] };
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Parse superfat percentage from text with flexible format support
+ * Handles: "5% superfat", "superfat 5%", "5 percent superfat", "lye discount 5%", etc.
+ */
+function parseSuperfat(text) {
+    const input = text.toLowerCase();
+
+    // Multiple patterns for flexibility
+    const patterns = [
+        // "5% superfat" or "5 % superfat"
+        /(\d+(?:\.\d+)?)\s*%?\s*(?:superfat|super\s*fat)/i,
+        // "superfat 5%" or "superfat: 5%"
+        /(?:superfat|super\s*fat)[:\s]+(\d+(?:\.\d+)?)\s*%?/i,
+        // "5 percent superfat"
+        /(\d+(?:\.\d+)?)\s*percent\s*(?:superfat|super\s*fat)?/i,
+        // "lye discount 5%" or "5% lye discount"
+        /(\d+(?:\.\d+)?)\s*%?\s*lye\s*discount/i,
+        /lye\s*discount[:\s]+(\d+(?:\.\d+)?)\s*%?/i,
+        // "sf 5" or "sf: 5"
+        /\bsf[:\s]+(\d+(?:\.\d+)?)\s*%?/i,
+        // "with 5% extra oil"
+        /with\s+(\d+(?:\.\d+)?)\s*%\s*(?:extra|excess)\s*oil/i
+    ];
+
+    for (const pattern of patterns) {
+        const match = input.match(pattern);
+        if (match) {
+            const value = parseFloat(match[1]);
+            // Sanity check - superfat should be 0-25%
+            if (value >= 0 && value <= 25) {
+                return value;
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Parse lye concentration or water:lye ratio from text
+ * Handles: "33% lye concentration", "2:1 water to lye", etc.
+ */
+function parseLyeConcentration(text) {
+    const input = text.toLowerCase();
+
+    // Lye concentration as percentage
+    const concMatch = input.match(/(\d+(?:\.\d+)?)\s*%\s*(?:lye\s*)?(?:concentration|conc)/i);
+    if (concMatch) {
+        const conc = parseFloat(concMatch[1]);
+        if (conc >= 25 && conc <= 50) {
+            return { type: 'concentration', value: conc };
+        }
+    }
+
+    // Water:lye ratio (e.g., "2:1 water to lye" or "water:lye 2.5:1")
+    const ratioMatch = input.match(/(\d+(?:\.\d+)?)\s*:\s*1\s*(?:water|w)\s*(?:to|:)\s*(?:lye|l)/i) ||
+                       input.match(/(?:water|w)\s*(?:to|:)\s*(?:lye|l)\s*(?:ratio)?\s*(\d+(?:\.\d+)?)\s*:\s*1/i);
+    if (ratioMatch) {
+        const ratio = parseFloat(ratioMatch[1]);
+        if (ratio >= 1 && ratio <= 4) {
+            return { type: 'ratio', value: ratio };
+        }
+    }
+
+    return null;
 }
 
 /**
@@ -1426,17 +2042,11 @@ function handleActiveRecipeConversation(input) {
         };
     }
 
-    // Check for batch size if we don't have one yet
+    // Check for batch size if we don't have one yet - use improved parser
     if (recipeState.batchSizeGrams === 0) {
-        const batchMatch = input.match(/(\d+)\s*(g|grams?|oz|ounces?|lbs?|pounds?)?/i);
-        if (batchMatch) {
-            const size = parseInt(batchMatch[1]);
-            const unit = (batchMatch[2] || 'g').toLowerCase();
-            let grams = size;
-
-            if (unit.startsWith('oz')) grams = Math.round(size * 28.35);
-            else if (unit.startsWith('lb') || unit === 'pounds') grams = Math.round(size * 453.6);
-
+        const batchResult = parseBatchSize(input);
+        if (batchResult) {
+            const grams = batchResult.grams;
             recipeState.batchSizeGrams = grams;
 
             // Check if we had pending oils from earlier
@@ -1486,14 +2096,14 @@ function handleActiveRecipeConversation(input) {
         }
     }
 
-    // Check for superfat adjustment or final calculation
+    // Check for superfat adjustment or final calculation - use improved parser
     if (recipeState.oils.length > 0) {
-        const superfatMatch = input.match(/(\d+)\s*%?\s*(superfat|super\s*fat|lye\s*discount)/i);
-        if (superfatMatch) {
-            recipeState.superfat = parseInt(superfatMatch[1]);
+        const superfatValue = parseSuperfat(input);
+        if (superfatValue !== null) {
+            recipeState.superfat = superfatValue;
         }
 
-        if (/\b(calculate|yes|go|do it|proceed|ok|okay)\b/i.test(input) || superfatMatch) {
+        if (/\b(calculate|yes|go|do it|proceed|ok|okay|sure|yep|yeah)\b/i.test(input) || superfatValue !== null) {
             return calculateAndFormatRecipe(recipeState.oils, recipeState.superfat);
         }
     }
@@ -1501,7 +2111,7 @@ function handleActiveRecipeConversation(input) {
     // Didn't understand - provide guidance
     if (recipeState.batchSizeGrams === 0) {
         return {
-            response: "I need to know the batch size first. How many grams of soap do you want to make? (e.g., \"500g\" or \"1000 grams\")",
+            response: "I need to know the batch size first. How much soap do you want to make?\n\nExamples: \"500g\", \"1 pound\", \"32 oz\", \"small batch\", \"1 kilo\"",
             category: 'recipe'
         };
     }
@@ -1514,7 +2124,7 @@ function handleActiveRecipeConversation(input) {
     }
 
     return {
-        response: "Ready to calculate! Just say \"yes\" or \"calculate\" to proceed with 5% superfat, or specify a different superfat like \"7% superfat\".",
+        response: "Ready to calculate! Just say \"yes\" or \"calculate\" to proceed with 5% superfat, or specify a different superfat like \"7% superfat\" or \"lye discount 8%\".",
         category: 'recipe'
     };
 }
@@ -1772,6 +2382,29 @@ async function sendMessage() {
     let messageDisplayed = false;
 
     try {
+        // STEP 0: Check for follow-up questions that reference previous context
+        const followUpResult = checkFollowUpQuestion(userMessage.toLowerCase());
+        if (followUpResult) {
+            console.log('✅ Follow-up question detected - using context');
+            lastResponseSource = 'context';
+
+            removeTypingIndicator();
+            addMessage(followUpResult.response, true, followUpResult.category);
+            messageDisplayed = true;
+
+            // Update context tracking
+            updateConversationContext(followUpResult.category, userMessage);
+
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'assistant', content: followUpResult.response });
+
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+
+            return; // Done - follow-up handled!
+        }
+
         // STEP 1: Check for recipe intent FIRST (highest priority for safety!)
         // This must happen BEFORE knowledge bank to prevent oil names triggering info lookups
         const recipeResult = checkRecipeIntent(userMessage);
@@ -1783,6 +2416,9 @@ async function sendMessage() {
             removeTypingIndicator();
             addMessage(recipeResult.response, true, recipeResult.category);
             messageDisplayed = true;
+
+            // Update context tracking
+            updateConversationContext(recipeResult.category, userMessage);
 
             conversationHistory.push({ role: 'user', content: userMessage });
             conversationHistory.push({ role: 'assistant', content: recipeResult.response });
@@ -1809,6 +2445,9 @@ async function sendMessage() {
             addMessage(knowledgeBankResult.response, true, knowledgeBankResult.category);
             messageDisplayed = true;
 
+            // Update context tracking
+            updateConversationContext(knowledgeBankResult.category, userMessage);
+
             // Update conversation history for context
             conversationHistory.push({ role: 'user', content: userMessage });
             conversationHistory.push({ role: 'assistant', content: knowledgeBankResult.response });
@@ -1831,6 +2470,9 @@ async function sendMessage() {
             removeTypingIndicator();
             addMessage(legacyResult.response, true, legacyResult.category);
             messageDisplayed = true;
+
+            // Update context tracking
+            updateConversationContext(legacyResult.category, userMessage);
 
             conversationHistory.push({ role: 'user', content: userMessage });
             conversationHistory.push({ role: 'assistant', content: legacyResult.response });
