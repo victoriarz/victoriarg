@@ -2071,34 +2071,30 @@ function checkRecipeIntent(userInput) {
 
 /**
  * Detect unusual/invalid ingredients that aren't used in soap making
+ * Note: Many food items CAN be used in soap making, including:
+ * - Coffee, beer, wine (replace water, add color/scent)
+ * - Milk (goat, cow, oat, coconut - adds creaminess)
+ * - Honey, sugar (boost lather)
+ * - Salt (increases hardness)
+ * - Tea (color and properties)
+ * - Chocolate/cocoa (color and scent)
+ * - Eggs (rich creamy lather)
+ * - Oatmeal (soothing, exfoliating)
+ * - Fruit/vegetable purees (color and nutrients)
+ * - Vinegar (can be used as additive)
+ * Only flag truly inappropriate items.
  */
 function detectUnusualIngredient(text) {
     const input = text.toLowerCase();
 
-    // Common non-soap ingredients people might try to use
+    // Only flag items that truly don't belong in soap making
     const unusualIngredients = [
         { pattern: /\bsoy\s*sauce\b/, name: 'soy sauce' },
         { pattern: /\bketchup\b/, name: 'ketchup' },
-        { pattern: /\bmustard\b/, name: 'mustard' },
+        { pattern: /\bmustard\b(?!\s*seed)/, name: 'mustard' },
         { pattern: /\bmayonnaise\b/, name: 'mayonnaise' },
-        { pattern: /\bvinegar\b/, name: 'vinegar' },
-        { pattern: /\bbutter\b(?!\s*(shea|cocoa|mango|kokum))/, name: 'dairy butter' },
-        { pattern: /\bmilk\b(?!\s*(goat|coconut|oat))/, name: 'milk' },
-        { pattern: /\begg\b/, name: 'eggs' },
-        { pattern: /\bflour\b/, name: 'flour' },
-        { pattern: /\bsugar\b/, name: 'sugar' },
-        { pattern: /\bhoney\b/, name: 'honey' },
-        { pattern: /\bsalt\b/, name: 'salt' },
-        { pattern: /\bpepper\b/, name: 'pepper' },
         { pattern: /\bgarlic\b/, name: 'garlic' },
         { pattern: /\bonion\b/, name: 'onion' },
-        { pattern: /\bjuice\b(?!\s*lemon)/, name: 'juice' },
-        { pattern: /\bsoda\b/, name: 'soda' },
-        { pattern: /\bbeer\b/, name: 'beer' },
-        { pattern: /\bwine\b/, name: 'wine' },
-        { pattern: /\bcoffee\b/, name: 'coffee' },
-        { pattern: /\btea\b(?!\s*tree)/, name: 'tea' },
-        { pattern: /\bchocolate\b/, name: 'chocolate' },
         { pattern: /\bpeanut\s*butter\b/, name: 'peanut butter' },
         { pattern: /\btoothpaste\b/, name: 'toothpaste' },
         { pattern: /\bshampoo\b/, name: 'shampoo' },
@@ -2107,7 +2103,16 @@ function detectUnusualIngredient(text) {
         { pattern: /\bbleach\b/, name: 'bleach' },
         { pattern: /\bgasoline\b|\bpetrol\b/, name: 'gasoline' },
         { pattern: /\bmotor\s*oil\b/, name: 'motor oil' },
-        { pattern: /\bvegetable\s*oil\b/, name: 'vegetable oil (generic)' }
+        { pattern: /\bmeat\b/, name: 'meat' },
+        { pattern: /\bchicken\b/, name: 'chicken' },
+        { pattern: /\bfish\b(?!\s*oil)/, name: 'fish' },
+        { pattern: /\bsoup\b/, name: 'soup' },
+        { pattern: /\bgravy\b/, name: 'gravy' },
+        { pattern: /\bpasta\b/, name: 'pasta' },
+        { pattern: /\bbread\b/, name: 'bread' },
+        { pattern: /\bcheese\b/, name: 'cheese' },
+        { pattern: /\byogurt\b/, name: 'yogurt' },
+        { pattern: /\bice\s*cream\b/, name: 'ice cream' }
     ];
 
     for (const { pattern, name } of unusualIngredients) {
