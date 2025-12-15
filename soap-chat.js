@@ -1990,6 +1990,15 @@ function checkRecipeIntent(userInput) {
 
     console.log('🧮 Recipe intent detected in:', input.substring(0, 50));
 
+    // Check for unusual/invalid ingredients that aren't used in soap making
+    const unusualIngredient = detectUnusualIngredient(input);
+    if (unusualIngredient) {
+        return {
+            response: `I appreciate your creativity, but **${unusualIngredient}** isn't typically used in soap making! 🧼\n\nSoap requires fats/oils that can undergo saponification (reaction with lye). Common soap-making ingredients include:\n\n**Oils:** Olive oil, coconut oil, palm oil, castor oil, sunflower oil, avocado oil\n**Butters:** Shea butter, cocoa butter, mango butter\n**Animal fats:** Lard, tallow\n\nWould you like me to suggest a recipe using traditional soap-making oils instead?`,
+            category: 'recipe'
+        };
+    }
+
     // Try to extract batch size if provided (use parseBatchSize for "small", "medium", "large" support)
     const batchSizeResult = parseBatchSize(input);
     const batchSizeMatch = input.match(/(\d+)\s*(g|grams?|oz|ounces?|lbs?|pounds?)\b/i);
@@ -2058,6 +2067,56 @@ function checkRecipeIntent(userInput) {
         response: `I'll help you create a safe, calculated soap recipe! 🧮\n\nFirst, how much soap do you want to make?\n- **Small batch:** 500g\n- **Medium batch:** 1000g\n- **Large batch:** 1500g\n\nJust tell me the batch size (e.g., "500g" or "1000 grams")`,
         category: 'recipe'
     };
+}
+
+/**
+ * Detect unusual/invalid ingredients that aren't used in soap making
+ */
+function detectUnusualIngredient(text) {
+    const input = text.toLowerCase();
+
+    // Common non-soap ingredients people might try to use
+    const unusualIngredients = [
+        { pattern: /\bsoy\s*sauce\b/, name: 'soy sauce' },
+        { pattern: /\bketchup\b/, name: 'ketchup' },
+        { pattern: /\bmustard\b/, name: 'mustard' },
+        { pattern: /\bmayonnaise\b/, name: 'mayonnaise' },
+        { pattern: /\bvinegar\b/, name: 'vinegar' },
+        { pattern: /\bbutter\b(?!\s*(shea|cocoa|mango|kokum))/, name: 'dairy butter' },
+        { pattern: /\bmilk\b(?!\s*(goat|coconut|oat))/, name: 'milk' },
+        { pattern: /\begg\b/, name: 'eggs' },
+        { pattern: /\bflour\b/, name: 'flour' },
+        { pattern: /\bsugar\b/, name: 'sugar' },
+        { pattern: /\bhoney\b/, name: 'honey' },
+        { pattern: /\bsalt\b/, name: 'salt' },
+        { pattern: /\bpepper\b/, name: 'pepper' },
+        { pattern: /\bgarlic\b/, name: 'garlic' },
+        { pattern: /\bonion\b/, name: 'onion' },
+        { pattern: /\bjuice\b(?!\s*lemon)/, name: 'juice' },
+        { pattern: /\bsoda\b/, name: 'soda' },
+        { pattern: /\bbeer\b/, name: 'beer' },
+        { pattern: /\bwine\b/, name: 'wine' },
+        { pattern: /\bcoffee\b/, name: 'coffee' },
+        { pattern: /\btea\b(?!\s*tree)/, name: 'tea' },
+        { pattern: /\bchocolate\b/, name: 'chocolate' },
+        { pattern: /\bpeanut\s*butter\b/, name: 'peanut butter' },
+        { pattern: /\btoothpaste\b/, name: 'toothpaste' },
+        { pattern: /\bshampoo\b/, name: 'shampoo' },
+        { pattern: /\blotion\b/, name: 'lotion' },
+        { pattern: /\bdetergent\b/, name: 'detergent' },
+        { pattern: /\bbleach\b/, name: 'bleach' },
+        { pattern: /\bgasoline\b|\bpetrol\b/, name: 'gasoline' },
+        { pattern: /\bmotor\s*oil\b/, name: 'motor oil' },
+        { pattern: /\bvegetable\s*oil\b/, name: 'vegetable oil (generic)' }
+    ];
+
+    for (const { pattern, name } of unusualIngredients) {
+        if (pattern.test(input)) {
+            return name;
+        }
+    }
+
+    return null;
 }
 
 /**
