@@ -514,8 +514,8 @@ const soapKnowledge = {
         response: "Different oils create different soap properties! Hard oils (coconut, palm): create hard bars and lather. Soft oils (olive, avocado, sweet almond): moisturizing and gentle. Luxury oils (castor, jojoba, shea butter): add special properties. A balanced recipe typically uses 60-70% hard oils, 25-35% soft oils, and 5% castor for bubbles. Coconut oil creates great lather but can dry skin over 30%. Olive oil (Castile soap) is super gentle but takes longer to cure!"
     },
     'essential_oils': {
-        keywords: ['essential oil', 'fragrance', 'scent', 'smell', 'aroma', 'chocolate', 'vanilla', 'lavender', 'peppermint', 'citrus'],
-        response: "To scent your soap, you have several options:\n\n**Essential Oils** (natural): Use 0.5-1 oz per pound of soap. Popular choices: Lavender, Peppermint, Tea Tree, Lemongrass, Eucalyptus.\n\n**Fragrance Oils** (synthetic): Often last longer and come in more varieties like chocolate, vanilla, bakery scents. Use 0.7 oz per pound.\n\n**For chocolate scent specifically**: Use a chocolate fragrance oil, OR add cocoa butter (gives subtle natural chocolate scent) + cocoa powder for color. Vanilla-based scents may discolor soap brown over time.\n\nAdd fragrances at trace, right before pouring!"
+        keywords: ['essential oil', 'fragrance', 'scent', 'smell', 'aroma', 'chocolate', 'vanilla', 'lavender', 'peppermint', 'citrus', 'strawberry', 'fruit', 'berry', 'floral', 'rose', 'mint', 'eucalyptus', 'tea tree'],
+        response: "To scent your soap, you have several options:\n\n**Essential Oils** (natural): Use 0.5-1 oz per pound. Popular choices: Lavender, Peppermint, Tea Tree, Lemongrass, Eucalyptus, Rose.\n\n**Fragrance Oils** (synthetic): Best for fruit scents like strawberry, mango, coconut - and bakery/dessert scents. These come in endless varieties! Use 0.7 oz per pound.\n\n**Tips:**\n- Fruit scents (strawberry, berry, citrus) = fragrance oils work best\n- Floral scents = essential oils OR fragrance oils\n- Bakery/dessert scents = fragrance oils only\n- Some FOs accelerate trace - test in small batches first\n\nAdd fragrances at trace, right before pouring!"
     },
     'lye': {
         keywords: ['lye', 'sodium hydroxide', 'caustic', 'dangerous'],
@@ -582,8 +582,8 @@ function isKnowledgeSeekingQuestion(input) {
         // Method comparisons
         /\b(difference between|compare|vs|versus)\b/i,
         // Fragrance/scent/smell questions with specific scents
-        /\b(fragrance|essential oil|scent|smell|aroma)\b.*\b(chocolate|vanilla|lavender|citrus|mint|coffee|honey)\b/i,
-        /\b(chocolate|vanilla|lavender|citrus|mint|coffee|honey)\b.*\b(fragrance|scent|smell)\b/i
+        /\b(fragrance|essential oil|scent|smell|aroma)\b.*\b(chocolate|vanilla|lavender|citrus|mint|coffee|honey|strawberry|berry|fruit|rose|floral|eucalyptus)\b/i,
+        /\b(chocolate|vanilla|lavender|citrus|mint|coffee|honey|strawberry|berry|fruit|rose|floral)\b.*\b(fragrance|scent|smell)\b/i
     ];
 
     return knowledgePatterns.some(pattern => pattern.test(input));
@@ -1671,6 +1671,11 @@ function findOilInDatabase(oilName) {
  * Handles: "adjust that recipe", "make it bigger", "change superfat", "swap olive for avocado"
  */
 function checkRecipeModificationIntent(input) {
+    // Skip if this is clearly a knowledge question - don't hijack info requests
+    if (isKnowledgeSeekingQuestion(input)) {
+        return null;
+    }
+
     // Only check if we have a recent recipe (within last 10 minutes)
     const recipeAge = lastCalculatedRecipe ? (Date.now() - lastCalculatedRecipeTime) : Infinity;
     const isRecentRecipe = recipeAge < 10 * 60 * 1000; // 10 minutes
@@ -1683,8 +1688,8 @@ function checkRecipeModificationIntent(input) {
 
     // Patterns for recipe modification
     const modificationPatterns = {
-        // Scale/resize requests
-        scale: /\b(scale|resize|double|triple|halve|half|make it|change.*(size|batch)|bigger|smaller)\b/i,
+        // Scale/resize requests - be specific about "make it" to avoid matching "make it smell"
+        scale: /\b(scale|resize|double|triple|halve|half|change.*(size|batch)|bigger|smaller|make it (bigger|smaller|larger|double|half))\b/i,
         // Superfat changes
         superfat: /\b(change|adjust|increase|decrease|modify).*(superfat|super\s*fat|lye\s*discount)\b/i,
         // Oil swap requests
