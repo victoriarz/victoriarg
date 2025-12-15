@@ -1075,7 +1075,451 @@ function findOilInDatabase(oilName) {
     return oilData;
 }
 
-// Find matching response based on keywords
+// ===========================================
+// RECIPE INTENT DETECTION SYSTEM
+// Detects when user wants to create/calculate a recipe
+// Must run BEFORE knowledge bank to prevent oil names triggering info lookups
+// ===========================================
+
+/**
+ * Check if user message indicates recipe creation intent
+ * Returns response object if recipe intent detected, null otherwise
+ */
+function checkRecipeIntent(userInput) {
+    const input = userInput.toLowerCase();
+
+    // If recipe building is already active, handle that conversation
+    if (recipeState.active) {
+        return handleActiveRecipeConversation(input);
+    }
+
+    // Patterns that indicate user wants to CREATE a recipe (not just learn about something)
+    const recipeIntentPatterns = [
+        // Direct recipe requests
+        /\b(calculate|create|make|build|design|formulate)\b.*\b(recipe|soap|batch)\b/i,
+        /\b(recipe|soap|batch)\b.*\b(for|with|using)\b/i,
+        /\brecipe calculator\b/i,
+        /\bhelp me (calculate|make|create)\b/i,
+
+        // "I want to make" patterns
+        /\bi want to (make|create|try)\b.*\bsoap\b/i,
+        /\bi('d| would) like to (make|create)\b.*\bsoap\b/i,
+        /\bcan you (make|create|give) me a\b.*\b(recipe|soap)\b/i,
+        /\bgive me a\b.*\brecipe\b/i,
+        /\bwhat('s| is) a good recipe\b/i,
+
+        // Batch size with oils mentioned
+        /\b(\d+)\s*(g|grams?|oz|ounces?|lbs?|pounds?)\b.*\b(batch|soap|recipe)\b/i,
+        /\b(batch|soap|recipe)\b.*\b(\d+)\s*(g|grams?|oz|ounces?)\b/i,
+
+        // Oil combinations suggesting recipe building
+        /\b(using|with)\b.*\b(olive|coconut|palm|shea|castor)\b.*\b(and|,)\b.*\b(olive|coconut|palm|shea|castor)\b/i,
+
+        // Recommendation requests
+        /\brecommend\b.*\b(recipe|soap|formula)\b/i,
+        /\bsuggest\b.*\b(recipe|soap|formula)\b/i,
+        /\byour best\b.*\brecipe\b/i,
+        /\bbeginner\b.*\brecipe\b/i,
+        /\bfirst\b.*\b(batch|soap|recipe)\b/i,
+
+        // Direct calculation requests
+        /\bcalculate\b.*\blye\b/i,
+        /\bhow much lye\b.*\bfor\b/i,
+        /\blye.*(amount|calculation)\b/i
+    ];
+
+    // Check if any pattern matches
+    const hasRecipeIntent = recipeIntentPatterns.some(pattern => pattern.test(input));
+
+    if (!hasRecipeIntent) {
+        return null; // No recipe intent - let knowledge bank handle it
+    }
+
+    console.log('🧮 Recipe intent detected in:', input.substring(0, 50));
+
+    // Try to extract batch size if provided
+    const batchSizeMatch = input.match(/(\d+)\s*(g|grams?|oz|ounces?|lbs?|pounds?)\b/i);
+
+    // Try to extract oils if mentioned
+    const mentionedOils = extractOilsFromText(input);
+
+    // If user provided both batch size AND oils, try to start calculation directly
+    if (batchSizeMatch && mentionedOils.length > 0) {
+        return handleDirectRecipeRequest(batchSizeMatch, mentionedOils, input);
+    }
+
+    // If user provided batch size but no oils, ask for oils
+    if (batchSizeMatch) {
+        const size = parseInt(batchSizeMatch[1]);
+        const unit = batchSizeMatch[2].toLowerCase();
+        let grams = size;
+
+        if (unit.startsWith('oz')) grams = Math.round(size * 28.35);
+        else if (unit.startsWith('lb') || unit === 'pounds') grams = Math.round(size * 453.6);
+
+        recipeState.active = true;
+        recipeState.batchSizeGrams = grams;
+        recipeState.oils = [];
+        recipeState.superfat = 5;
+
+        const availableOils = soapCalculator
+            ? soapCalculator.getAvailableOils().slice(0, 8).map(o => o.name).join(', ')
+            : 'olive oil, coconut oil, palm oil, castor oil, shea butter';
+
+        return {
+            response: `Great! I'll help you create a **${grams}g soap recipe**.\n\nNow, what oils would you like to use? Tell me the oils and amounts, for example:\n- "300g olive oil, 150g coconut oil, 50g castor oil"\n- Or just list oils and I'll suggest percentages: "olive oil, coconut oil, shea butter"\n\n**Available oils:** ${availableOils}`,
+            category: 'recipe'
+        };
+    }
+
+    // If user mentioned oils but no batch size, ask for batch size
+    if (mentionedOils.length > 0) {
+        recipeState.active = true;
+        recipeState.batchSizeGrams = 0;
+        recipeState.pendingOils = mentionedOils;
+        recipeState.superfat = 5;
+
+        return {
+            response: `I can create a recipe with **${mentionedOils.join(', ')}**! 🧼\n\nHow much soap do you want to make? (e.g., "500g", "1000 grams", "32 oz")`,
+            category: 'recipe'
+        };
+    }
+
+    // Generic recipe request - start the guided flow
+    recipeState.active = true;
+    recipeState.batchSizeGrams = 0;
+    recipeState.oils = [];
+    recipeState.superfat = 5;
+
+    return {
+        response: `I'll help you create a safe, calculated soap recipe! 🧮\n\nFirst, how much soap do you want to make?\n- **Small batch:** 500g\n- **Medium batch:** 1000g\n- **Large batch:** 1500g\n\nJust tell me the batch size (e.g., "500g" or "1000 grams")`,
+        category: 'recipe'
+    };
+}
+
+/**
+ * Extract oil names from user text
+ */
+function extractOilsFromText(text) {
+    const input = text.toLowerCase();
+    const foundOils = [];
+
+    // List of recognizable oil names
+    const oilPatterns = [
+        { pattern: /\b(olive)\s*(oil)?\b/, name: 'Olive Oil' },
+        { pattern: /\b(coconut)\s*(oil)?\b/, name: 'Coconut Oil' },
+        { pattern: /\b(palm)\s*(oil)?\b(?!\s*kernel)/, name: 'Palm Oil' },
+        { pattern: /\b(castor)\s*(oil)?\b/, name: 'Castor Oil' },
+        { pattern: /\b(shea)\s*(butter)?\b/, name: 'Shea Butter' },
+        { pattern: /\b(cocoa)\s*(butter)?\b/, name: 'Cocoa Butter' },
+        { pattern: /\b(sweet\s*almond|almond)\s*(oil)?\b/, name: 'Sweet Almond Oil' },
+        { pattern: /\b(avocado)\s*(oil)?\b/, name: 'Avocado Oil' },
+        { pattern: /\b(sunflower)\s*(oil)?\b/, name: 'Sunflower Oil' },
+        { pattern: /\b(rice\s*bran)\s*(oil)?\b/, name: 'Rice Bran Oil' },
+        { pattern: /\b(grapeseed|grape\s*seed)\s*(oil)?\b/, name: 'Grapeseed Oil' },
+        { pattern: /\b(jojoba)\s*(oil)?\b/, name: 'Jojoba Oil' },
+        { pattern: /\b(hemp|hemp\s*seed)\s*(oil)?\b/, name: 'Hemp Seed Oil' },
+        { pattern: /\b(canola)\s*(oil)?\b/, name: 'Canola Oil' },
+        { pattern: /\b(lard)\b/, name: 'Lard' },
+        { pattern: /\b(tallow)\b/, name: 'Tallow' },
+        { pattern: /\b(mango)\s*(butter)?\b/, name: 'Mango Butter' },
+        { pattern: /\b(babassu)\s*(oil)?\b/, name: 'Babassu Oil' },
+        { pattern: /\b(apricot)\s*(kernel)?\s*(oil)?\b/, name: 'Apricot Kernel Oil' }
+    ];
+
+    for (const { pattern, name } of oilPatterns) {
+        if (pattern.test(input) && !foundOils.includes(name)) {
+            foundOils.push(name);
+        }
+    }
+
+    return foundOils;
+}
+
+/**
+ * Handle direct recipe request with batch size and oils
+ */
+function handleDirectRecipeRequest(batchSizeMatch, mentionedOils, input) {
+    const size = parseInt(batchSizeMatch[1]);
+    const unit = batchSizeMatch[2].toLowerCase();
+    let batchGrams = size;
+
+    if (unit.startsWith('oz')) batchGrams = Math.round(size * 28.35);
+    else if (unit.startsWith('lb') || unit === 'pounds') batchGrams = Math.round(size * 453.6);
+
+    // Try to extract amounts for each oil
+    const oilsWithAmounts = parseOilAmounts(input, mentionedOils, batchGrams);
+
+    if (oilsWithAmounts.length > 0 && oilsWithAmounts.every(o => o.grams > 0)) {
+        // User provided complete recipe - calculate it!
+        return calculateAndFormatRecipe(oilsWithAmounts, 5); // Default 5% superfat
+    }
+
+    // Oils mentioned but no amounts - suggest a balanced recipe
+    return suggestBalancedRecipe(mentionedOils, batchGrams);
+}
+
+/**
+ * Parse oil amounts from text
+ */
+function parseOilAmounts(text, oilNames, totalBatchGrams) {
+    const input = text.toLowerCase();
+    const results = [];
+
+    // Try to find amounts for each mentioned oil
+    for (const oilName of oilNames) {
+        const oilKey = oilName.toLowerCase().replace(/\s*(oil|butter)\s*/gi, '').trim();
+        let found = false;
+
+        // Look for amount patterns near this oil name
+        const amountMatch = input.match(new RegExp(`(\\d+)\\s*(g|grams?|oz|ounces?|%)\\s*(?:of\\s+)?${oilKey}|${oilKey}\\s*(?:oil|butter)?\\s*[:\\s]*(\\d+)\\s*(g|grams?|oz|ounces?|%)`, 'i'));
+
+        if (amountMatch) {
+            const amount = parseInt(amountMatch[1] || amountMatch[3]);
+            const unit = (amountMatch[2] || amountMatch[4] || '').toLowerCase();
+
+            let grams = amount;
+            if (unit === '%') {
+                grams = Math.round(totalBatchGrams * (amount / 100));
+            } else if (unit.startsWith('oz')) {
+                grams = Math.round(amount * 28.35);
+            }
+
+            if (grams > 0) {
+                results.push({ name: oilName, grams });
+                found = true;
+            }
+        }
+
+        // If no amount found, add with 0 grams (will trigger suggestion)
+        if (!found) {
+            results.push({ name: oilName, grams: 0 });
+        }
+    }
+
+    return results;
+}
+
+/**
+ * Suggest a balanced recipe using the mentioned oils
+ */
+function suggestBalancedRecipe(oilNames, batchGrams) {
+    // Create balanced percentages based on oil types
+    const percentages = calculateBalancedPercentages(oilNames);
+
+    let response = `Great choice of oils! Here's a balanced **${batchGrams}g** recipe suggestion:\n\n`;
+    response += `### Suggested Recipe\n`;
+
+    const oils = [];
+    for (const oilName of oilNames) {
+        const percent = percentages[oilName] || Math.round(100 / oilNames.length);
+        const grams = Math.round(batchGrams * (percent / 100));
+        response += `- **${oilName}**: ${grams}g (${percent}%)\n`;
+        oils.push({ name: oilName, grams, percent });
+    }
+
+    response += `\nShould I calculate this with **5% superfat** (standard)? Or would you like to:\n`;
+    response += `- Adjust the percentages\n`;
+    response += `- Change the superfat (type "7% superfat")\n`;
+    response += `\nJust say **"calculate"** or **"yes"** to proceed!`;
+
+    // Store in recipe state for follow-up
+    recipeState.active = true;
+    recipeState.batchSizeGrams = batchGrams;
+    recipeState.oils = oils;
+    recipeState.superfat = 5;
+
+    return { response, category: 'recipe' };
+}
+
+/**
+ * Calculate balanced percentages for oils based on type
+ */
+function calculateBalancedPercentages(oilNames) {
+    const percentages = {};
+    const hardOils = ['Coconut Oil', 'Palm Oil', 'Cocoa Butter', 'Shea Butter', 'Mango Butter', 'Lard', 'Tallow', 'Babassu Oil'];
+    const latherBoosters = ['Castor Oil'];
+
+    let hardOilsInRecipe = oilNames.filter(o => hardOils.includes(o));
+    let softOilsInRecipe = oilNames.filter(o => !hardOils.includes(o) && !latherBoosters.includes(o));
+    let castorInRecipe = oilNames.filter(o => latherBoosters.includes(o));
+
+    // Aim for: ~30-40% hard oils, 5-10% castor, rest soft oils
+    let hardPercent = hardOilsInRecipe.length > 0 ? 35 : 0;
+    let castorPercent = castorInRecipe.length > 0 ? 8 : 0;
+    let softPercent = 100 - hardPercent - castorPercent;
+
+    // Distribute within categories
+    hardOilsInRecipe.forEach(oil => {
+        percentages[oil] = Math.round(hardPercent / hardOilsInRecipe.length);
+    });
+
+    castorInRecipe.forEach(oil => {
+        percentages[oil] = castorPercent;
+    });
+
+    softOilsInRecipe.forEach(oil => {
+        percentages[oil] = Math.round(softPercent / softOilsInRecipe.length);
+    });
+
+    // Ensure percentages sum to 100
+    const total = Object.values(percentages).reduce((a, b) => a + b, 0);
+    if (total !== 100 && oilNames.length > 0) {
+        const diff = 100 - total;
+        percentages[oilNames[0]] += diff;
+    }
+
+    return percentages;
+}
+
+/**
+ * Calculate recipe and format for display
+ */
+function calculateAndFormatRecipe(oils, superfatPercent) {
+    try {
+        const recipe = calculateRecipeWithCalculator(oils, superfatPercent);
+
+        // Validate recipe for safety
+        let validationMessage = '';
+        if (recipeValidator) {
+            const validation = recipeValidator.validateRecipe(recipe);
+
+            if (!validation.valid) {
+                validationMessage = recipeValidator.formatValidationMessage(validation);
+                validationMessage += '\n---\n\n';
+            } else if (validation.warnings.length > 0) {
+                validationMessage = recipeValidator.formatValidationMessage(validation);
+                validationMessage += '\n---\n\n';
+            }
+        }
+
+        const recipeOutput = formatCalculatedRecipe(recipe);
+
+        // Reset recipe state
+        recipeState = {
+            active: false,
+            batchSizeGrams: 0,
+            oils: [],
+            superfat: 5
+        };
+
+        return { response: validationMessage + recipeOutput, category: 'recipe' };
+    } catch (error) {
+        console.error('Recipe calculation error:', error);
+        return {
+            response: `Sorry, I encountered an error calculating your recipe: ${error.message}. Please try again or ask for help.`,
+            category: 'recipe'
+        };
+    }
+}
+
+/**
+ * Handle conversation when recipe building is active
+ */
+function handleActiveRecipeConversation(input) {
+    // Check for cancel/abort
+    if (/\b(cancel|stop|abort|nevermind|never mind)\b/i.test(input)) {
+        recipeState = { active: false, batchSizeGrams: 0, oils: [], superfat: 5 };
+        return {
+            response: "No problem! Recipe cancelled. What else can I help you with?",
+            category: 'recipe'
+        };
+    }
+
+    // Check for batch size if we don't have one yet
+    if (recipeState.batchSizeGrams === 0) {
+        const batchMatch = input.match(/(\d+)\s*(g|grams?|oz|ounces?|lbs?|pounds?)?/i);
+        if (batchMatch) {
+            const size = parseInt(batchMatch[1]);
+            const unit = (batchMatch[2] || 'g').toLowerCase();
+            let grams = size;
+
+            if (unit.startsWith('oz')) grams = Math.round(size * 28.35);
+            else if (unit.startsWith('lb') || unit === 'pounds') grams = Math.round(size * 453.6);
+
+            recipeState.batchSizeGrams = grams;
+
+            // Check if we had pending oils from earlier
+            if (recipeState.pendingOils && recipeState.pendingOils.length > 0) {
+                return suggestBalancedRecipe(recipeState.pendingOils, grams);
+            }
+
+            const availableOils = soapCalculator
+                ? soapCalculator.getAvailableOils().slice(0, 8).map(o => o.name).join(', ')
+                : 'olive oil, coconut oil, palm oil, castor oil, shea butter';
+
+            return {
+                response: `Perfect! Making a **${grams}g** batch.\n\nNow, what oils do you want to use? You can:\n- List oils with amounts: "300g olive oil, 150g coconut oil, 50g castor oil"\n- Or just list oils: "olive oil, coconut oil, shea butter"\n\n**Available oils:** ${availableOils}`,
+                category: 'recipe'
+            };
+        }
+    }
+
+    // Check for oil inputs
+    if (recipeState.batchSizeGrams > 0 && recipeState.oils.length === 0) {
+        // Try to extract oils and amounts
+        const mentionedOils = extractOilsFromText(input);
+
+        if (mentionedOils.length > 0) {
+            const oilsWithAmounts = parseOilAmounts(input, mentionedOils, recipeState.batchSizeGrams);
+
+            // Check if all oils have amounts
+            if (oilsWithAmounts.every(o => o.grams > 0)) {
+                const totalGrams = oilsWithAmounts.reduce((sum, o) => sum + o.grams, 0);
+                recipeState.oils = oilsWithAmounts;
+
+                if (Math.abs(totalGrams - recipeState.batchSizeGrams) > 10) {
+                    return {
+                        response: `Your oils total **${totalGrams}g** (batch size was ${recipeState.batchSizeGrams}g). That's fine - I'll calculate based on ${totalGrams}g.\n\nReady to calculate with **5% superfat**? Just say "yes" or "calculate", or specify a different superfat like "7% superfat".`,
+                        category: 'recipe'
+                    };
+                }
+
+                return {
+                    response: `Got it! Your oils total **${totalGrams}g**.\n\nReady to calculate with **5% superfat**? Just say "yes" or "calculate", or specify a different superfat like "7% superfat".`,
+                    category: 'recipe'
+                };
+            } else {
+                // Have oils but no amounts - suggest balanced recipe
+                return suggestBalancedRecipe(mentionedOils, recipeState.batchSizeGrams);
+            }
+        }
+    }
+
+    // Check for superfat adjustment or final calculation
+    if (recipeState.oils.length > 0) {
+        const superfatMatch = input.match(/(\d+)\s*%?\s*(superfat|super\s*fat|lye\s*discount)/i);
+        if (superfatMatch) {
+            recipeState.superfat = parseInt(superfatMatch[1]);
+        }
+
+        if (/\b(calculate|yes|go|do it|proceed|ok|okay)\b/i.test(input) || superfatMatch) {
+            return calculateAndFormatRecipe(recipeState.oils, recipeState.superfat);
+        }
+    }
+
+    // Didn't understand - provide guidance
+    if (recipeState.batchSizeGrams === 0) {
+        return {
+            response: "I need to know the batch size first. How many grams of soap do you want to make? (e.g., \"500g\" or \"1000 grams\")",
+            category: 'recipe'
+        };
+    }
+
+    if (recipeState.oils.length === 0) {
+        return {
+            response: "What oils would you like to use? List them with amounts (e.g., \"300g olive oil, 150g coconut oil\") or just the names and I'll suggest amounts.",
+            category: 'recipe'
+        };
+    }
+
+    return {
+        response: "Ready to calculate! Just say \"yes\" or \"calculate\" to proceed with 5% superfat, or specify a different superfat like \"7% superfat\".",
+        category: 'recipe'
+    };
+}
+
+// Find matching response based on keywords (legacy - for non-recipe commands)
 function findResponse(userInput) {
     const input = userInput.toLowerCase();
 
@@ -1102,160 +1546,8 @@ function findResponse(userInput) {
         };
     }
 
-    // Check for recipe calculation keywords or recommendation requests
-    if (input.includes('calculate') || input.includes('recipe calculator') ||
-        input.includes('make recipe') || input.includes('create recipe') ||
-        input.includes('help me calculate') || input.includes('recommend') ||
-        input.includes('suggestion') || input.includes('your best')) {
-
-        // If user is asking for a recommendation and already specified batch size
-        const gramsMatch = input.match(/(\d+)\s*(grams?|g\b)/i);
-        if ((input.includes('recommend') || input.includes('your best') || input.includes('suggestion')) && gramsMatch) {
-            const batchSize = parseInt(gramsMatch[1]);
-
-            // Provide a beginner-friendly recipe recommendation
-            return {
-                response: `Perfect! For your ${batchSize}g batch, I recommend this balanced recipe:\n\n` +
-                    `**Oils & Fats:**\n` +
-                    `- Olive Oil: ${Math.round(batchSize * 0.35)}g (35%) - conditioning\n` +
-                    `- Coconut Oil: ${Math.round(batchSize * 0.30)}g (30%) - hardness & lather\n` +
-                    `- Shea Butter: ${Math.round(batchSize * 0.25)}g (25%) - hardness & conditioning\n` +
-                    `- Castor Oil: ${Math.round(batchSize * 0.10)}g (10%) - lather boost\n\n` +
-                    `Would you like me to calculate the exact lye and water amounts? Type "calculate" or "yes" to proceed with 5% superfat!`,
-                category: 'recipe'
-            };
-        }
-
-        recipeState.active = true;
-        recipeState.oils = [];
-        recipeState.batchSizeGrams = 0;
-        return {
-            response: "Great! I'll help you calculate a safe soap recipe. First, how many grams of soap do you want to make? (For example: 500 grams, 1000 grams, etc.)",
-            category: 'recipe'
-        };
-    }
-
-    // Handle recipe building conversation
-    if (recipeState.active) {
-        // Check for batch size
-        const gramsMatch = input.match(/(\d+)\s*(grams?|g\b)/i);
-        if (gramsMatch && recipeState.batchSizeGrams === 0) {
-            recipeState.batchSizeGrams = parseInt(gramsMatch[1]);
-
-            // Get available oils from SoapCalculator database
-            const availableOilsList = soapCalculator
-                ? soapCalculator.getAvailableOils().slice(0, 10).map(oil => oil.name).join(', ')
-                : 'olive oil, coconut oil, palm oil, castor oil, sweet almond oil, shea butter';
-
-            return {
-                response: `Perfect! You want to make ${recipeState.batchSizeGrams}g of soap. Now, tell me what oils you have and how many grams of each. For example: "300g olive oil, 150g coconut oil, 50g castor oil". Available oils include: ${availableOilsList}, and more. What oils do you have?`,
-                category: 'recipe'
-            };
-        }
-
-        // Check for oil inputs
-        if (recipeState.batchSizeGrams > 0 && recipeState.oils.length === 0) {
-            const oilMatches = input.match(/(\d+)\s*g?\s*([\w\s]+?)(?:,|and|$)/gi);
-            if (oilMatches) {
-                let totalGrams = 0;
-                let unknownOils = [];
-
-                for (const match of oilMatches) {
-                    const parts = match.match(/(\d+)\s*g?\s*([\w\s]+)/i);
-                    if (parts) {
-                        const grams = parseInt(parts[1]);
-                        const oilName = parts[2].trim().replace(/,/g, '');
-                        const oilData = findOilInDatabase(oilName);
-
-                        if (oilData) {
-                            recipeState.oils.push({
-                                name: oilData.name,
-                                grams: grams
-                            });
-                            totalGrams += grams;
-                        } else {
-                            unknownOils.push(oilName);
-                        }
-                    }
-                }
-
-                if (unknownOils.length > 0) {
-                    const availableOils = soapCalculator
-                        ? soapCalculator.getAvailableOils().map(oil => oil.name).join(', ')
-                        : 'olive oil, coconut oil, palm oil, etc.';
-
-                    return {
-                        response: `I don't have data for: ${unknownOils.join(', ')}. Available oils include: ${availableOils}. Please try again with oils from this list.`,
-                        category: 'recipe'
-                    };
-                }
-
-                if (totalGrams !== recipeState.batchSizeGrams) {
-                    return {
-                        response: `Note: Your oils total ${totalGrams}g, but you wanted ${recipeState.batchSizeGrams}g. That's okay! I'll calculate based on ${totalGrams}g. Would you like to change the superfat percentage? (Default is 5%, recommended range is 5-8%. Type "calculate" to proceed with 5% superfat, or specify like "7% superfat")`,
-                        category: 'recipe'
-                    };
-                }
-
-                return {
-                    response: `Perfect! Your oils total ${totalGrams}g. Would you like to change the superfat percentage? (Default is 5%, recommended range is 5-8%. Type "calculate" to proceed with 5% superfat, or specify like "7% superfat")`,
-                    category: 'recipe'
-                };
-            }
-        }
-
-        // Check for superfat adjustment or final calculation
-        if (recipeState.oils.length > 0) {
-            const superfatMatch = input.match(/(\d+)%?\s*superfat/i);
-            if (superfatMatch) {
-                recipeState.superfat = parseInt(superfatMatch[1]);
-            }
-
-            if (input.includes('calculate') || input.includes('yes') || superfatMatch) {
-                try {
-                    // Use the proper SoapCalculator class for accurate calculation
-                    const recipe = calculateRecipeWithCalculator(
-                        recipeState.oils,
-                        recipeState.superfat
-                    );
-
-                    // Validate recipe for safety
-                    let validationMessage = '';
-                    if (recipeValidator) {
-                        const validation = recipeValidator.validateRecipe(recipe);
-
-                        if (!validation.valid) {
-                            validationMessage = recipeValidator.formatValidationMessage(validation);
-                            validationMessage += '\n---\n\n';
-                        } else if (validation.warnings.length > 0) {
-                            validationMessage = recipeValidator.formatValidationMessage(validation);
-                            validationMessage += '\n---\n\n';
-                        }
-                    }
-
-                    // Format the complete recipe with properties
-                    const recipeOutput = formatCalculatedRecipe(recipe);
-                    const response = validationMessage + recipeOutput;
-
-                    // Reset state
-                    recipeState = {
-                        active: false,
-                        batchSizeGrams: 0,
-                        oils: [],
-                        superfat: 5
-                    };
-
-                    return { response: response, category: 'recipe' };
-                } catch (error) {
-                    console.error('Recipe calculation error:', error);
-                    return {
-                        response: `Sorry, I encountered an error calculating your recipe: ${error.message}. Please try again or ask for help.`,
-                        category: 'recipe'
-                    };
-                }
-            }
-        }
-    }
+    // NOTE: Recipe calculation is now handled by checkRecipeIntent() which runs BEFORE this function
+    // This function now only handles save/view commands and legacy knowledge lookup
 
     // Check each knowledge category
     for (const [category, data] of Object.entries(soapKnowledge)) {
@@ -1283,9 +1575,182 @@ async function makeDirectRequest(userMessage) {
     }
 }
 
+// ===========================================
+// AI-TO-CALCULATOR BRIDGE
+// Post-processes AI responses to detect recipe suggestions
+// and run them through the actual calculator for safety
+// ===========================================
+
+/**
+ * Process AI response to detect and calculate recipe suggestions
+ * If AI suggests a recipe with oils/percentages, calculate actual lye amounts
+ */
+async function processAIResponseForRecipe(aiResponse, originalQuestion) {
+    // Check if the response looks like it contains a recipe suggestion
+    const hasRecipeIndicators = (
+        /\b(olive|coconut|palm|shea|castor|avocado)\s*(oil|butter)?.*\d+\s*%/i.test(aiResponse) ||
+        /\d+\s*%.*\b(olive|coconut|palm|shea|castor|avocado)\b/i.test(aiResponse) ||
+        /\d+\s*(g|grams?).*\b(olive|coconut|palm|shea|castor)\b/i.test(aiResponse)
+    );
+
+    // Check if user was asking for a recipe
+    const userWantsRecipe = (
+        /\b(recipe|calculate|make|create|suggest)\b.*\bsoap\b/i.test(originalQuestion) ||
+        /\bsoap\b.*\b(recipe|calculate)\b/i.test(originalQuestion) ||
+        /\b(recommend|suggestion|beginner)\b.*\b(recipe|soap)\b/i.test(originalQuestion)
+    );
+
+    if (!hasRecipeIndicators || !userWantsRecipe) {
+        return aiResponse; // Return as-is if not a recipe
+    }
+
+    console.log('🔄 AI response contains recipe - attempting to calculate...');
+
+    // Try to extract oils and percentages from the AI response
+    const extractedRecipe = extractRecipeFromAIResponse(aiResponse);
+
+    if (!extractedRecipe || extractedRecipe.oils.length === 0) {
+        console.log('⚠️ Could not extract recipe from AI response');
+        return aiResponse; // Return original if can't extract
+    }
+
+    // Try to extract or default batch size
+    let batchSize = extractedRecipe.batchSize || 500; // Default 500g if not specified
+
+    // Check if user mentioned a batch size
+    const userBatchMatch = originalQuestion.match(/(\d+)\s*(g|grams?|oz|ounces?)/i);
+    if (userBatchMatch) {
+        batchSize = parseInt(userBatchMatch[1]);
+        const unit = userBatchMatch[2].toLowerCase();
+        if (unit.startsWith('oz')) batchSize = Math.round(batchSize * 28.35);
+    }
+
+    try {
+        // Convert percentages to grams
+        const oilsWithGrams = extractedRecipe.oils.map(oil => ({
+            name: oil.name,
+            grams: Math.round(batchSize * (oil.percent / 100))
+        }));
+
+        // Calculate actual recipe with lye amounts
+        const calculatedRecipe = calculateRecipeWithCalculator(oilsWithGrams, extractedRecipe.superfat || 5);
+
+        // Validate for safety
+        let validationMessage = '';
+        if (recipeValidator) {
+            const validation = recipeValidator.validateRecipe(calculatedRecipe);
+            if (validation.warnings.length > 0 || !validation.valid) {
+                validationMessage = recipeValidator.formatValidationMessage(validation);
+                validationMessage += '\n---\n\n';
+            }
+        }
+
+        // Format the calculated recipe
+        const recipeOutput = formatCalculatedRecipe(calculatedRecipe);
+
+        console.log('✅ Successfully calculated recipe from AI suggestion');
+
+        // Return AI explanation + calculated recipe
+        return `${aiResponse}\n\n---\n\n## 🧮 Calculated Recipe (${batchSize}g batch)\n\n${validationMessage}${recipeOutput}`;
+
+    } catch (error) {
+        console.error('❌ Failed to calculate recipe from AI response:', error);
+        // Return original AI response if calculation fails
+        return aiResponse + `\n\n> **Note:** I suggested a recipe above. To get exact lye and water amounts, say "calculate recipe" and I'll walk you through the safe calculation process.`;
+    }
+}
+
+/**
+ * Extract oil names and percentages from AI response text
+ */
+function extractRecipeFromAIResponse(text) {
+    const oils = [];
+    let superfat = 5; // Default
+    let batchSize = null;
+
+    // Oil name mapping to standardized names
+    const oilNameMap = {
+        'olive': 'Olive Oil',
+        'coconut': 'Coconut Oil',
+        'palm': 'Palm Oil',
+        'castor': 'Castor Oil',
+        'shea': 'Shea Butter',
+        'cocoa': 'Cocoa Butter',
+        'sweet almond': 'Sweet Almond Oil',
+        'almond': 'Sweet Almond Oil',
+        'avocado': 'Avocado Oil',
+        'sunflower': 'Sunflower Oil',
+        'rice bran': 'Rice Bran Oil',
+        'grapeseed': 'Grapeseed Oil',
+        'jojoba': 'Jojoba Oil',
+        'hemp': 'Hemp Seed Oil',
+        'canola': 'Canola Oil',
+        'lard': 'Lard',
+        'tallow': 'Tallow',
+        'mango': 'Mango Butter',
+        'babassu': 'Babassu Oil',
+        'apricot': 'Apricot Kernel Oil'
+    };
+
+    // Try first pattern: "Oil Name: XX%"
+    let match;
+    const pattern1 = /(\w+(?:\s+\w+)?)\s*(?:oil|butter)?[\s:–-]+(\d+)\s*%/gi;
+    while ((match = pattern1.exec(text)) !== null) {
+        const oilKey = match[1].toLowerCase().trim();
+        const percent = parseInt(match[2]);
+
+        for (const [key, standardName] of Object.entries(oilNameMap)) {
+            if (oilKey.includes(key) && !oils.find(o => o.name === standardName)) {
+                oils.push({ name: standardName, percent });
+                break;
+            }
+        }
+    }
+
+    // Try second pattern: "XX% Oil Name"
+    if (oils.length === 0) {
+        const pattern2 = /(\d+)\s*%\s*(\w+(?:\s+\w+)?)\s*(?:oil|butter)?/gi;
+        while ((match = pattern2.exec(text)) !== null) {
+            const percent = parseInt(match[1]);
+            const oilKey = match[2].toLowerCase().trim();
+
+            for (const [key, standardName] of Object.entries(oilNameMap)) {
+                if (oilKey.includes(key) && !oils.find(o => o.name === standardName)) {
+                    oils.push({ name: standardName, percent });
+                    break;
+                }
+            }
+        }
+    }
+
+    // Extract superfat if mentioned
+    const superfatMatch = text.match(/(\d+)\s*%?\s*superfat/i);
+    if (superfatMatch) {
+        superfat = parseInt(superfatMatch[1]);
+    }
+
+    // Extract batch size if mentioned
+    const batchMatch = text.match(/(\d+)\s*(g|grams?)\s*(batch|total)?/i);
+    if (batchMatch) {
+        batchSize = parseInt(batchMatch[1]);
+    }
+
+    // Validate total percentage is reasonable (within 5% of 100)
+    const totalPercent = oils.reduce((sum, o) => sum + o.percent, 0);
+    if (totalPercent < 95 || totalPercent > 105) {
+        console.log(`⚠️ Extracted percentages total ${totalPercent}% - may be incomplete`);
+    }
+
+    return {
+        oils,
+        superfat,
+        batchSize
+    };
+}
+
 // Handle sending messages
-// STRATEGY: Check local knowledge bank FIRST to save API tokens
-// Only call AI API if knowledge bank doesn't have a good answer
+// STRATEGY: Check recipe intent FIRST, then knowledge bank, then AI API
+// Recipe calculations should always take priority to ensure safety
 async function sendMessage() {
     const userMessage = chatInput.value.trim();
 
@@ -1302,12 +1767,35 @@ async function sendMessage() {
     sendButton.disabled = true;
 
     // Show typing indicator
-    showTypingIndicator('Searching knowledge base');
+    showTypingIndicator('Processing your request');
 
     let messageDisplayed = false;
 
     try {
-        // STEP 1: Check local knowledge bank FIRST (saves API tokens!)
+        // STEP 1: Check for recipe intent FIRST (highest priority for safety!)
+        // This must happen BEFORE knowledge bank to prevent oil names triggering info lookups
+        const recipeResult = checkRecipeIntent(userMessage);
+
+        if (recipeResult) {
+            console.log('✅ Recipe intent detected - using calculator');
+            lastResponseSource = 'calculator';
+
+            removeTypingIndicator();
+            addMessage(recipeResult.response, true, recipeResult.category);
+            messageDisplayed = true;
+
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'assistant', content: recipeResult.response });
+
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+
+            return; // Done - recipe handled locally!
+        }
+
+        // STEP 2: Check local knowledge bank (saves API tokens!)
+        updateTypingIndicator('Searching knowledge base');
         const knowledgeBankResult = searchKnowledgeBank(userMessage);
 
         if (knowledgeBankResult) {
@@ -1332,7 +1820,7 @@ async function sendMessage() {
             return; // Done - no API call needed!
         }
 
-        // STEP 2: Check legacy findResponse for recipe calculations and special commands
+        // STEP 3: Check legacy findResponse for special commands (save recipe, view recipes, etc.)
         const legacyResult = findResponse(userMessage);
 
         // If legacy findResponse found something other than the default "That's a great question" response
@@ -1354,7 +1842,7 @@ async function sendMessage() {
             return; // Done - no API call needed!
         }
 
-        // STEP 3: No local match found - call AI API as fallback
+        // STEP 4: No local match found - call AI API as fallback
         console.log('🤖 No local match found - calling AI API...');
         updateTypingIndicator('AI is thinking');
         lastResponseSource = 'api';
@@ -1363,8 +1851,11 @@ async function sendMessage() {
 
         removeTypingIndicator();
 
+        // POST-PROCESS: Check if AI response contains a recipe suggestion that should be calculated
+        const processedResponse = await processAIResponseForRecipe(aiResult.response, userMessage);
+
         // Add response (markdown will be rendered in addMessage)
-        addMessage(aiResult.response, true);
+        addMessage(processedResponse, true);
         messageDisplayed = true;
 
         // Update conversation history (keep last 10 messages for context)
