@@ -6,10 +6,10 @@ class AIConfig {
         // Backend proxy URL (deployed on Render)
         this.backendUrl = 'https://saponify-ai-backend.onrender.com';
 
-        // Default Gemini API key for direct calls (fallback when backend unavailable)
+        // Gemini API key - stored on backend (Render.com) for security
+        // Users can optionally set their own key via: aiConfig.setGeminiApiKey('your-key')
         // Get a free key at: https://aistudio.google.com/app/apikey
-        // Note: Free tier limits - 15 RPM, 1000 requests/day for Flash-Lite
-        this.defaultGeminiKey = 'AIzaSyA9VKr-gBS7Vl4Q8s5GOGBegmgkr0_qPNE'; // Replace with your key
+        this.defaultGeminiKey = null; // Key is on backend, not in frontend code
 
         // Model settings
         this.geminiModel = 'gemini-2.5-flash-lite'; // Best free tier limits (1000 req/day)
