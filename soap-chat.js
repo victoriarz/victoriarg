@@ -1493,8 +1493,8 @@ function renderMarkdown(text) {
             return DOMPurify.sanitize(html, {
                 ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4',
                               'code', 'pre', 'blockquote', 'a', 'table', 'thead', 'tbody', 'tr',
-                              'th', 'td', 'hr', 'span', 'div'],
-                ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+                              'th', 'td', 'hr', 'span', 'div', 'button'],
+                ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'onclick', 'title'],
                 ALLOW_DATA_ATTR: false
             });
         }
