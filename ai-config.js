@@ -8,11 +8,11 @@ class AIConfig {
 
         // Default Gemini API key for direct calls (fallback when backend unavailable)
         // Get a free key at: https://aistudio.google.com/app/apikey
-        // Note: Free tier has generous limits (60 requests/minute)
+        // Note: Free tier limits - 15 RPM, 1000 requests/day for Flash-Lite
         this.defaultGeminiKey = 'AIzaSyA9VKr-gBS7Vl4Q8s5GOGBegmgkr0_qPNE'; // Replace with your key
 
         // Model settings
-        this.geminiModel = 'gemini-2.0-flash-exp'; // Latest Flash model - Fast, efficient, and FREE!
+        this.geminiModel = 'gemini-2.5-flash-lite'; // Best free tier limits (1000 req/day)
 
         // System prompt for soap making assistant
         this.systemPrompt = `You are a knowledgeable and friendly soap making assistant for Saponify AI, powered by a comprehensive soap calculator engine similar to SoapCalc.net. You help users with:
@@ -248,7 +248,7 @@ Then present the calculated recipe with:
             throw new Error('No Gemini API key configured');
         }
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.geminiModel}:generateContent?key=${apiKey}`;
 
         const response = await fetch(url, {
             method: 'POST',
