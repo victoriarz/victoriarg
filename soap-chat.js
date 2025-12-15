@@ -27,6 +27,262 @@ let conversationContext = {
     questionCount: 0           // Track depth of conversation on topic
 };
 
+// Recipe draft auto-save key for localStorage
+const RECIPE_DRAFT_KEY = 'saponify_recipe_draft';
+
+// ===========================================
+// RECIPE DRAFT PERSISTENCE
+// Auto-saves recipe progress so users don't lose work
+// ===========================================
+
+/**
+ * Save current recipe state to localStorage
+ */
+function saveRecipeDraft() {
+    if (!recipeState.active) return;
+
+    try {
+        const draft = {
+            ...recipeState,
+            savedAt: Date.now()
+        };
+        localStorage.setItem(RECIPE_DRAFT_KEY, JSON.stringify(draft));
+        console.log('📝 Recipe draft saved');
+    } catch (e) {
+        console.warn('Could not save recipe draft:', e);
+    }
+}
+
+/**
+ * Load recipe draft from localStorage
+ * Returns true if a draft was loaded
+ */
+function loadRecipeDraft() {
+    try {
+        const saved = localStorage.getItem(RECIPE_DRAFT_KEY);
+        if (!saved) return false;
+
+        const draft = JSON.parse(saved);
+
+        // Only restore if draft is less than 1 hour old
+        const ageHours = (Date.now() - draft.savedAt) / (1000 * 60 * 60);
+        if (ageHours > 1) {
+            clearRecipeDraft();
+            return false;
+        }
+
+        // Restore state
+        recipeState = {
+            active: draft.active,
+            batchSizeGrams: draft.batchSizeGrams || 0,
+            oils: draft.oils || [],
+            superfat: draft.superfat || 5,
+            pendingOils: draft.pendingOils || null
+        };
+
+        console.log('📝 Recipe draft restored');
+        return true;
+    } catch (e) {
+        console.warn('Could not load recipe draft:', e);
+        return false;
+    }
+}
+
+/**
+ * Clear saved recipe draft
+ */
+function clearRecipeDraft() {
+    try {
+        localStorage.removeItem(RECIPE_DRAFT_KEY);
+    } catch (e) {
+        // Ignore errors
+    }
+}
+
+/**
+ * Check if there's a saved draft and offer to resume
+ */
+function checkForSavedDraft() {
+    try {
+        const saved = localStorage.getItem(RECIPE_DRAFT_KEY);
+        if (!saved) return null;
+
+        const draft = JSON.parse(saved);
+        const ageMinutes = Math.round((Date.now() - draft.savedAt) / (1000 * 60));
+
+        if (ageMinutes > 60) {
+            clearRecipeDraft();
+            return null;
+        }
+
+        // Build description of saved progress
+        let description = '';
+        if (draft.batchSizeGrams > 0) {
+            description += `${draft.batchSizeGrams}g batch`;
+        }
+        if (draft.oils && draft.oils.length > 0) {
+            const oilNames = draft.oils.map(o => o.name).join(', ');
+            description += description ? ` with ${oilNames}` : oilNames;
+        }
+        if (draft.pendingOils && draft.pendingOils.length > 0) {
+            description += description ? ` (oils: ${draft.pendingOils.join(', ')})` : draft.pendingOils.join(', ');
+        }
+
+        return {
+            ageMinutes,
+            description: description || 'recipe in progress',
+            draft
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
+// ===========================================
+// USER-FRIENDLY ERROR MESSAGES
+// Provides helpful feedback when things go wrong
+// ===========================================
+
+/**
+ * Generate user-friendly error message based on error type
+ */
+function generateUserFriendlyError(error, userMessage) {
+    const errorMsg = error.message || '';
+
+    // Network/API errors
+    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('Failed to fetch')) {
+        return `**Connection Issue**\n\n` +
+            `I couldn't reach the AI service. This might be a temporary network issue.\n\n` +
+            `**In the meantime, I can still help with:**\n` +
+            `- Calculating soap recipes (just tell me your oils!)\n` +
+            `- Answering questions from my knowledge base\n` +
+            `- Validating recipe safety\n\n` +
+            `Try your question again, or ask about something specific like "calculate a recipe with olive oil and coconut oil".`;
+    }
+
+    // API key/auth errors
+    if (errorMsg.includes('401') || errorMsg.includes('403') || errorMsg.includes('API key') || errorMsg.includes('unauthorized')) {
+        return `**AI Service Unavailable**\n\n` +
+            `The AI service isn't available right now, but no worries!\n\n` +
+            `**I can still help you with:**\n` +
+            `- Recipe calculations (my specialty!)\n` +
+            `- Soap making knowledge\n` +
+            `- Oil properties and recommendations\n\n` +
+            `What would you like to know about soap making?`;
+    }
+
+    // Rate limit errors
+    if (errorMsg.includes('429') || errorMsg.includes('rate limit') || errorMsg.includes('too many requests')) {
+        return `**Please wait a moment**\n\n` +
+            `I'm getting a lot of questions right now! Give me about 30 seconds and try again.\n\n` +
+            `While you wait, here's a tip: I can calculate soap recipes instantly without needing the AI - just say "create a recipe"!`;
+    }
+
+    // Recipe calculation errors
+    if (errorMsg.includes('oil') || errorMsg.includes('SAP') || errorMsg.includes('calculate')) {
+        return `**Recipe Calculation Issue**\n\n` +
+            `I had trouble with that calculation. This usually happens when:\n` +
+            `- An oil name wasn't recognized\n` +
+            `- The amounts don't add up correctly\n\n` +
+            `**Try again with:**\n` +
+            `- Standard oil names: "olive oil", "coconut oil", "shea butter"\n` +
+            `- Clear amounts: "300g olive oil, 200g coconut oil"\n\n` +
+            `Or just list your oils and I'll suggest amounts!`;
+    }
+
+    // Generic fallback with helpful suggestions
+    const legacyResult = findResponse(userMessage);
+
+    if (legacyResult.category !== null) {
+        return legacyResult.response;
+    }
+
+    return `**Hmm, something went wrong**\n\n` +
+        `I couldn't process that request, but I'm still here to help!\n\n` +
+        `**Try asking about:**\n` +
+        `- Creating a soap recipe\n` +
+        `- Oil properties and recommendations\n` +
+        `- Cold process vs hot process\n` +
+        `- Troubleshooting soap problems\n` +
+        `- Lye safety\n\n` +
+        `What would you like to know?`;
+}
+
+/**
+ * Generate specific error for recipe validation failures
+ */
+function generateRecipeError(issue, context) {
+    const errors = {
+        'unknown_oil': {
+            title: 'Unknown Oil',
+            message: `I don't recognize "${context.oilName}" in my database.`,
+            suggestions: [
+                'Check the spelling',
+                'Try common names like "olive oil" instead of brand names',
+                'Ask "what oils do you know about?" to see available options'
+            ]
+        },
+        'invalid_amount': {
+            title: 'Invalid Amount',
+            message: `I couldn't understand the amount "${context.amount}".`,
+            suggestions: [
+                'Use grams: "300g olive oil"',
+                'Use ounces: "10 oz coconut oil"',
+                'Use percentages: "30% olive oil"'
+            ]
+        },
+        'batch_too_small': {
+            title: 'Batch Too Small',
+            message: `${context.grams}g is quite small for a batch.`,
+            suggestions: [
+                'Minimum recommended: 200g',
+                'Small test batch: 500g',
+                'Standard batch: 1000g'
+            ]
+        },
+        'batch_too_large': {
+            title: 'Very Large Batch',
+            message: `${context.grams}g is a large batch! Make sure you have the equipment.`,
+            suggestions: [
+                'Large batches need bigger containers',
+                'Consider splitting into multiple batches',
+                'Ensure you have a large enough mold'
+            ]
+        },
+        'high_coconut': {
+            title: 'High Coconut Oil',
+            message: `${context.percent}% coconut oil may be drying for some skin types.`,
+            suggestions: [
+                'Consider reducing to 20-30%',
+                'Increase superfat to 8-10%',
+                'Or keep it for a "cleansing" bar'
+            ]
+        },
+        'no_hard_oils': {
+            title: 'No Hard Oils',
+            message: 'Your recipe has no hard oils - bars may be soft.',
+            suggestions: [
+                'Add coconut oil (15-30%)',
+                'Add palm oil or shea butter (20-30%)',
+                'Or make a "bastille" style soft bar'
+            ]
+        }
+    };
+
+    const errorInfo = errors[issue] || {
+        title: 'Recipe Issue',
+        message: 'There might be an issue with your recipe.',
+        suggestions: ['Try adjusting the amounts', 'Ask for a beginner recipe']
+    };
+
+    let response = `**${errorInfo.title}**\n\n${errorInfo.message}\n\n**Suggestions:**\n`;
+    errorInfo.suggestions.forEach(s => {
+        response += `- ${s}\n`;
+    });
+
+    return response;
+}
+
 /**
  * Update conversation context based on response category and content
  */
@@ -515,19 +771,67 @@ function searchKnowledgeBank(userInput) {
         }
     ];
 
-    // Search for matching keywords
-    for (const mapping of searchMappings) {
-        const matchedKeyword = mapping.keywords.find(kw => input.includes(kw.toLowerCase()));
-        if (matchedKeyword) {
-            console.log(`📚 Knowledge bank match: "${matchedKeyword}" -> ${mapping.section}`);
+    // Search for matching keywords with RELEVANCE RANKING
+    // Score each mapping based on number and quality of keyword matches
+    const scoredMatches = [];
 
-            // Navigate to the section in the knowledge bank
-            const data = getNestedProperty(kb, mapping.section);
-            if (data) {
-                const response = mapping.format(data, input);
-                if (response) {
-                    return { response, category: mapping.category, source: 'knowledge_bank' };
+    for (const mapping of searchMappings) {
+        let score = 0;
+        let matchedKeywords = [];
+
+        for (const kw of mapping.keywords) {
+            const kwLower = kw.toLowerCase();
+            if (input.includes(kwLower)) {
+                // Base score for match
+                let keywordScore = 1;
+
+                // Bonus for longer keywords (more specific)
+                if (kw.length > 10) keywordScore += 1;
+
+                // Bonus for exact phrase match at word boundary
+                const wordBoundaryRegex = new RegExp(`\\b${kwLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
+                if (wordBoundaryRegex.test(input)) {
+                    keywordScore += 2;
                 }
+
+                // Bonus if keyword appears at start of input
+                if (input.startsWith(kwLower) || input.startsWith('what is ' + kwLower)) {
+                    keywordScore += 1;
+                }
+
+                score += keywordScore;
+                matchedKeywords.push(kw);
+            }
+        }
+
+        if (score > 0) {
+            scoredMatches.push({
+                mapping,
+                score,
+                matchedKeywords
+            });
+        }
+    }
+
+    // Sort by score (highest first)
+    scoredMatches.sort((a, b) => b.score - a.score);
+
+    // Return best match
+    if (scoredMatches.length > 0) {
+        const best = scoredMatches[0];
+        console.log(`📚 Knowledge bank match: "${best.matchedKeywords.join(', ')}" -> ${best.mapping.section} (score: ${best.score})`);
+
+        // Log other candidates for debugging
+        if (scoredMatches.length > 1) {
+            console.log(`   Other candidates: ${scoredMatches.slice(1, 4).map(m => `${m.mapping.section}(${m.score})`).join(', ')}`);
+        }
+
+        // Navigate to the section in the knowledge bank
+        const data = getNestedProperty(kb, best.mapping.section);
+        if (data) {
+            const response = best.mapping.format(data, input);
+            if (response) {
+                return { response, category: best.mapping.category, source: 'knowledge_bank' };
             }
         }
     }
@@ -1635,6 +1939,7 @@ function checkRecipeIntent(userInput) {
         recipeState.batchSizeGrams = grams;
         recipeState.oils = [];
         recipeState.superfat = 5;
+        saveRecipeDraft(); // Auto-save progress
 
         const availableOils = soapCalculator
             ? soapCalculator.getAvailableOils().slice(0, 8).map(o => o.name).join(', ')
@@ -1652,6 +1957,7 @@ function checkRecipeIntent(userInput) {
         recipeState.batchSizeGrams = 0;
         recipeState.pendingOils = mentionedOils;
         recipeState.superfat = 5;
+        saveRecipeDraft(); // Auto-save progress
 
         return {
             response: `I can create a recipe with **${mentionedOils.join(', ')}**! 🧼\n\nHow much soap do you want to make? (e.g., "500g", "1000 grams", "32 oz")`,
@@ -1664,6 +1970,7 @@ function checkRecipeIntent(userInput) {
     recipeState.batchSizeGrams = 0;
     recipeState.oils = [];
     recipeState.superfat = 5;
+    saveRecipeDraft(); // Auto-save progress
 
     return {
         response: `I'll help you create a safe, calculated soap recipe! 🧮\n\nFirst, how much soap do you want to make?\n- **Small batch:** 500g\n- **Medium batch:** 1000g\n- **Large batch:** 1500g\n\nJust tell me the batch size (e.g., "500g" or "1000 grams")`,
@@ -2011,13 +2318,14 @@ function calculateAndFormatRecipe(oils, superfatPercent) {
 
         const recipeOutput = formatCalculatedRecipe(recipe);
 
-        // Reset recipe state
+        // Reset recipe state and clear draft
         recipeState = {
             active: false,
             batchSizeGrams: 0,
             oils: [],
             superfat: 5
         };
+        clearRecipeDraft(); // Recipe complete - clear draft
 
         return { response: validationMessage + recipeOutput, category: 'recipe' };
     } catch (error) {
@@ -2036,6 +2344,7 @@ function handleActiveRecipeConversation(input) {
     // Check for cancel/abort
     if (/\b(cancel|stop|abort|nevermind|never mind)\b/i.test(input)) {
         recipeState = { active: false, batchSizeGrams: 0, oils: [], superfat: 5 };
+        clearRecipeDraft(); // Clear saved draft
         return {
             response: "No problem! Recipe cancelled. What else can I help you with?",
             category: 'recipe'
@@ -2048,6 +2357,7 @@ function handleActiveRecipeConversation(input) {
         if (batchResult) {
             const grams = batchResult.grams;
             recipeState.batchSizeGrams = grams;
+            saveRecipeDraft(); // Auto-save progress
 
             // Check if we had pending oils from earlier
             if (recipeState.pendingOils && recipeState.pendingOils.length > 0) {
@@ -2077,6 +2387,7 @@ function handleActiveRecipeConversation(input) {
             if (oilsWithAmounts.every(o => o.grams > 0)) {
                 const totalGrams = oilsWithAmounts.reduce((sum, o) => sum + o.grams, 0);
                 recipeState.oils = oilsWithAmounts;
+                saveRecipeDraft(); // Auto-save progress
 
                 if (Math.abs(totalGrams - recipeState.batchSizeGrams) > 10) {
                     return {
@@ -2524,14 +2835,11 @@ async function sendMessage() {
             return; // Exit early - message was already shown successfully
         }
 
-        // Show error to user temporarily for debugging
-        console.warn('⚠️ Falling back to local knowledge base due to API error:', error.message);
+        // Generate user-friendly error message
+        const errorResponse = generateUserFriendlyError(error, userMessage);
 
-        // Fallback to legacy local knowledge base - no error message shown
-        const result = findResponse(userMessage);
-
-        // Just show the fallback response directly without error message
-        addMessage(result.response, true, result.category);
+        // Show error with fallback response
+        addMessage(errorResponse, true, 'error');
     } finally {
         // Re-enable input
         chatInput.disabled = false;
