@@ -563,6 +563,48 @@ const soapKnowledge = {
 // ===========================================
 
 /**
+ * Check if a question is related to soap making
+ * Used to filter out off-topic questions before using AI tokens
+ * Returns true if soap-related, false if off-topic
+ */
+function isSoapRelatedQuestion(input) {
+    const lowerInput = input.toLowerCase();
+
+    // Soap-making related keywords
+    const soapKeywords = [
+        // Core soap making terms
+        'soap', 'lye', 'saponification', 'saponify', 'batch', 'recipe',
+        // Oils and fats
+        'oil', 'olive', 'coconut', 'palm', 'castor', 'shea', 'cocoa', 'butter',
+        'avocado', 'sunflower', 'lard', 'tallow', 'jojoba', 'almond', 'hemp',
+        'grapeseed', 'canola', 'babassu', 'mango', 'apricot', 'rice bran',
+        // Process terms
+        'cold process', 'hot process', 'melt and pour', 'trace', 'gel phase',
+        'cure', 'curing', 'unmold', 'cut', 'pour', 'mold',
+        // Chemistry
+        'sodium hydroxide', 'naoh', 'potassium hydroxide', 'koh', 'sap value',
+        'superfat', 'lye calculator', 'fatty acid', 'ph',
+        // Properties
+        'hardness', 'cleansing', 'conditioning', 'bubbly', 'lather', 'creamy',
+        'iodine', 'ins',
+        // Additives
+        'essential oil', 'fragrance', 'colorant', 'mica', 'oxide', 'clay',
+        'exfoliant', 'oatmeal', 'honey', 'milk', 'charcoal', 'additive',
+        'scent', 'smell', 'aroma',
+        // Troubleshooting
+        'dos', 'soda ash', 'rancid', 'soft', 'crumbly', 'seize', 'accelerate',
+        'volcano', 'separation', 'glycerin river',
+        // Safety
+        'safety', 'goggles', 'gloves', 'caustic', 'burn',
+        // General crafting
+        'beginner', 'first batch', 'homemade', 'diy', 'natural', 'handmade'
+    ];
+
+    // Check if any soap keyword is in the input
+    return soapKeywords.some(keyword => lowerInput.includes(keyword));
+}
+
+/**
  * Detect if user is asking an explicit knowledge-seeking question
  * These should be answered even during active recipe conversations
  * Examples: "what is saponification?", "explain cold process", "tell me about safety"
@@ -3189,8 +3231,27 @@ async function sendMessage() {
             return; // Done - no API call needed!
         }
 
-        // STEP 4: No local match found - call AI API as fallback
-        console.log('🤖 No local match found - calling AI API...');
+        // STEP 4: Check if question is soap-related before using AI tokens
+        if (!isSoapRelatedQuestion(userMessage)) {
+            console.log('🚫 Off-topic question detected - not using AI tokens');
+            removeTypingIndicator();
+
+            const offTopicResponse = `**I'm a soap making assistant!** 🧼\n\n` +
+                `I can only help with soap-related topics like:\n` +
+                `- **Recipes**: "Create a beginner soap recipe"\n` +
+                `- **Techniques**: "What is cold process vs hot process?"\n` +
+                `- **Ingredients**: "What oils are good for soap?"\n` +
+                `- **Troubleshooting**: "Why is my soap soft?"\n` +
+                `- **Safety**: "How do I work with lye safely?"\n\n` +
+                `What would you like to know about soap making?`;
+
+            addMessage(offTopicResponse, true);
+            messageDisplayed = true;
+            return;
+        }
+
+        // STEP 5: Question is soap-related - call AI API
+        console.log('🤖 Soap-related question - calling AI API...');
         updateTypingIndicator('AI is thinking');
         lastResponseSource = 'api';
 
