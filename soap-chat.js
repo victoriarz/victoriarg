@@ -520,7 +520,7 @@ const soapKnowledge = {
         response: "Saponification is the chemical reaction that occurs when fats or oils react with lye (sodium hydroxide for bar soap or potassium hydroxide for liquid soap). This process creates soap and glycerin. The lye breaks down the triglycerides in oils into fatty acid salts (soap) and glycerol. It's an exothermic reaction, meaning it produces heat. Safety is crucial - always add lye to water, never water to lye!"
     },
     'cold_process': {
-        keywords: ['cold process', 'cp', 'cold soap', 'cp vs hp', 'difference between'],
+        keywords: ['cold process', 'cp', 'cold soap', 'cp vs hp', 'cold process vs hot process'],
         response: "Cold Process (CP) soap making doesn't require external heat after mixing. You mix oils and lye at around 100-110°F, pour into molds, and let it cure for 4-6 weeks. CP gives you more design freedom and smoother bars. Hot Process (HP) uses heat to speed saponification - the soap is ready to use in 1-2 weeks but has a rustic texture. CP is great for swirls and designs, while HP is faster if you need soap quickly!"
     },
     'first_batch': {
@@ -2801,6 +2801,14 @@ function findResponse(userInput) {
 
     // NOTE: Recipe calculation is now handled by checkRecipeIntent() which runs BEFORE this function
     // This function now only handles save/view commands and legacy knowledge lookup
+
+    // COMPARISON QUESTIONS: Route to Gemini for "difference between", "vs", "compare" questions
+    // These need AI to synthesize answers, not match generic keywords
+    const comparisonMatch = input.match(/\b(difference\s+between|what'?s?\s+the\s+difference|compare|vs\.?|versus)\b/i);
+    if (comparisonMatch) {
+        console.log('📚 Comparison question in findResponse - routing to Gemini');
+        return { response: null, category: null }; // Let Gemini handle it
+    }
 
     // Check each knowledge category
     for (const [category, data] of Object.entries(soapKnowledge)) {
