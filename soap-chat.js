@@ -1,10 +1,12 @@
 // Saponify AI - Soap Making Chat Assistant with LLM Integration
+// Uses local knowledge bank first, then falls back to AI API to save tokens
 
 // Initialize AI configuration
 let aiConfig;
 let conversationHistory = [];
 let soapCalculator = null;  // Will be initialized when SoapCalculator loads
 let recipeValidator = null;  // Will be initialized when RecipeValidator loads
+let knowledgeBank = null;    // Will be loaded from soap-knowledge-bank.js
 
 // NOTE: SAP values are now managed by SoapCalculator class in soap-calculator.js
 // This duplicate data structure has been removed to avoid inconsistencies
@@ -21,9 +23,12 @@ let recipeState = {
 let lastCalculatedRecipe = null;
 let lastCalculatedRecipeTime = null;
 
+// Track if we're using local knowledge or AI
+let lastResponseSource = 'local';
+
 // Removed rate limiting - no artificial delays between requests
 
-// Knowledge base for soap making
+// Legacy knowledge base for soap making (kept as fallback)
 const soapKnowledge = {
     'saponification': {
         keywords: ['saponification', 'process', 'chemical reaction', 'how does soap form'],
@@ -66,6 +71,711 @@ const soapKnowledge = {
         response: "Natural colorants: Clays (white, pink, green), Activated charcoal (black/gray), Turmeric (yellow/gold), Paprika (peach/coral), Spirulina (green), Cocoa powder (brown), Alkanet root (purple). Micas and oxides give vibrant, stable colors. Add at trace and mix well. Natural colorants may fade or morph - test small batches first. Titanium dioxide creates white and brightens colors. For swirls, divide your batter and color each portion separately!"
     }
 };
+
+// ===========================================
+// KNOWLEDGE BANK SEARCH SYSTEM
+// Searches the comprehensive soap-knowledge-bank.js first to save API tokens
+// ===========================================
+
+/**
+ * Search the comprehensive knowledge bank for relevant information
+ * Returns a formatted response if found, null if no good match
+ */
+function searchKnowledgeBank(userInput) {
+    // If knowledge bank not loaded, return null to trigger API call
+    if (typeof SOAP_KNOWLEDGE_BANK === 'undefined') {
+        console.log('📚 Knowledge bank not loaded, will use API');
+        return null;
+    }
+
+    const input = userInput.toLowerCase();
+    const kb = SOAP_KNOWLEDGE_BANK;
+
+    // Define keyword mappings to knowledge bank sections
+    const searchMappings = [
+        // Saponification & Chemistry
+        {
+            keywords: ['saponification', 'chemical reaction', 'how soap made', 'how is soap made', 'soap chemistry', 'triglyceride', 'fatty acid'],
+            section: 'saponification',
+            category: 'Chemistry',
+            format: (data) => formatSaponificationResponse(data)
+        },
+        // SAP Values & Lye Calculation
+        {
+            keywords: ['sap value', 'saponification value', 'lye calculator', 'how much lye', 'calculate lye', 'lye amount'],
+            section: 'saponification.sapValues',
+            category: 'Chemistry',
+            format: (data) => formatSapValuesResponse(data)
+        },
+        // Cold Process
+        {
+            keywords: ['cold process', 'cp soap', 'cold soap', 'cp method', 'cold process steps'],
+            section: 'methods.coldProcess',
+            category: 'Technique',
+            format: (data) => formatColdProcessResponse(data)
+        },
+        // Hot Process
+        {
+            keywords: ['hot process', 'hp soap', 'crockpot soap', 'hot process steps', 'hp method'],
+            section: 'methods.hotProcess',
+            category: 'Technique',
+            format: (data) => formatHotProcessResponse(data)
+        },
+        // Melt and Pour
+        {
+            keywords: ['melt and pour', 'melt pour', 'm&p', 'mp soap', 'glycerin soap', 'soap base'],
+            section: 'methods.meltAndPour',
+            category: 'Technique',
+            format: (data) => formatMeltAndPourResponse(data)
+        },
+        // Liquid Soap
+        {
+            keywords: ['liquid soap', 'potassium hydroxide', 'koh soap', 'castile liquid'],
+            section: 'methods.liquidSoap',
+            category: 'Technique',
+            format: (data) => formatLiquidSoapResponse(data)
+        },
+        // Oils - General
+        {
+            keywords: ['which oil', 'best oil', 'oils for soap', 'soap oils', 'oil properties', 'hard oil', 'soft oil'],
+            section: 'oils',
+            category: 'Ingredients',
+            format: (data) => formatOilsOverviewResponse(data)
+        },
+        // Specific Oils
+        {
+            keywords: ['coconut oil', 'olive oil', 'palm oil', 'castor oil', 'shea butter', 'cocoa butter', 'sweet almond', 'avocado oil', 'lard', 'tallow'],
+            section: 'oils.commonOils',
+            category: 'Ingredients',
+            format: (data, input) => formatSpecificOilResponse(data, input)
+        },
+        // Recipe Formulation
+        {
+            keywords: ['beginner recipe', 'recipe ratio', 'formulation', 'recipe percentage', '33/33/33', '34/33/33', 'palm free', 'castile recipe'],
+            section: 'formulation.classicRatios',
+            category: 'Recipe',
+            format: (data) => formatRecipeRatiosResponse(data)
+        },
+        // Superfat
+        {
+            keywords: ['superfat', 'lye discount', 'how much superfat', 'superfat percentage'],
+            section: 'formulation.superfat',
+            category: 'Recipe',
+            format: (data) => formatSuperfatResponse(data)
+        },
+        // Water Calculations
+        {
+            keywords: ['water discount', 'water ratio', 'lye concentration', 'how much water'],
+            section: 'formulation.waterCalculations',
+            category: 'Recipe',
+            format: (data) => formatWaterCalculationsResponse(data)
+        },
+        // Soap Properties
+        {
+            keywords: ['soap properties', 'hardness', 'cleansing', 'conditioning', 'bubbly', 'creamy lather', 'ins value', 'iodine'],
+            section: 'formulation.soapProperties',
+            category: 'Recipe',
+            format: (data) => formatSoapPropertiesResponse(data)
+        },
+        // Natural Colorants
+        {
+            keywords: ['natural color', 'colorant', 'purple soap', 'blue soap', 'green soap', 'pink soap', 'yellow soap', 'clay color', 'indigo', 'spirulina', 'turmeric', 'madder'],
+            section: 'additives.naturalColorants',
+            category: 'Design',
+            format: (data, input) => formatColorantsResponse(data, input)
+        },
+        // Essential Oils & Fragrance
+        {
+            keywords: ['essential oil', 'fragrance oil', 'scent', 'how much essential', 'eo usage', 'fragrance rate', 'smell', 'aroma'],
+            section: 'additives.fragrance',
+            category: 'Fragrance',
+            format: (data) => formatFragranceResponse(data)
+        },
+        // Exfoliants
+        {
+            keywords: ['exfoliant', 'scrub', 'oatmeal soap', 'coffee grounds', 'poppy seeds'],
+            section: 'additives.exfoliants',
+            category: 'Additives',
+            format: (data) => formatExfoliantsResponse(data)
+        },
+        // Botanicals
+        {
+            keywords: ['botanical', 'flower', 'herb', 'lavender buds', 'rose petals', 'calendula', 'dried flower'],
+            section: 'additives.botanicals',
+            category: 'Additives',
+            format: (data) => formatBotanicalsResponse(data)
+        },
+        // Special Additives
+        {
+            keywords: ['sodium lactate', 'honey soap', 'milk soap', 'goat milk', 'sugar', 'salt', 'vitamin e', 'roe', 'rosemary extract'],
+            section: 'additives.specialAdditives',
+            category: 'Additives',
+            format: (data, input) => formatSpecialAdditivesResponse(data, input)
+        },
+        // Safety
+        {
+            keywords: ['safety', 'lye safety', 'protective', 'goggles', 'gloves', 'burn', 'first aid', 'dangerous', 'caustic'],
+            section: 'safety',
+            category: 'Safety',
+            format: (data) => formatSafetyResponse(data)
+        },
+        // Troubleshooting - General
+        {
+            keywords: ['problem', 'troubleshoot', 'wrong', 'failed', 'help', 'issue', 'fix'],
+            section: 'troubleshooting',
+            category: 'Help',
+            format: (data) => formatTroubleshootingOverview(data)
+        },
+        // Specific Troubleshooting Issues
+        {
+            keywords: ['lye heavy', 'zap test', 'burning', 'too much lye'],
+            section: 'troubleshooting.lyeHeavySoap',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Lye Heavy Soap')
+        },
+        {
+            keywords: ['soft soap', 'won\'t harden', 'squishy', 'too soft'],
+            section: 'troubleshooting.softSoap',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Soft Soap')
+        },
+        {
+            keywords: ['seizing', 'soap on a stick', 'seized', 'solid in pot'],
+            section: 'troubleshooting.seizing',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Seizing')
+        },
+        {
+            keywords: ['acceleration', 'trace too fast', 'thickening fast'],
+            section: 'troubleshooting.acceleration',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Acceleration')
+        },
+        {
+            keywords: ['ricing', 'rice like', 'lumps', 'curdled'],
+            section: 'troubleshooting.ricing',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Ricing')
+        },
+        {
+            keywords: ['separation', 'oil pooling', 'separating'],
+            section: 'troubleshooting.separation',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Separation')
+        },
+        {
+            keywords: ['soda ash', 'white powder', 'ash on soap'],
+            section: 'troubleshooting.sodaAsh',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Soda Ash')
+        },
+        {
+            keywords: ['dos', 'orange spots', 'rancid', 'dreaded orange'],
+            section: 'troubleshooting.dreadedOrangeSpots',
+            category: 'Help',
+            format: (data) => formatSpecificTroubleshooting(data, 'Dreaded Orange Spots (DOS)')
+        },
+        // Curing
+        {
+            keywords: ['cure', 'curing', 'how long cure', 'cure time', 'when ready', 'storage'],
+            section: 'curingAndStorage',
+            category: 'Process',
+            format: (data) => formatCuringResponse(data)
+        },
+        // Design Techniques
+        {
+            keywords: ['swirl', 'design', 'layer', 'drop swirl', 'hanger swirl', 'taiwan swirl', 'in the pot'],
+            section: 'designTechniques',
+            category: 'Design',
+            format: (data) => formatDesignResponse(data)
+        },
+        // Business & Regulations
+        {
+            keywords: ['sell soap', 'business', 'fda', 'regulation', 'label', 'labeling', 'legal', 'cosmetic'],
+            section: 'businessRegulations',
+            category: 'Business',
+            format: (data) => formatBusinessResponse(data)
+        },
+        // Glossary
+        {
+            keywords: ['what is', 'what does', 'define', 'meaning of', 'term'],
+            section: 'glossary',
+            category: 'Info',
+            format: (data, input) => formatGlossaryResponse(data, input)
+        }
+    ];
+
+    // Search for matching keywords
+    for (const mapping of searchMappings) {
+        const matchedKeyword = mapping.keywords.find(kw => input.includes(kw.toLowerCase()));
+        if (matchedKeyword) {
+            console.log(`📚 Knowledge bank match: "${matchedKeyword}" -> ${mapping.section}`);
+
+            // Navigate to the section in the knowledge bank
+            const data = getNestedProperty(kb, mapping.section);
+            if (data) {
+                const response = mapping.format(data, input);
+                if (response) {
+                    return { response, category: mapping.category, source: 'knowledge_bank' };
+                }
+            }
+        }
+    }
+
+    console.log('📚 No knowledge bank match found for:', input.substring(0, 50));
+    return null;
+}
+
+/**
+ * Helper to get nested property from object using dot notation
+ */
+function getNestedProperty(obj, path) {
+    return path.split('.').reduce((current, key) => current && current[key], obj);
+}
+
+// ===========================================
+// KNOWLEDGE BANK RESPONSE FORMATTERS
+// ===========================================
+
+function formatSaponificationResponse(data) {
+    let response = `## What is Saponification?\n\n`;
+    response += `${data.definition}\n\n`;
+    response += `### The Chemical Reaction\n`;
+    response += `**${data.chemicalReaction.equation}**\n\n`;
+    response += `${data.chemicalReaction.explanation}\n\n`;
+    response += `**By-products:** ${data.chemicalReaction.byproducts.join(', ')}\n\n`;
+    response += `### Timeline\n`;
+    for (const [stage, desc] of Object.entries(data.timeline)) {
+        response += `- **${stage}:** ${desc}\n`;
+    }
+    return response;
+}
+
+function formatSapValuesResponse(data) {
+    let response = `## SAP Values & Lye Calculation\n\n`;
+    response += `**What is a SAP value?** ${data.definition}\n\n`;
+    response += `### How to Calculate\n${data.calculation}\n\n`;
+    response += `**Example:** ${data.example}\n\n`;
+    response += `⚠️ **Important:** ${data.importance}`;
+    return response;
+}
+
+function formatColdProcessResponse(data) {
+    let response = `## Cold Process Soap Making\n\n`;
+    response += `${data.description}\n\n`;
+    response += `### Steps\n`;
+    data.steps.forEach(step => {
+        response += `${step}\n`;
+    });
+    response += `\n### What is Trace?\n${data.traceDefinition}\n\n`;
+    response += `**Cure Time:** ${data.cureTime}\n\n`;
+    response += `### Advantages\n`;
+    data.advantages.forEach(adv => response += `- ${adv}\n`);
+    response += `\n### Disadvantages\n`;
+    data.disadvantages.forEach(dis => response += `- ${dis}\n`);
+    return response;
+}
+
+function formatHotProcessResponse(data) {
+    let response = `## Hot Process Soap Making\n\n`;
+    response += `${data.description}\n\n`;
+    response += `### Steps\n`;
+    data.steps.forEach(step => response += `${step}\n`);
+    response += `\n### Stages During Cooking\n`;
+    data.stages.forEach(stage => response += `- ${stage}\n`);
+    response += `\n**Cure Time:** ${data.cureTime}\n\n`;
+    response += `⚠️ **Warning:** ${data.volcanoWarning}\n\n`;
+    response += `### Advantages\n`;
+    data.advantages.forEach(adv => response += `- ${adv}\n`);
+    return response;
+}
+
+function formatMeltAndPourResponse(data) {
+    let response = `## Melt and Pour Soap Making\n\n`;
+    response += `${data.description}\n\n`;
+    response += `### Steps\n`;
+    data.steps.forEach(step => response += `${step}\n`);
+    response += `\n### Available Base Types\n`;
+    data.baseTypes.forEach(base => response += `- ${base}\n`);
+    response += `\n**Ready to use:** ${data.cureTime}\n\n`;
+    response += `### Tips\n`;
+    data.tips.forEach(tip => response += `- ${tip}\n`);
+    return response;
+}
+
+function formatLiquidSoapResponse(data) {
+    let response = `## Liquid Soap Making\n\n`;
+    response += `${data.description}\n\n`;
+    response += `### Process\n`;
+    data.process.forEach(step => response += `${step}\n`);
+    response += `\n⚠️ **Note:** ${data.kohNote}`;
+    return response;
+}
+
+function formatOilsOverviewResponse(data) {
+    let response = `## Oils for Soap Making\n\n`;
+    response += `### Hard Oils\n${data.categories.hardOils.definition}\n`;
+    response += `**Examples:** ${data.categories.hardOils.examples.join(', ')}\n\n`;
+    response += `### Soft Oils\n${data.categories.softOils.definition}\n`;
+    response += `**Examples:** ${data.categories.softOils.examples.join(', ')}\n\n`;
+    response += `### Popular Oils at a Glance\n`;
+    const topOils = ['coconutOil', 'oliveOil', 'palmOil', 'castorOil', 'sheaButter'];
+    topOils.forEach(oilKey => {
+        const oil = data.commonOils[oilKey];
+        if (oil) {
+            response += `- **${oilKey.replace(/([A-Z])/g, ' $1').trim()}**: ${oil.recommendedPercentage} - ${oil.properties.lather} lather\n`;
+        }
+    });
+    return response;
+}
+
+function formatSpecificOilResponse(data, input) {
+    // Find which oil the user is asking about
+    const oilMappings = {
+        'coconut': 'coconutOil',
+        'olive': 'oliveOil',
+        'palm oil': 'palmOil',
+        'castor': 'castorOil',
+        'shea': 'sheaButter',
+        'cocoa': 'cocoaButter',
+        'sweet almond': 'sweetAlmondOil',
+        'avocado': 'avocadoOil',
+        'lard': 'lard',
+        'tallow': 'tallow',
+        'sunflower': 'sunflowerOil',
+        'rice bran': 'riceBranOil'
+    };
+
+    for (const [keyword, oilKey] of Object.entries(oilMappings)) {
+        if (input.includes(keyword)) {
+            const oil = data[oilKey];
+            if (oil) {
+                let response = `## ${oilKey.replace(/([A-Z])/g, ' $1').trim()}\n\n`;
+                response += `**SAP Value (NaOH):** ${oil.sapValueNaOH}\n\n`;
+                response += `### Properties\n`;
+                response += `| Property | Level |\n|----------|-------|\n`;
+                for (const [prop, value] of Object.entries(oil.properties)) {
+                    response += `| ${prop} | ${value} |\n`;
+                }
+                response += `\n**Recommended Percentage:** ${oil.recommendedPercentage}\n\n`;
+                response += `### Notes\n${oil.notes}`;
+                return response;
+            }
+        }
+    }
+    return null;
+}
+
+function formatRecipeRatiosResponse(data) {
+    let response = `## Classic Soap Recipe Ratios\n\n`;
+    for (const [key, recipe] of Object.entries(data)) {
+        response += `### ${recipe.name}\n`;
+        for (const [oil, percent] of Object.entries(recipe.recipe)) {
+            response += `- ${oil.replace(/([A-Z])/g, ' $1').trim()}: ${percent}\n`;
+        }
+        response += `*${recipe.notes}*\n\n`;
+    }
+    return response;
+}
+
+function formatSuperfatResponse(data) {
+    let response = `## Superfat (Lye Discount)\n\n`;
+    response += `**Definition:** ${data.definition}\n\n`;
+    response += `### Recommended Superfat Percentages\n`;
+    for (const [use, percent] of Object.entries(data.recommendations)) {
+        response += `- **${use}:** ${percent}\n`;
+    }
+    response += `\n### Calculation\n${data.calculation}`;
+    return response;
+}
+
+function formatWaterCalculationsResponse(data) {
+    let response = `## Water & Lye Ratios\n\n`;
+    response += `### Common Ratios\n`;
+    for (const [name, info] of Object.entries(data)) {
+        if (typeof info === 'object' && info.ratio) {
+            response += `**${name}:** ${info.ratio} (${info.percentage})\n- ${info.use}\n\n`;
+        }
+    }
+    response += `**Safe Range:** ${data.safeRange || 'Water:lye ratios between 3:1 (25% lye) and 1:1 (50% lye) are workable.'}`;
+    return response;
+}
+
+function formatSoapPropertiesResponse(data) {
+    let response = `## Soap Properties Explained\n\n`;
+    for (const [prop, info] of Object.entries(data)) {
+        response += `### ${prop.charAt(0).toUpperCase() + prop.slice(1)}\n`;
+        response += `${info.description}\n`;
+        response += `**Ideal Range:** ${info.idealRange}\n`;
+        response += `**Increased by:** ${info.increasedBy.join(', ')}\n\n`;
+    }
+    return response;
+}
+
+function formatColorantsResponse(data, input) {
+    let response = `## Natural Soap Colorants\n\n`;
+
+    // Check if user is asking about a specific color
+    const colorMap = {
+        'purple': 'purples',
+        'blue': 'blues',
+        'green': 'greens',
+        'pink': 'pinks',
+        'yellow': 'yellows',
+        'brown': 'browns',
+        'black': 'blackGray',
+        'gray': 'blackGray',
+        'grey': 'blackGray'
+    };
+
+    let specificColor = null;
+    for (const [keyword, colorKey] of Object.entries(colorMap)) {
+        if (input.includes(keyword)) {
+            specificColor = colorKey;
+            break;
+        }
+    }
+
+    if (specificColor && data[specificColor]) {
+        const colorData = data[specificColor];
+        response += `### ${specificColor.charAt(0).toUpperCase() + specificColor.slice(1)} Colorants\n`;
+        for (const [name, info] of Object.entries(colorData)) {
+            response += `**${name}:**\n`;
+            if (info.color) response += `- Color: ${info.color}\n`;
+            if (info.method) response += `- Method: ${info.method}\n`;
+            if (info.usage) response += `- Usage: ${info.usage}\n`;
+            if (info.notes) response += `- Notes: ${info.notes}\n`;
+            response += `\n`;
+        }
+    } else {
+        // General overview
+        response += `### By Color\n`;
+        const colors = ['purples', 'blues', 'greens', 'pinks', 'yellows', 'browns'];
+        colors.forEach(color => {
+            if (data[color]) {
+                const options = Object.keys(data[color]).map(k => k.replace(/([A-Z])/g, ' $1').trim()).join(', ');
+                response += `- **${color}:** ${options}\n`;
+            }
+        });
+        response += `\n### Clays\n`;
+        if (data.clays) {
+            data.clays.types.forEach(type => response += `- ${type}\n`);
+            response += `\n**Usage:** ${data.clays.usage}`;
+        }
+    }
+    return response;
+}
+
+function formatFragranceResponse(data) {
+    let response = `## Essential Oils & Fragrance in Soap\n\n`;
+    response += `### Essential Oils\n`;
+    response += `**Usage Rate:** ${data.essentialOils.usageRate}\n\n`;
+    response += `**Scent Categories:**\n`;
+    for (const [note, info] of Object.entries(data.essentialOils.categories)) {
+        response += `- **${note}:** ${info.description} - Examples: ${info.examples.join(', ')}\n`;
+    }
+    response += `\n**Tip:** ${data.essentialOils.anchoring}\n\n`;
+    response += `### Fragrance Oils\n`;
+    response += `**Usage Rate:** ${data.fragranceOils.usageRate}\n`;
+    response += `**For Melt & Pour:** ${data.fragranceOils.meltAndPour}\n\n`;
+    response += `⚠️ **Behaviors to Watch:**\n`;
+    for (const [behavior, desc] of Object.entries(data.fragranceOils.behaviors)) {
+        response += `- **${behavior}:** ${desc}\n`;
+    }
+    return response;
+}
+
+function formatExfoliantsResponse(data) {
+    let response = `## Exfoliants for Soap\n\n`;
+    response += `### By Intensity\n`;
+    response += `**Gentle:** ${data.gentle.join(', ')}\n`;
+    response += `**Medium:** ${data.medium.join(', ')}\n`;
+    response += `**Heavy:** ${data.heavy.join(', ')}\n\n`;
+    response += `**Usage:** ${data.usage}\n\n`;
+    response += `**Tip:** ${data.notes}`;
+    return response;
+}
+
+function formatBotanicalsResponse(data) {
+    let response = `## Using Botanicals in Soap\n\n`;
+    response += `### Color Stability\n`;
+    response += `**Hold their color:** ${data.holdColor.join(', ')}\n`;
+    response += `**Turn brown:** ${data.turnBrown.join(', ')}\n\n`;
+    response += `### When to Add Botanicals\n`;
+    for (const [method, desc] of Object.entries(data.whenToAdd)) {
+        response += `- **${method}:** ${desc}\n`;
+    }
+    response += `\n⚠️ ${data.allergenWarning}`;
+    return response;
+}
+
+function formatSpecialAdditivesResponse(data, input) {
+    let response = `## Special Soap Additives\n\n`;
+
+    // Check for specific additive
+    const additiveMap = {
+        'sodium lactate': 'sodiumLactate',
+        'sugar': 'sugar',
+        'salt': 'salt',
+        'honey': 'honey',
+        'milk': 'milks',
+        'goat milk': 'milks',
+        'yogurt': 'yogurt',
+        'oatmeal': 'oatmeal',
+        'vitamin e': 'vitaminE',
+        'roe': 'ROE',
+        'rosemary': 'ROE'
+    };
+
+    let foundSpecific = false;
+    for (const [keyword, key] of Object.entries(additiveMap)) {
+        if (input.includes(keyword)) {
+            const additive = data[key];
+            if (additive) {
+                response += `### ${key.replace(/([A-Z])/g, ' $1').trim()}\n`;
+                response += `**Use:** ${additive.use}\n`;
+                if (additive.rate) response += `**Rate:** ${additive.rate}\n`;
+                if (additive.addTo) response += `**Add to:** ${additive.addTo}\n`;
+                if (additive.method) response += `**Method:** ${additive.method}\n`;
+                if (additive.notes) response += `**Notes:** ${additive.notes}\n`;
+                if (additive.types) response += `**Types:** ${additive.types.join(', ')}\n`;
+                foundSpecific = true;
+                break;
+            }
+        }
+    }
+
+    if (!foundSpecific) {
+        // Show overview of all additives
+        for (const [key, additive] of Object.entries(data)) {
+            response += `**${key}:** ${additive.use} (${additive.rate || 'varies'})\n`;
+        }
+    }
+    return response;
+}
+
+function formatSafetyResponse(data) {
+    let response = `## Soap Making Safety\n\n`;
+    response += `### Personal Protective Equipment\n`;
+    for (const [area, info] of Object.entries(data.personalProtection)) {
+        response += `**${area}:** ${info.equipment}\n- *${info.importance}*\n\n`;
+    }
+    response += `### Lye Handling\n`;
+    response += `⚠️ **Golden Rule:** ${data.lyeHandling.goldenRule}\n`;
+    response += `*${data.lyeHandling.reason}*\n\n`;
+    response += `**Safe Materials:** ${data.lyeHandling.materials.safe.join(', ')}\n`;
+    response += `**Avoid:** ${data.lyeHandling.materials.avoid.join(', ')}\n\n`;
+    response += `### First Aid\n`;
+    response += `**Skin:** ${data.firstAid.skinExposure[0]}\n`;
+    response += `**Eyes:** ${data.firstAid.eyeExposure[0]} - Seek medical attention immediately!\n`;
+    response += `**Poison Control:** ${data.firstAid.poisonControl}`;
+    return response;
+}
+
+function formatTroubleshootingOverview(data) {
+    let response = `## Soap Making Troubleshooting\n\n`;
+    response += `Here are common issues and how to fix them:\n\n`;
+    const issues = ['lyeHeavySoap', 'softSoap', 'seizing', 'acceleration', 'ricing', 'separation', 'sodaAsh', 'dreadedOrangeSpots'];
+    issues.forEach(issue => {
+        if (data[issue]) {
+            const title = issue.replace(/([A-Z])/g, ' $1').trim();
+            response += `### ${title}\n`;
+            response += `**Symptoms:** ${data[issue].symptoms.slice(0, 2).join(', ')}\n`;
+            response += `**Main causes:** ${data[issue].causes.slice(0, 2).join(', ')}\n\n`;
+        }
+    });
+    response += `*Ask me about a specific issue for detailed solutions!*`;
+    return response;
+}
+
+function formatSpecificTroubleshooting(data, title) {
+    let response = `## ${title}\n\n`;
+    response += `### Symptoms\n`;
+    data.symptoms.forEach(s => response += `- ${s}\n`);
+    response += `\n### Causes\n`;
+    data.causes.forEach(c => response += `- ${c}\n`);
+    if (data.solutions) {
+        response += `\n### Solutions\n`;
+        data.solutions.forEach(s => response += `- ${s}\n`);
+    }
+    if (data.prevention) {
+        response += `\n### Prevention\n`;
+        data.prevention.forEach(p => response += `- ${p}\n`);
+    }
+    if (data.note) {
+        response += `\n*Note: ${data.note}*`;
+    }
+    return response;
+}
+
+function formatCuringResponse(data) {
+    let response = `## Curing Soap\n\n`;
+    response += `### Why Cure?\n`;
+    for (const [reason, desc] of Object.entries(data.whyCure)) {
+        response += `- **${reason}:** ${desc}\n`;
+    }
+    response += `\n### Cure Times\n`;
+    for (const [method, time] of Object.entries(data.cureTime)) {
+        response += `- **${method}:** ${time}\n`;
+    }
+    response += `\n### How to Cure\n`;
+    response += `**Environment:** ${data.curingMethod.environment}\n`;
+    response += `**Setup:** ${data.curingMethod.setup}\n`;
+    response += `**Position:** ${data.curingMethod.position}\n\n`;
+    response += `### How to Know When Done\n`;
+    for (const [test, desc] of Object.entries(data.howToKnowWhenCured)) {
+        response += `- **${test}:** ${desc}\n`;
+    }
+    return response;
+}
+
+function formatDesignResponse(data) {
+    let response = `## Soap Design Techniques\n\n`;
+    response += `### Swirl Techniques\n`;
+    for (const [name, info] of Object.entries(data.swirls)) {
+        response += `**${name}** (${info.difficulty})\n`;
+        response += `${info.description}\n`;
+        response += `*Tip: ${info.tips}*\n\n`;
+    }
+    response += `### Tips for Success\n`;
+    for (const [tip, desc] of Object.entries(data.tipsForSuccess)) {
+        response += `- **${tip}:** ${desc}\n`;
+    }
+    return response;
+}
+
+function formatBusinessResponse(data) {
+    let response = `## Selling Soap: Regulations & Requirements\n\n`;
+    response += `### Product Classification\n`;
+    response += `**True Soap:** ${data.productClassification.trueSoap.definition}\n`;
+    response += `- Regulated by: ${data.productClassification.trueSoap.regulatedBy}\n\n`;
+    response += `**Cosmetic:** ${data.productClassification.cosmetic.definition}\n`;
+    response += `- Regulated by: ${data.productClassification.cosmetic.regulatedBy}\n\n`;
+    response += `### Labeling Requirements\n`;
+    response += `**For True Soap:** ${data.labelingRequirements.trueSoap.required.join(', ')}\n`;
+    response += `**For Cosmetics:** Full ingredient list required\n\n`;
+    response += `### Claims to Avoid\n`;
+    response += `These claims change your product's classification:\n`;
+    response += `- Cosmetic claims: ${data.claimsToAvoid.cosmeticClaims.join(', ')}\n`;
+    response += `- Drug claims: ${data.claimsToAvoid.drugClaims.join(', ')}\n`;
+    return response;
+}
+
+function formatGlossaryResponse(data, input) {
+    // Try to find a specific term
+    for (const [term, definition] of Object.entries(data)) {
+        if (input.includes(term.toLowerCase())) {
+            return `## ${term.charAt(0).toUpperCase() + term.slice(1)}\n\n${definition}`;
+        }
+    }
+
+    // Return full glossary if no specific term found
+    let response = `## Soap Making Glossary\n\n`;
+    for (const [term, definition] of Object.entries(data)) {
+        response += `**${term}:** ${definition}\n\n`;
+    }
+    return response;
+}
 
 // LLM API Integration Functions
 
@@ -567,6 +1277,8 @@ async function makeDirectRequest(userMessage) {
 }
 
 // Handle sending messages
+// STRATEGY: Check local knowledge bank FIRST to save API tokens
+// Only call AI API if knowledge bank doesn't have a good answer
 async function sendMessage() {
     const userMessage = chatInput.value.trim();
 
@@ -583,18 +1295,68 @@ async function sendMessage() {
     sendButton.disabled = true;
 
     // Show typing indicator
-    showTypingIndicator();
+    showTypingIndicator('Searching knowledge base');
 
-    let aiResult;
     let messageDisplayed = false;
 
     try {
-        // Make direct API request to Gemini
-        aiResult = await makeDirectRequest(userMessage);
+        // STEP 1: Check local knowledge bank FIRST (saves API tokens!)
+        const knowledgeBankResult = searchKnowledgeBank(userMessage);
+
+        if (knowledgeBankResult) {
+            // Found answer in knowledge bank - no API call needed!
+            console.log('✅ Answer found in knowledge bank - saving API tokens!');
+            lastResponseSource = 'knowledge_bank';
+
+            removeTypingIndicator();
+
+            // Add response with category badge
+            addMessage(knowledgeBankResult.response, true, knowledgeBankResult.category);
+            messageDisplayed = true;
+
+            // Update conversation history for context
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'assistant', content: knowledgeBankResult.response });
+
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+
+            return; // Done - no API call needed!
+        }
+
+        // STEP 2: Check legacy findResponse for recipe calculations and special commands
+        const legacyResult = findResponse(userMessage);
+
+        // If legacy findResponse found something other than the default "That's a great question" response
+        if (legacyResult.category !== null) {
+            console.log('✅ Answer found in legacy knowledge - saving API tokens!');
+            lastResponseSource = 'local';
+
+            removeTypingIndicator();
+            addMessage(legacyResult.response, true, legacyResult.category);
+            messageDisplayed = true;
+
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'assistant', content: legacyResult.response });
+
+            if (conversationHistory.length > 20) {
+                conversationHistory = conversationHistory.slice(-20);
+            }
+
+            return; // Done - no API call needed!
+        }
+
+        // STEP 3: No local match found - call AI API as fallback
+        console.log('🤖 No local match found - calling AI API...');
+        updateTypingIndicator('AI is thinking');
+        lastResponseSource = 'api';
+
+        const aiResult = await makeDirectRequest(userMessage);
 
         removeTypingIndicator();
 
-        // Add response with provider badge (markdown will be rendered in addMessage)
+        // Add response (markdown will be rendered in addMessage)
         addMessage(aiResult.response, true);
         messageDisplayed = true;
 
@@ -623,9 +1385,9 @@ async function sendMessage() {
         }
 
         // Show error to user temporarily for debugging
-        console.warn('⚠️ Falling back to local knowledge base due to error:', error.message);
+        console.warn('⚠️ Falling back to local knowledge base due to API error:', error.message);
 
-        // Fallback to local knowledge base - no error message shown
+        // Fallback to legacy local knowledge base - no error message shown
         const result = findResponse(userMessage);
 
         // Just show the fallback response directly without error message
@@ -1083,6 +1845,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('📚 Library status:');
     console.log('  marked:', typeof marked !== 'undefined' ? '✅ Loaded' : '❌ Not loaded');
     console.log('  DOMPurify:', typeof DOMPurify !== 'undefined' ? '✅ Loaded' : '❌ Not loaded');
+
+    // Check if Knowledge Bank is loaded (for token savings)
+    if (typeof SOAP_KNOWLEDGE_BANK !== 'undefined') {
+        knowledgeBank = SOAP_KNOWLEDGE_BANK;
+        const sectionCount = Object.keys(knowledgeBank).length;
+        console.log(`✅ Soap Knowledge Bank loaded (${sectionCount} sections) - will save API tokens!`);
+    } else {
+        console.warn('⚠️ Soap Knowledge Bank not loaded - all queries will use API tokens');
+    }
 
     // Initialize SoapCalculator if available
     if (typeof SoapCalculator !== 'undefined') {
