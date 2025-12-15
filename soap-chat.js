@@ -59,7 +59,7 @@ const soapKnowledge = {
         response: "Common issues: 1) Soap won't trace - check your scale, blend longer, or use stick blender. 2) Soap is crumbly - too much lye or not enough water. 3) Soap is soft/greasy - not enough lye or excess oils. 4) White powder (soda ash) - cosmetic only, wash off. 5) Orange spots - dreaded orange spot (DOS) from rancid oils. 6) Separation - oils and lye didn't mix properly, might be salvageable with rebatch. Always use a soap calculator and measure precisely!"
     },
     'recipe': {
-        keywords: ['recipe', 'formula', 'how to make', 'lavender soap', 'oatmeal'],
+        keywords: ['beginner recipe', 'basic recipe', 'simple recipe', 'starter recipe', 'first recipe'],
         response: "Here's a versatile beginner recipe: 35% Olive Oil, 30% Coconut Oil, 25% Palm Oil (or Shea Butter), 10% Castor Oil. For a 2 lb batch: 11.2 oz olive oil, 9.6 oz coconut oil, 8 oz palm oil, 3.2 oz castor oil, 4.4 oz lye, 10.5 oz water. Add 1 oz lavender essential oil at trace. This creates a hard, bubbly bar with good moisturizing properties. Always run any recipe through a soap calculator before making!"
     },
     'curing': {
