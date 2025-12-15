@@ -3081,7 +3081,23 @@ async function sendMessage() {
         updateTypingIndicator('AI is thinking');
         lastResponseSource = 'api';
 
-        const aiResult = await makeDirectRequest(userMessage);
+        // Show "waking up" message if backend takes > 3 seconds (cold start)
+        const wakeUpTimer = setTimeout(() => {
+            updateTypingIndicator('Waking up AI... (cold start)');
+        }, 3000);
+
+        // Show longer wait message after 10 seconds
+        const longWaitTimer = setTimeout(() => {
+            updateTypingIndicator('Still waking up... almost ready!');
+        }, 10000);
+
+        let aiResult;
+        try {
+            aiResult = await makeDirectRequest(userMessage);
+        } finally {
+            clearTimeout(wakeUpTimer);
+            clearTimeout(longWaitTimer);
+        }
 
         removeTypingIndicator();
 
