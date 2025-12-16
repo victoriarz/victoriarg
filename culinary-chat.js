@@ -741,9 +741,8 @@ async function sendMessage() {
         const result = await getLLMResponse(userMessage);
         removeTypingIndicator();
 
-        // Add response with provider badge
-        const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>\n\n${result.response}`;
-        addMessage(responseWithBadge, true);
+        // Add response
+        addMessage(result.response, true);
 
         // Update conversation history
         conversationHistory.push({ role: 'user', content: userMessage });
@@ -758,7 +757,7 @@ async function sendMessage() {
 
         // Fallback to local knowledge base ONLY when LLM fails
         const fallbackResult = getLocalFallbackResponse(userMessage);
-        const fallbackMessage = `<span class="ai-provider-badge">Local Knowledge Base</span>\n\n${fallbackResult.response}\n\n> **Note:** AI is currently unavailable. This response is from the local knowledge graph.`;
+        const fallbackMessage = `${fallbackResult.response}\n\n> *AI is currently unavailable. This response is from the local knowledge graph.*`;
         addMessage(fallbackMessage, true, fallbackResult.category);
 
         // Still update conversation history
