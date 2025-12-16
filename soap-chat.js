@@ -3249,8 +3249,11 @@ async function sendMessage() {
 
     try {
         // STEP 1: Off-topic filter (saves tokens on irrelevant questions)
-        if (!isSoapRelatedQuestion(userMessage)) {
-            console.log('🚫 Off-topic question detected - not using AI tokens');
+        // Only apply to FIRST message - allow follow-ups since LLM has conversation context
+        const hasActiveConversation = conversationHistory.length > 0;
+
+        if (!hasActiveConversation && !isSoapRelatedQuestion(userMessage)) {
+            console.log('🚫 Off-topic question detected (no active conversation) - not using AI tokens');
             removeTypingIndicator();
 
             const offTopicResponse = `**I'm a soap making assistant!**\n\n` +
@@ -3264,6 +3267,10 @@ async function sendMessage() {
 
             addMessage(offTopicResponse, true);
             return;
+        }
+
+        if (hasActiveConversation) {
+            console.log('💬 Active conversation - allowing follow-up message');
         }
 
         // STEP 2: Retrieve RAG context from knowledge bank
