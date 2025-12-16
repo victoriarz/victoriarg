@@ -226,16 +226,27 @@ function showTypingIndicator() {
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = `
         <span class="bot-icon">🥗</span>
-        <div class="typing-dots">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+        <div class="typing-container">
+            <span class="typing-text" id="typingText">Thinking...</span>
+            <div class="typing-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
         </div>
     `;
 
     typingDiv.appendChild(contentDiv);
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Update typing indicator message
+function updateTypingIndicator(message) {
+    const typingText = document.getElementById('typingText');
+    if (typingText) {
+        typingText.textContent = message;
+    }
 }
 
 // Remove typing indicator
@@ -628,8 +639,18 @@ async function callGemini(messages) {
     );
 
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Backend API error: ${response.status} - ${errorData.error || response.statusText}`);
+        let errorData = {};
+        try {
+            errorData = await response.json();
+        } catch (e) {
+            // Response body wasn't JSON
+        }
+        // Include status code in error message for retry logic to detect
+        const errorMsg = `Backend API error: ${response.status} - ${errorData.error || response.statusText}`;
+        const error = new Error(errorMsg);
+        error.status = response.status;
+        error.retryAfter = errorData.retryAfter || null;
+        throw error;
     }
 
     const data = await response.json();
@@ -654,6 +675,45 @@ async function callGemini(messages) {
     }
 
     throw new Error('Invalid response format from Gemini API');
+}
+
+// Sleep utility for retry delays
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Wrapper with exponential backoff for rate limits (429 errors)
+async function callGeminiWithRetry(messages, maxRetries = 3) {
+    let lastError;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await callGemini(messages);
+        } catch (error) {
+            lastError = error;
+
+            // Check if it's a rate limit error (429)
+            if (error.message.includes('429') || error.status === 429) {
+                // Use exponential backoff: 2s, 4s, 8s
+                const baseDelay = 2000;
+                const delay = baseDelay * Math.pow(2, attempt);
+
+                console.log(`Rate limited. Retrying in ${delay/1000}s (attempt ${attempt + 1}/${maxRetries})`);
+
+                // Update typing indicator to show retry status
+                updateTypingIndicator(`Rate limited, retrying in ${Math.round(delay/1000)}s...`);
+
+                await sleep(delay);
+                continue;
+            }
+
+            // Non-rate-limit error, throw immediately
+            throw error;
+        }
+    }
+
+    // All retries exhausted
+    throw lastError;
 }
 
 // Main LLM call via backend proxy with focused GraphRAG enhancement
@@ -686,8 +746,8 @@ async function getLLMResponse(userMessage) {
         { role: 'user', content: userMessageWithRestrictions }
     ];
 
-    // Call backend proxy (which securely handles the API key)
-    let result = await callGemini(messages);
+    // Call backend proxy with retry logic for rate limits
+    let result = await callGeminiWithRetry(messages);
     let fullResponse = result.text;
     let continuationCount = 0;
     const maxContinuations = 3; // Prevent infinite loops
@@ -706,7 +766,7 @@ async function getLLMResponse(userMessage) {
             { role: 'user', content: 'Please continue from where you left off.' }
         ];
 
-        result = await callGemini(continuationMessages);
+        result = await callGeminiWithRetry(continuationMessages);
         fullResponse += '\n\n' + result.text;
     }
 

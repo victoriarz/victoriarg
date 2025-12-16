@@ -1467,6 +1467,41 @@
             font-family: 'Press Start 2P', monospace;
             box-shadow: 0 0 0 2px var(--dark-brown);
         }
+
+        /* Typing indicator styles */
+        .typing-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .typing-text {
+            color: var(--medium-brown);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .typing-dots .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--soft-green);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -1818,7 +1853,7 @@
     <script src="culinary-substitution.js?v=1.2.0"></script>
 
     <!-- Culinary Chat Assistant (RAG-Enhanced) -->
-    <script src="culinary-chat.js?v=2.1.2"></script>
+    <script src="culinary-chat.js?v=2.2.0"></script>
 
     <script>
         // Update time display
