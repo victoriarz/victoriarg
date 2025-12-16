@@ -1717,7 +1717,7 @@ async function callGeminiWithRetry(messages, maxRetries = 3) {
                 console.log(`Rate limited. Retrying in ${delay/1000}s (attempt ${attempt + 1}/${maxRetries})`);
 
                 // Update typing indicator to show retry status
-                updateTypingIndicator(`Rate limited, retrying in ${Math.round(delay/1000)}s...`);
+                updateTypingIndicator('Almost bubbly...');
 
                 await sleep(delay);
                 continue;
