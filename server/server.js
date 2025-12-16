@@ -25,8 +25,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Body parser
-app.use(express.json({ limit: '10kb' })); // Limit payload size
+// Body parser - 1MB limit to support RAG context
+// Gemini 2.5 Flash supports 1M tokens (~4MB), so 1MB is safe
+app.use(express.json({ limit: '1mb' }));
 
 // Rate limiter - 30 requests per minute per IP
 const apiLimiter = rateLimit({
