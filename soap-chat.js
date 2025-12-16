@@ -582,17 +582,215 @@ function hasExplicitRecipeActionWord(input) {
 
 // ===========================================
 // RAG CONTEXT - MINIMAL
-// System prompt already contains soap knowledge
-// Only inject computed data the LLM cannot derive on its own
+// RAG Context Retrieval
+// Extracts relevant knowledge bank sections to augment LLM responses
 // ===========================================
 
 /**
- * RAG context retrieval - currently returns empty
- * General soap knowledge is in system prompt, no need to duplicate
- * Future: inject calculator results, user's saved recipes
+ * RAG context retrieval - extracts relevant knowledge bank sections
+ * Maps user keywords to knowledge bank topics and returns raw data
+ * for the LLM to synthesize into a response
  */
 function retrieveRAGContext(userInput) {
-    return { context: '' };
+    // If knowledge bank not loaded, return empty
+    if (typeof SOAP_KNOWLEDGE_BANK === 'undefined') {
+        console.log('📚 Knowledge bank not loaded');
+        return { context: '' };
+    }
+
+    const input = userInput.toLowerCase();
+    const kb = SOAP_KNOWLEDGE_BANK;
+    const relevantSections = [];
+
+    // Keyword-to-section mapping
+    const sectionMappings = [
+        {
+            keywords: ['saponification', 'sap value', 'sap number', 'lye calculation', 'chemistry', 'chemical reaction', 'glycerin'],
+            section: 'saponification',
+            data: kb.saponification
+        },
+        {
+            keywords: ['cold process', 'hot process', 'melt and pour', 'trace', 'cure', 'curing', 'method'],
+            section: 'methods',
+            data: kb.methods
+        },
+        {
+            keywords: ['olive oil', 'coconut oil', 'palm oil', 'castor', 'shea', 'cocoa butter', 'oil', 'butter', 'fat', 'lard', 'tallow'],
+            section: 'oils',
+            data: kb.oils
+        },
+        {
+            keywords: ['recipe', 'formulation', 'superfat', 'lye concentration', 'water discount', 'beginner', 'first batch'],
+            section: 'formulation',
+            data: kb.formulation
+        },
+        {
+            keywords: ['essential oil', 'fragrance', 'colorant', 'color', 'clay', 'botanical', 'exfoliant', 'additive', 'scent'],
+            section: 'additives',
+            data: kb.additives
+        },
+        {
+            keywords: ['safety', 'lye', 'caustic', 'burn', 'goggles', 'gloves', 'ventilation', 'dangerous'],
+            section: 'safety',
+            data: kb.safety
+        },
+        {
+            keywords: ['problem', 'troubleshoot', 'fix', 'wrong', 'failed', 'rancid', 'dos', 'dreaded orange spots', 'seize', 'separate', 'soft', 'crumbly', 'lye heavy', 'oily'],
+            section: 'troubleshooting',
+            data: kb.troubleshooting
+        },
+        {
+            keywords: ['cure', 'curing', 'store', 'storage', 'wrap', 'packaging', 'shelf life'],
+            section: 'curingAndStorage',
+            data: kb.curingAndStorage
+        },
+        {
+            keywords: ['design', 'swirl', 'layer', 'embed', 'technique', 'pattern', 'aesthetic'],
+            section: 'designTechniques',
+            data: kb.designTechniques
+        },
+        {
+            keywords: ['sell', 'business', 'regulation', 'legal', 'fda', 'label', 'insurance'],
+            section: 'businessRegulations',
+            data: kb.businessRegulations
+        },
+        {
+            keywords: ['popular', 'classic', 'castile', 'marseille', 'aleppo', 'bastille'],
+            section: 'popularRecipes',
+            data: kb.popularRecipes
+        }
+    ];
+
+    // Find matching sections (limit to top 2 most relevant)
+    const matches = [];
+    for (const mapping of sectionMappings) {
+        const matchCount = mapping.keywords.filter(kw => input.includes(kw)).length;
+        if (matchCount > 0) {
+            matches.push({ ...mapping, score: matchCount });
+        }
+    }
+
+    // Sort by relevance score and take top 2
+    matches.sort((a, b) => b.score - a.score);
+    const topMatches = matches.slice(0, 2);
+
+    if (topMatches.length === 0) {
+        console.log('📚 No relevant knowledge bank sections found');
+        return { context: '' };
+    }
+
+    // Build context string with relevant data
+    let contextParts = [];
+    for (const match of topMatches) {
+        // Convert section data to concise string (not full JSON dump)
+        const sectionContext = extractRelevantContent(match.section, match.data, input);
+        if (sectionContext) {
+            contextParts.push(`[${match.section.toUpperCase()}]\n${sectionContext}`);
+        }
+    }
+
+    const context = contextParts.length > 0
+        ? '\n\nRELEVANT KNOWLEDGE BASE CONTEXT:\n' + contextParts.join('\n\n')
+        : '';
+
+    console.log(`📚 RAG context: ${contextParts.length} sections, ${context.length} chars`);
+
+    return { context };
+}
+
+/**
+ * Extract relevant content from a knowledge bank section
+ * Returns concise text, not raw JSON
+ */
+function extractRelevantContent(sectionName, data, userInput) {
+    if (!data) return '';
+
+    // For simple string values, return directly
+    if (typeof data === 'string') {
+        return data.substring(0, 500);
+    }
+
+    // For objects, extract key information based on section type
+    const parts = [];
+
+    switch (sectionName) {
+        case 'saponification':
+            if (data.definition) parts.push(`Definition: ${data.definition}`);
+            if (data.sapValues?.definition) parts.push(`SAP Values: ${data.sapValues.definition}`);
+            if (data.timeline) parts.push(`Timeline: ${Object.values(data.timeline).join(', ')}`);
+            break;
+
+        case 'methods':
+            // Check which method user is asking about
+            if (userInput.includes('cold process') && data.coldProcess) {
+                parts.push(`Cold Process: ${data.coldProcess.description}`);
+                if (data.coldProcess.cureTime) parts.push(`Cure time: ${data.coldProcess.cureTime}`);
+            }
+            if (userInput.includes('hot process') && data.hotProcess) {
+                parts.push(`Hot Process: ${data.hotProcess.description}`);
+                if (data.hotProcess.cureTime) parts.push(`Cure time: ${data.hotProcess.cureTime}`);
+            }
+            if (userInput.includes('melt') && data.meltAndPour) {
+                parts.push(`Melt and Pour: ${data.meltAndPour.description}`);
+            }
+            // If no specific method mentioned, give overview
+            if (parts.length === 0) {
+                if (data.coldProcess?.description) parts.push(`Cold Process: ${data.coldProcess.description}`);
+                if (data.hotProcess?.description) parts.push(`Hot Process: ${data.hotProcess.description}`);
+            }
+            break;
+
+        case 'oils':
+            // Extract info about specific oils mentioned
+            const oilKeywords = ['olive', 'coconut', 'palm', 'castor', 'shea', 'cocoa', 'avocado', 'sunflower', 'jojoba', 'lard', 'tallow'];
+            for (const oil of oilKeywords) {
+                if (userInput.includes(oil) && data[oil]) {
+                    const oilData = data[oil];
+                    parts.push(`${oil.charAt(0).toUpperCase() + oil.slice(1)}: ${oilData.description || ''} Properties: ${JSON.stringify(oilData.properties || {})}`);
+                }
+            }
+            // If no specific oil, don't dump everything - let system prompt handle it
+            break;
+
+        case 'safety':
+            if (data.lyeHandling) {
+                parts.push(`Lye Safety: ${data.lyeHandling.critical || ''}`);
+                if (data.lyeHandling.ppe) parts.push(`Required PPE: ${data.lyeHandling.ppe.join(', ')}`);
+            }
+            if (data.emergencyProcedures) {
+                parts.push(`Emergency: Skin contact - ${data.emergencyProcedures.skinContact || 'rinse immediately'}`);
+            }
+            break;
+
+        case 'troubleshooting':
+            // Look for specific problems mentioned
+            if (data.commonProblems) {
+                for (const [problem, info] of Object.entries(data.commonProblems)) {
+                    if (userInput.includes(problem.toLowerCase().replace(/([A-Z])/g, ' $1').trim())) {
+                        parts.push(`${problem}: Causes - ${info.causes?.join(', ') || 'various'}. Fix - ${info.solutions?.join(', ') || 'varies'}`);
+                    }
+                }
+            }
+            break;
+
+        case 'formulation':
+            if (data.superfatting) parts.push(`Superfat: ${data.superfatting.definition || ''} Typical range: ${data.superfatting.typicalRange || '5-8%'}`);
+            if (data.waterCalculation) parts.push(`Water: ${data.waterCalculation.methods || ''}`);
+            break;
+
+        default:
+            // For other sections, just extract top-level descriptions
+            for (const [key, value] of Object.entries(data)) {
+                if (typeof value === 'string' && value.length < 300) {
+                    parts.push(`${key}: ${value}`);
+                } else if (value?.description) {
+                    parts.push(`${key}: ${value.description}`);
+                }
+                if (parts.length >= 3) break; // Limit content
+            }
+    }
+
+    return parts.join('\n').substring(0, 800); // Cap at 800 chars per section
 }
 
 /**
