@@ -1647,9 +1647,19 @@ async function callGemini(messages) {
         console.log('📡 Backend response status:', response.status, response.statusText);
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ Backend error:', errorText);
-            throw new Error(`Backend API error: ${response.status}`);
+            let errorData = {};
+            try {
+                errorData = await response.json();
+            } catch (e) {
+                // Response body wasn't JSON
+            }
+            console.error('❌ Backend error:', errorData);
+            // Include status code in error message for retry logic to detect
+            const errorMsg = `Backend API error: ${response.status} - ${errorData.error || response.statusText}`;
+            const error = new Error(errorMsg);
+            error.status = response.status;
+            error.retryAfter = errorData.retryAfter || null;
+            throw error;
         }
 
         const data = await response.json();
@@ -1683,6 +1693,45 @@ async function callGemini(messages) {
     }
 }
 
+// Sleep utility for retry delays
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Wrapper with exponential backoff for rate limits (429 errors)
+async function callGeminiWithRetry(messages, maxRetries = 3) {
+    let lastError;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await callGemini(messages);
+        } catch (error) {
+            lastError = error;
+
+            // Check if it's a rate limit error (429)
+            if (error.message.includes('429') || error.status === 429) {
+                // Use exponential backoff: 2s, 4s, 8s
+                const baseDelay = 2000;
+                const delay = baseDelay * Math.pow(2, attempt);
+
+                console.log(`Rate limited. Retrying in ${delay/1000}s (attempt ${attempt + 1}/${maxRetries})`);
+
+                // Update typing indicator to show retry status
+                updateTypingIndicator(`Rate limited, retrying in ${Math.round(delay/1000)}s...`);
+
+                await sleep(delay);
+                continue;
+            }
+
+            // Non-rate-limit error, throw immediately
+            throw error;
+        }
+    }
+
+    // All retries exhausted
+    throw lastError;
+}
+
 // Main LLM call - includes RAG context in prompt
 // RAG context is ALWAYS included to augment LLM knowledge
 async function getLLMResponse(userMessage, ragContext = null) {
@@ -1707,7 +1756,7 @@ async function getLLMResponse(userMessage, ragContext = null) {
         ...conversationHistory,
         { role: 'user', content: augmentedMessage }
     ];
-    const response = await callGemini(messages);
+    const response = await callGeminiWithRetry(messages);
     return { response, provider: 'Gemini 2.5 Flash' };
 }
 
