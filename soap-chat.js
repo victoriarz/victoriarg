@@ -3269,7 +3269,7 @@ async function sendMessage() {
         // STEP 2: Retrieve RAG context from knowledge bank
         updateTypingIndicator('Gathering context');
         const ragContext = retrieveRAGContext(userMessage);
-        console.log(`📚 RAG context retrieved: ${ragContext.topics.length} topics`);
+        console.log(`📚 RAG context retrieved: ${ragContext.context.length} chars`);
 
         // STEP 3: Call Gemini API with RAG-augmented prompt (ALWAYS for soap questions)
         console.log('🤖 Calling Gemini API with RAG context...');
