@@ -1546,9 +1546,9 @@
                     <p class="project-tagline">Knowledge Graph-Powered Recipe Discovery</p>
                     <div class="project-tech">
                         <span class="tech-tag">Knowledge Graphs</span>
-                        <span class="tech-tag">Neo4j</span>
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Graph Database</span>
+                        <span class="tech-tag">Gemini AI</span>
+                        <span class="tech-tag">RAG Architecture</span>
+                        <span class="tech-tag">Graph Visualization</span>
                         <span class="tech-tag">Recipe Intelligence</span>
                     </div>
                 </div>
@@ -1559,7 +1559,7 @@
                     <div class="chat-header-controls">
                         <div>
                             <h2>Ask the Culinary Assistant</h2>
-                            <p class="chat-intro">Search through 236+ ingredients, discover recipe combinations, find substitutions, and explore flavor pairings! Ask about dietary restrictions, cuisine types, or get cooking advice from our comprehensive culinary knowledge graph.</p>
+                            <p class="chat-intro">Your AI-powered culinary companion with a built-in knowledge graph of 236+ ingredients. Get complete recipes, find ingredient substitutions with exact ratios, discover flavor pairings, and filter by dietary needs. Just ask - I'll cook up an answer.</p>
                             <div class="ai-controls">
                                 <span id="culinaryAIStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
                                 <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">🔄 Start Over</button>
@@ -1759,7 +1759,10 @@
             <section id="project-overview">
                 <div class="section-frame pixel-border">
                     <h2>Overview</h2>
-                    <p>Culinary Graph is an intelligent recipe discovery platform powered by knowledge graph technology. By representing ingredients, recipes, cuisines, and cooking techniques as interconnected nodes in a graph database, this project enables sophisticated recipe recommendations and ingredient substitution insights that go far beyond traditional search capabilities.</p>
+                    <p>Culinary Graph pairs a structured knowledge graph with conversational AI to create a cooking assistant
+                        that actually understands food. The graph maps relationships between 236+ ingredients - what substitutes
+                        for what, which flavors pair well, and how dietary restrictions connect to ingredient choices. When you
+                        ask a question, the AI retrieves relevant context from the graph to give you precise, useful answers.</p>
                 </div>
             </section>
 
@@ -1768,20 +1771,20 @@
                     <h2>Key Features</h2>
                     <div class="features-grid">
                         <div class="feature-card">
-                            <h3>Graph-Based Discovery</h3>
-                            <p>Leverages Neo4j graph database to model complex relationships between ingredients, recipes, cuisines, and dietary restrictions, enabling intelligent discovery paths.</p>
+                            <h3>RAG-Enhanced Responses</h3>
+                            <p>Queries extract focused context from the knowledge graph before hitting the AI, ensuring responses are grounded in real ingredient data rather than hallucinated.</p>
                         </div>
                         <div class="feature-card">
                             <h3>Smart Substitutions</h3>
-                            <p>Recommends ingredient substitutions based on flavor profiles, nutritional content, and cooking properties using graph traversal algorithms.</p>
+                            <p>Get ingredient substitutions with exact ratios and confidence scores - not just "use this instead" but "use 3/4 cup applesauce per egg."</p>
                         </div>
                         <div class="feature-card">
-                            <h3>Cuisine Exploration</h3>
-                            <p>Discover recipes by exploring connections between different cuisines, identifying fusion opportunities and ingredient commonalities.</p>
+                            <h3>Complete Recipes</h3>
+                            <p>Ask for any recipe and get full ingredients, measurements, and step-by-step instructions - the AI generates complete, cookable recipes on demand.</p>
                         </div>
                         <div class="feature-card">
-                            <h3>Dietary Intelligence</h3>
-                            <p>Navigate dietary restrictions and preferences through relationship mapping, finding suitable recipes based on complex constraint satisfaction.</p>
+                            <h3>Dietary Filtering</h3>
+                            <p>Set your dietary restrictions once and every response respects them - no more manually checking if recipes work for you.</p>
                         </div>
                     </div>
                 </div>
@@ -1791,11 +1794,11 @@
                 <div class="section-frame pixel-border">
                     <h2>Technology Stack</h2>
                     <ul class="tech-stack-list">
-                        <li><strong>Graph Database:</strong> Neo4j for knowledge graph storage and querying</li>
-                        <li><strong>Backend:</strong> Python with py2neo for graph operations</li>
-                        <li><strong>Query Language:</strong> Cypher for graph traversal and pattern matching</li>
-                        <li><strong>Data Modeling:</strong> Entity-relationship modeling for culinary domain</li>
-                        <li><strong>Algorithm Design:</strong> Custom graph algorithms for recommendation and substitution</li>
+                        <li><strong>AI Model:</strong> Gemini 2.5 Flash with RAG (Retrieval-Augmented Generation)</li>
+                        <li><strong>Knowledge Graph:</strong> Custom ontology with 236+ ingredients, substitution rules, and flavor pairings</li>
+                        <li><strong>Architecture:</strong> Focused context extraction - queries retrieve only relevant graph data</li>
+                        <li><strong>Features:</strong> Dietary filtering, cuisine exploration, substitution ratios with confidence scores</li>
+                        <li><strong>Frontend:</strong> Cytoscape.js visualization, vanilla JavaScript, localStorage for preferences</li>
                     </ul>
                 </div>
             </section>
@@ -1803,7 +1806,10 @@
             <section id="project-impact">
                 <div class="section-frame pixel-border">
                     <h2>Impact & Results</h2>
-                    <p>Culinary Graph demonstrates the power of knowledge graphs in the culinary domain, transforming how users discover and adapt recipes. By modeling the intricate relationships between ingredients, techniques, and cuisines, this project showcases advanced data modeling capabilities and the practical application of graph database technology to solve real-world problems in creative and intuitive ways.</p>
+                    <p>Culinary Graph proves that AI assistants work best when grounded in structured data. By combining a
+                        knowledge graph with an LLM, it can answer "what can I substitute for eggs?" with specific ratios
+                        and context - not just generic suggestions. The RAG architecture ensures responses are accurate and
+                        relevant, while the graph visualization helps users explore ingredient relationships visually.</p>
                 </div>
             </section>
 
