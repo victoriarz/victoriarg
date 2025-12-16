@@ -461,7 +461,7 @@ def generate_json_file(graph_data: Dict, output_path: str):
 # ============================================
 
 def main():
-    parser = argparse.ArgumentParser(description="AI Chronicle News Scraper")
+    parser = argparse.ArgumentParser(description="AI Chronicles News Scraper")
     parser.add_argument("--days", type=int, default=7, help="Number of days to scrape")
     parser.add_argument("--no-ai", action="store_true", help="Skip AI summarization")
     parser.add_argument("--output", default="aichronicle-data.js", help="Output file path")

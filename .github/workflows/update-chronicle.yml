@@ -3,7 +3,7 @@
 # Runs daily at 6 AM UTC to fetch and process AI news
 # ================================================
 
-name: Update AI Chronicle
+name: Update AI Chronicles
 
 on:
   schedule:
@@ -55,12 +55,12 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add aichronicle-data.js aichronicle-data.json
-          git commit -m "chore: Update AI Chronicle data [$(date +'%Y-%m-%d')]"
+          git commit -m "chore: Update AI Chronicles data [$(date +'%Y-%m-%d')]"
           git push
       
       - name: Summary
         run: |
-          echo "## AI Chronicle Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## AI Chronicles Update Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Date:** $(date +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
           echo "- **Days scraped:** ${{ github.event.inputs.days || '7' }}" >> $GITHUB_STEP_SUMMARY
