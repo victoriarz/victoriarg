@@ -593,18 +593,6 @@
                 width: 100%;
                 font-size: 14px;
             }
-
-            .library-header {
-                flex-direction: column;
-            }
-
-            .library-search {
-                max-width: 100%;
-            }
-
-            .recipes-library {
-                grid-template-columns: 1fr;
-            }
         }
 
         /* Pixel cursor */
@@ -1117,107 +1105,6 @@
             box-shadow: 0 0 0 2px var(--dark-brown), 0 2px 0 2px var(--dark-brown);
         }
 
-        .library-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .library-search {
-            position: relative;
-            flex-grow: 1;
-            max-width: 400px;
-        }
-
-        .library-search input {
-            width: 100%;
-            padding: 10px 35px 10px 10px;
-            font-size: 18px;
-            font-family: 'VT323', monospace;
-            border: 3px solid var(--dark-brown);
-            background: var(--tan);
-        }
-
-        .library-search-icon {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-        }
-
-        .library-stats {
-            display: flex;
-            gap: 10px;
-            font-size: 18px;
-        }
-
-        .storage-badge {
-            background: var(--wood);
-            padding: 5px 10px;
-            box-shadow: 0 0 0 2px var(--dark-brown);
-        }
-
-        .recipes-library {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .recipe-card {
-            background: var(--tan);
-            padding: 15px;
-            border: 3px solid var(--dark-brown);
-            box-shadow: 0 4px 0 var(--brown);
-        }
-
-        .recipe-card h3 {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: var(--dark-brown);
-        }
-
-        .recipe-expiration {
-            font-size: 14px;
-            color: var(--brown);
-            margin-bottom: 10px;
-            padding: 4px 8px;
-            background: var(--wood);
-            display: inline-block;
-            border-radius: 4px;
-        }
-
-        .recipe-expiration.expiring-soon {
-            background: var(--accent);
-            color: white;
-            font-weight: bold;
-        }
-
-        .recipe-card-actions {
-            display: flex;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        .recipe-card-btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            font-size: 14px;
-            font-family: 'VT323', monospace;
-            box-shadow: 0 0 0 2px var(--dark-brown), 0 2px 0 2px var(--brown);
-            transition: all 0.1s;
-        }
-
-        .recipe-card-btn:hover {
-            transform: translateY(1px);
-            box-shadow: 0 0 0 2px var(--dark-brown), 0 1px 0 2px var(--brown);
-        }
-
         /* Recipe action buttons - pixel-art style */
         .recipe-actions {
             display: flex;
@@ -1394,8 +1281,6 @@
                                 ingredients, and troubleshooting.</p>
                             <div class="ai-controls">
                                 <span id="aiStatusBadge" class="ai-status-badge">🤖 AI: Gemini (Active)</span>
-                                <button onclick="openRecipeLibrary()" class="start-over-btn" aria-label="View saved recipes">📚
-                                    My Recipes</button>
                                 <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">🔄
                                     Start Over</button>
                             </div>
@@ -1499,56 +1384,6 @@
         <p style="margin-top: 10px; font-size: 16px;">Built with pixel-perfect precision ✨</p>
     </footer>
 
-    <!-- Save Recipe Modal -->
-    <div id="saveRecipeModal" class="modal-overlay" role="dialog" aria-labelledby="saveRecipeTitle" aria-modal="true">
-        <div class="modal">
-            <button class="modal-close" onclick="closeSaveRecipeModal()" aria-label="Close dialog">&times;</button>
-            <h2 id="saveRecipeTitle">Save Recipe</h2>
-            <form id="saveRecipeForm" onsubmit="handleSaveRecipe(event)">
-                <div class="form-group">
-                    <label for="recipeName">Recipe Name *</label>
-                    <input type="text" id="recipeName" name="recipeName" required maxlength="100"
-                        placeholder="e.g., Lavender Dream Soap" autocomplete="off" />
-                    <p class="form-help">Give your recipe a memorable name</p>
-                </div>
-                <div class="form-group">
-                    <label for="recipeNotes">Notes (Optional)</label>
-                    <textarea id="recipeNotes" name="recipeNotes" maxlength="500"
-                        placeholder="Add notes about this recipe, like fragrance used, colorants, or special techniques..."></textarea>
-                    <p class="form-help">Optional: Add notes about scent, color, or how it turned out</p>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeSaveRecipeModal()">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Recipe</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Recipe Library Modal -->
-    <div id="recipeLibraryModal" class="modal-overlay" role="dialog" aria-labelledby="libraryTitle" aria-modal="true">
-        <div class="modal">
-            <button class="modal-close" onclick="closeRecipeLibrary()" aria-label="Close dialog">&times;</button>
-            <h2 id="libraryTitle">My Saved Recipes</h2>
-
-            <div class="library-header">
-                <div class="library-search">
-                    <input type="text" id="librarySearchInput" placeholder="Search recipes..."
-                        oninput="filterRecipes(this.value)" autocomplete="off" />
-                    <span class="library-search-icon">🔍</span>
-                </div>
-                <div class="library-stats">
-                    <span id="recipeCount">0 recipes</span>
-                    <span id="storageCapacity" class="storage-badge">0/50</span>
-                </div>
-            </div>
-
-            <div id="recipesLibrary" class="recipes-library">
-                <!-- Recipe cards will be dynamically inserted here -->
-            </div>
-        </div>
-    </div>
-
     <!-- Markdown parser for formatting AI responses -->
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" crossorigin="anonymous"></script>
 
@@ -1558,21 +1393,12 @@
     <!-- Soap Calculator Engine -->
     <script src="soap-calculator.js?v=1.0.0"></script>
 
-    <!-- Recipe Validator -->
-    <script src="recipe-validator.js?v=1.0.0"></script>
-
-    <!-- Recipe Storage Manager -->
-    <script src="recipe-storage.js?v=1.0.1"></script>
-
     <!-- Soap Making Knowledge Bank (loaded BEFORE chat for token savings) -->
     <script src="soap-knowledge-bank.js?v=1.0.2"></script>
 
     <!-- AI Configuration and Chat -->
     <script src="ai-config.js?v=2.0.0"></script>
-    <script src="soap-chat.js?v=2.1.1"></script>
-
-    <!-- Recipe Saving UI -->
-    <script src="recipe-ui.js?v=1.0.1"></script>
+    <script src="soap-chat.js?v=2.2.0"></script>
 
     <script>
         // Update time display

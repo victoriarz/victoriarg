@@ -3733,7 +3733,6 @@ function formatCalculatedRecipe(result) {
     // Quick action buttons
     output += `\n<div class="recipe-actions">\n`;
     output += `<button onclick="copyRecipeToClipboard()" class="recipe-action-btn">📋 Copy Recipe</button>\n`;
-    output += `<button onclick="openSaveRecipeModal()" class="recipe-action-btn">💾 Save Recipe</button>\n`;
     output += `<button onclick="printRecipe()" class="recipe-action-btn">🖨️ Print Recipe</button>\n`;
     output += `</div>\n\n`;
 
