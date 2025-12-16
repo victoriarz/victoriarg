@@ -581,113 +581,18 @@ function hasExplicitRecipeActionWord(input) {
 }
 
 // ===========================================
-// RAG CONTEXT RETRIEVAL
-// Extracts CONCISE relevant knowledge to augment LLM prompts
-// Uses short summaries, NOT full JSON dumps (to avoid 413 payload errors)
+// RAG CONTEXT - MINIMAL
+// System prompt already contains soap knowledge
+// Only inject computed data the LLM cannot derive on its own
 // ===========================================
 
 /**
- * Retrieve relevant context from knowledge bank for RAG
- * Returns CONCISE summaries to augment LLM prompt (max ~1500 chars)
- * @param {string} userInput - User's question
- * @returns {object} - { context: string, topics: string[] }
+ * RAG context retrieval - currently returns empty
+ * General soap knowledge is in system prompt, no need to duplicate
+ * Future: inject calculator results, user's saved recipes
  */
 function retrieveRAGContext(userInput) {
-    const result = {
-        context: '',
-        topics: []
-    };
-
-    const input = userInput.toLowerCase();
-    const contextParts = [];
-    const MAX_CONTEXT_LENGTH = 1500; // Prevent 413 payload too large errors
-
-    // Concise topic summaries (NOT full JSON dumps)
-    const topicSummaries = [
-        {
-            keywords: ['saponification', 'chemical reaction', 'how soap made'],
-            topic: 'Saponification',
-            summary: 'Saponification: fats + lye (NaOH/KOH) → soap + glycerin. Exothermic reaction. Always add lye to water.'
-        },
-        {
-            keywords: ['cold process', 'cp soap'],
-            topic: 'Cold Process',
-            summary: 'Cold process: Mix oils+lye at 100-110°F, pour at trace, cure 4-6 weeks. Best for designs/swirls.'
-        },
-        {
-            keywords: ['hot process', 'hp soap', 'crockpot'],
-            topic: 'Hot Process',
-            summary: 'Hot process: Cook soap in crockpot/oven to speed saponification. Ready in 1-2 weeks. Rustic texture.'
-        },
-        {
-            keywords: ['safety', 'lye safety', 'goggles', 'gloves', 'burn'],
-            topic: 'Safety',
-            summary: 'Safety: Wear goggles+gloves. Add lye TO water (never reverse). Work ventilated. Flush burns 15+ min.'
-        },
-        {
-            keywords: ['cure', 'curing', 'how long', 'when ready'],
-            topic: 'Curing',
-            summary: 'Curing: 4-6 weeks for CP soap. Water evaporates, bar hardens, pH drops. Store on rack with airflow.'
-        },
-        {
-            keywords: ['essential oil', 'fragrance', 'scent', 'smell'],
-            topic: 'Fragrance',
-            summary: 'Fragrance: EOs 0.5-0.7 oz/lb, FOs 0.7 oz/lb. Add at trace. Fruit/bakery scents need FOs, not EOs.'
-        },
-        {
-            keywords: ['colorant', 'color', 'mica', 'oxide'],
-            topic: 'Colorants',
-            summary: 'Colorants: Micas/oxides for vibrant colors. Natural: clay, charcoal, turmeric, cocoa. Add at trace.'
-        },
-        {
-            keywords: ['superfat', 'lye discount'],
-            topic: 'Superfat',
-            summary: 'Superfat: 5% standard (extra oils for moisturizing). Range 3-8%. Higher = more conditioning, softer bar.'
-        },
-        {
-            keywords: ['troubleshoot', 'problem', 'soft soap', 'seizing', 'soda ash'],
-            topic: 'Troubleshooting',
-            summary: 'Common issues: Soft soap (more cure time/hard oils), seizing (FO issue), soda ash (cosmetic, wash off).'
-        }
-    ];
-
-    // Find matching topics (limit to 2 most relevant)
-    let matchCount = 0;
-    for (const mapping of topicSummaries) {
-        if (matchCount >= 2) break; // Limit context size
-        const hasMatch = mapping.keywords.some(kw => input.includes(kw));
-        if (hasMatch) {
-            result.topics.push(mapping.topic);
-            contextParts.push(mapping.summary);
-            matchCount++;
-        }
-    }
-
-    // Add specific oil data if mentioned (compact format)
-    if (typeof soapCalculator !== 'undefined' && soapCalculator) {
-        const oilPatterns = ['olive', 'coconut', 'palm', 'castor', 'shea', 'cocoa'];
-        for (const oil of oilPatterns) {
-            if (input.includes(oil) && contextParts.join('').length < MAX_CONTEXT_LENGTH) {
-                const oilData = soapCalculator.findOil(oil);
-                if (oilData) {
-                    const props = oilData.properties || {};
-                    contextParts.push(`${oilData.name}: SAP ${oilData.sapNaOH}, Hard ${props.hardness || '?'}, Cond ${props.conditioning || '?'}`);
-                }
-            }
-        }
-    }
-
-    // Build final context (with size limit)
-    if (contextParts.length > 0) {
-        let context = '\n\n[Context: ' + contextParts.join(' | ') + ']';
-        if (context.length > MAX_CONTEXT_LENGTH) {
-            context = context.substring(0, MAX_CONTEXT_LENGTH) + '...]';
-        }
-        result.context = context;
-    }
-
-    console.log(`📚 RAG: ${result.topics.length} topics, ${result.context.length} chars`);
-    return result;
+    return { context: '' };
 }
 
 /**
