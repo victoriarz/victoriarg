@@ -1,9 +1,9 @@
-// Culinary Graph - Recipe & Ingredient Search Chat Assistant with AI Integration
+// Culinary Graph - Recipe & Ingredient Search Chat Assistant
+// RAG-Enhanced Architecture: Local knowledge graph data enhances LLM responses
 
 // Initialize AI configuration and conversation history
 let culinaryAiConfig;
 let conversationHistory = [];
-let useAI = true; // Toggle between AI and local knowledge base
 let dietaryRestrictions = []; // User's dietary restrictions and allergies
 
 // DOM elements
@@ -248,30 +248,106 @@ function removeTypingIndicator() {
 
 // Find ingredient by name (fuzzy matching)
 function findIngredient(searchTerm) {
+    if (typeof culinaryGraphData === 'undefined') return null;
+
     const normalized = searchTerm.toLowerCase().trim();
 
     // Exact match first
-    let match = ingredientNodes.find(node =>
+    let match = culinaryGraphData.nodes.find(node =>
         node.label.toLowerCase() === normalized || node.id === normalized
     );
 
     if (match) return match;
 
     // Partial match
-    return ingredientNodes.find(node =>
+    return culinaryGraphData.nodes.find(node =>
         node.label.toLowerCase().includes(normalized) ||
         normalized.includes(node.label.toLowerCase())
     );
 }
 
-// Get substitutions for an ingredient
+// ============================================
+// QUERY CLASSIFICATION FOR FOCUSED RAG
+// ============================================
+
+// Classify user query to optimize context retrieval
+function classifyQuery(userMessage) {
+    const input = userMessage.toLowerCase();
+
+    // Substitution queries
+    if (input.includes('substitute') || input.includes('replace') || input.includes('instead of')) {
+        return { type: 'substitution' };
+    }
+
+    // Pairing queries
+    if (input.includes('pair') || input.includes('goes well') || input.includes('complement')) {
+        return { type: 'pairing' };
+    }
+
+    // Recipe/combination queries
+    if (input.includes('recipe') || input.includes('used with') || input.includes('combine')) {
+        return { type: 'recipe' };
+    }
+
+    // Dietary filtering
+    if (input.includes('vegan')) {
+        return { type: 'dietary', dietaryType: 'vegan' };
+    }
+    if (input.includes('vegetarian')) {
+        return { type: 'dietary', dietaryType: 'vegetarian' };
+    }
+    if (input.includes('gluten-free') || input.includes('gluten free')) {
+        return { type: 'dietary', dietaryType: 'gluten-free' };
+    }
+
+    // Cuisine filtering
+    if (input.includes('italian')) {
+        return { type: 'cuisine', cuisineType: 'italian' };
+    }
+    if (input.includes('asian')) {
+        return { type: 'cuisine', cuisineType: 'asian' };
+    }
+    if (input.includes('mexican')) {
+        return { type: 'cuisine', cuisineType: 'mexican' };
+    }
+    if (input.includes('mediterranean')) {
+        return { type: 'cuisine', cuisineType: 'mediterranean' };
+    }
+
+    // Category search
+    if (input.includes('protein')) {
+        return { type: 'category', categoryType: 'protein' };
+    }
+    if (input.includes('dairy')) {
+        return { type: 'category', categoryType: 'dairy' };
+    }
+    if (input.includes('grain')) {
+        return { type: 'category', categoryType: 'grain' };
+    }
+    if (input.includes('vegetable')) {
+        return { type: 'category', categoryType: 'vegetable' };
+    }
+    if (input.includes('herb')) {
+        return { type: 'category', categoryType: 'herb' };
+    }
+    if (input.includes('spice')) {
+        return { type: 'category', categoryType: 'spice' };
+    }
+
+    // General query
+    return { type: 'general' };
+}
+
+// Get substitutions for an ingredient (used by fallback only)
 function getSubstitutions(ingredientId) {
-    const edges = ingredientEdges.filter(edge =>
+    if (typeof culinaryGraphData === 'undefined') return [];
+
+    const edges = culinaryGraphData.edges.filter(edge =>
         edge.source === ingredientId && edge.type === 'substitutes'
     );
 
     return edges.map(edge => {
-        const substitute = ingredientNodes.find(node => node.id === edge.target);
+        const substitute = culinaryGraphData.nodes.find(node => node.id === edge.target);
         return {
             ingredient: substitute,
             ratio: edge.ratio,
@@ -280,11 +356,14 @@ function getSubstitutions(ingredientId) {
     });
 }
 
-// Get detailed substitution rules
+// Get detailed substitution rules (used by fallback only)
 function getDetailedSubstitutions(ingredientId) {
+    if (typeof substitutionRules === 'undefined') return [];
+    if (typeof culinaryGraphData === 'undefined') return [];
+
     if (substitutionRules[ingredientId]) {
         return substitutionRules[ingredientId].map(rule => {
-            const substitute = ingredientNodes.find(node => node.id === rule.substitute);
+            const substitute = culinaryGraphData.nodes.find(node => node.id === rule.substitute);
             return {
                 ingredient: substitute,
                 ratio: rule.ratio,
@@ -297,16 +376,18 @@ function getDetailedSubstitutions(ingredientId) {
     return [];
 }
 
-// Get pairings for an ingredient
+// Get pairings for an ingredient (used by fallback only)
 function getPairings(ingredientId) {
-    const edges = ingredientEdges.filter(edge =>
+    if (typeof culinaryGraphData === 'undefined') return [];
+
+    const edges = culinaryGraphData.edges.filter(edge =>
         (edge.source === ingredientId || edge.target === ingredientId) &&
         edge.type === 'pairs-with'
     );
 
     return edges.map(edge => {
         const pairedId = edge.source === ingredientId ? edge.target : edge.source;
-        const paired = ingredientNodes.find(node => node.id === pairedId);
+        const paired = culinaryGraphData.nodes.find(node => node.id === pairedId);
         return {
             ingredient: paired,
             strength: edge.strength
@@ -314,16 +395,18 @@ function getPairings(ingredientId) {
     });
 }
 
-// Get recipe combinations (used-with relationships)
+// Get recipe combinations (used by fallback only)
 function getRecipeCombinations(ingredientId) {
-    const edges = ingredientEdges.filter(edge =>
+    if (typeof culinaryGraphData === 'undefined') return [];
+
+    const edges = culinaryGraphData.edges.filter(edge =>
         (edge.source === ingredientId || edge.target === ingredientId) &&
         edge.type === 'used-with'
     );
 
     return edges.map(edge => {
         const combinedId = edge.source === ingredientId ? edge.target : edge.source;
-        const combined = ingredientNodes.find(node => node.id === combinedId);
+        const combined = culinaryGraphData.nodes.find(node => node.id === combinedId);
         return {
             ingredient: combined,
             context: edge.context
@@ -331,448 +414,172 @@ function getRecipeCombinations(ingredientId) {
     });
 }
 
-// Filter ingredients by criteria
-function filterIngredients(criteria) {
-    return ingredientNodes.filter(node => {
-        let matches = true;
+// ============================================
+// LOCAL FALLBACK RESPONSE (Only used when LLM is unavailable)
+// ============================================
 
-        if (criteria.category) {
-            matches = matches && node.category === criteria.category;
-        }
+// Generate a basic response from local knowledge graph when LLM fails
+function getLocalFallbackResponse(userMessage) {
+    if (typeof culinaryGraphData === 'undefined') {
+        return {
+            response: "I'm having trouble accessing the knowledge base. Please try again in a moment.",
+            category: null
+        };
+    }
 
-        if (criteria.cuisine) {
-            matches = matches && (
-                node.cuisine.includes(criteria.cuisine) ||
-                node.cuisine.includes('all')
-            );
-        }
-
-        if (criteria.dietary) {
-            matches = matches && node.dietary.includes(criteria.dietary);
-        }
-
-        return matches;
-    });
-}
-
-// Process user query and generate response
-function processQuery(userMessage) {
+    const queryType = classifyQuery(userMessage);
     const input = userMessage.toLowerCase();
 
-    // Substitution queries
-    if (input.includes('substitute') || input.includes('replace') || input.includes('instead of')) {
-        return handleSubstitutionQuery(userMessage, input);
-    }
-
-    // Pairing queries
-    if (input.includes('pair') || input.includes('goes well') || input.includes('complement')) {
-        return handlePairingQuery(userMessage, input);
-    }
-
-    // Recipe/combination queries
-    if (input.includes('recipe') || input.includes('used with') || input.includes('combine')) {
-        return handleRecipeQuery(userMessage, input);
-    }
-
-    // Dietary filtering
-    if (input.includes('vegan') || input.includes('vegetarian') || input.includes('gluten-free')) {
-        return handleDietaryQuery(userMessage, input);
-    }
-
-    // Cuisine filtering
-    if (input.includes('italian') || input.includes('asian') || input.includes('mexican') || input.includes('mediterranean')) {
-        return handleCuisineQuery(userMessage, input);
-    }
-
-    // Category search
-    if (input.includes('protein') || input.includes('dairy') || input.includes('grain') ||
-        input.includes('vegetable') || input.includes('herb') || input.includes('spice')) {
-        return handleCategoryQuery(userMessage, input);
-    }
-
-    // General ingredient info
-    const ingredient = findIngredient(userMessage);
-    if (ingredient) {
-        return handleIngredientInfo(ingredient);
-    }
-
-    // Default help response
-    return {
-        response: `I can help you with:\n\n**🔍 Search Ingredients**\n- "Find vegan proteins"\n- "Show me Italian ingredients"\n- "What dairy alternatives are available?"\n\n**🔄 Find Substitutions**\n- "Substitute for eggs"\n- "Replace butter with what?"\n- "What can I use instead of milk?"\n\n**👥 Discover Pairings**\n- "What pairs well with garlic?"\n- "What goes with tomatoes?"\n\n**🍳 Recipe Ideas**\n- "Recipes with chickpeas"\n- "What's used with rice?"\n\nTry asking one of these questions!`,
-        category: null
-    };
-}
-
-// Handle substitution queries
-function handleSubstitutionQuery(userMessage, input) {
-    // Extract ingredient name
+    // Try to extract an ingredient from the query
+    let ingredient = null;
     const patterns = [
         /substitute for ([a-z\s]+)/i,
         /replace ([a-z\s]+)/i,
         /instead of ([a-z\s]+)/i,
-        /substitute ([a-z\s]+)/i
-    ];
-
-    let ingredientName = null;
-    for (const pattern of patterns) {
-        const match = input.match(pattern);
-        if (match) {
-            ingredientName = match[1].replace(/\?/g, '').trim();
-            break;
-        }
-    }
-
-    if (!ingredientName) {
-        return {
-            response: "I'd love to help with substitutions! Please specify which ingredient you'd like to substitute. For example: 'Substitute for eggs' or 'What can I use instead of butter?'",
-            category: 'substitution'
-        };
-    }
-
-    const ingredient = findIngredient(ingredientName);
-
-    if (!ingredient) {
-        return {
-            response: `I couldn't find "${ingredientName}" in our database of 236+ ingredients. Try searching for common ingredients like: butter, eggs, milk, flour, sugar, oil, cheese, or any vegetables, proteins, or grains.`,
-            category: 'substitution'
-        };
-    }
-
-    // Get detailed substitution rules first
-    const detailedSubs = getDetailedSubstitutions(ingredient.id);
-    const basicSubs = getSubstitutions(ingredient.id);
-
-    if (detailedSubs.length === 0 && basicSubs.length === 0) {
-        return {
-            response: `I don't have specific substitution rules for **${ingredient.label}** yet. However, consider ingredients with similar properties in the **${ingredient.category}** category. Check the graph visualization below to explore similar ingredients!`,
-            category: 'substitution'
-        };
-    }
-
-    let response = `## Substitutes for ${ingredient.label}\n\n`;
-
-    // Show detailed substitutions first
-    if (detailedSubs.length > 0) {
-        detailedSubs.forEach((sub, index) => {
-            const confidence = sub.confidence === 'high' ? '✅' : '⚠️';
-            response += `${index + 1}. **${sub.ingredient.label}** ${confidence}\n`;
-            response += `   - **Ratio**: ${sub.ratio}\n`;
-            response += `   - **Notes**: ${sub.notes}\n`;
-            if (sub.dietary && sub.dietary.length > 0) {
-                response += `   - **Dietary**: ${sub.dietary.join(', ')}\n`;
-            }
-            response += '\n';
-        });
-    } else {
-        // Show basic substitutions
-        basicSubs.forEach((sub, index) => {
-            response += `${index + 1}. **${sub.ingredient.label}**\n`;
-            if (sub.ratio) response += `   - **Ratio**: ${sub.ratio}\n`;
-            if (sub.context) response += `   - **Best for**: ${sub.context}\n`;
-            response += '\n';
-        });
-    }
-
-    response += `\n💡 *Click on **${ingredient.label}** in the graph below to see visual connections!*`;
-
-    return { response, category: 'substitution' };
-}
-
-// Handle pairing queries
-function handlePairingQuery(userMessage, input) {
-    // Extract ingredient name
-    const patterns = [
         /pair(?:s)? (?:well )?with ([a-z\s]+)/i,
         /goes well with ([a-z\s]+)/i,
-        /complement(?:s)? ([a-z\s]+)/i,
-        /what (?:goes|pairs) with ([a-z\s]+)/i
+        /what (?:goes|pairs) with ([a-z\s]+)/i,
+        /recipe(?:s)? with ([a-z\s]+)/i
     ];
 
-    let ingredientName = null;
     for (const pattern of patterns) {
         const match = input.match(pattern);
         if (match) {
-            ingredientName = match[1].replace(/\?/g, '').trim();
+            ingredient = findIngredient(match[1].replace(/\?/g, '').trim());
             break;
         }
     }
 
-    if (!ingredientName) {
-        return {
-            response: "I can help you discover flavor pairings! Tell me which ingredient you're curious about. For example: 'What pairs well with garlic?' or 'What goes with tomatoes?'",
-            category: 'pairing'
-        };
-    }
-
-    const ingredient = findIngredient(ingredientName);
-
+    // If no match from patterns, try direct lookup
     if (!ingredient) {
-        return {
-            response: `I couldn't find "${ingredientName}" in our database. Try searching for herbs, spices, proteins, or vegetables like: garlic, basil, tomato, chicken, or olive oil.`,
-            category: 'pairing'
-        };
+        ingredient = findIngredient(userMessage);
     }
 
-    const pairings = getPairings(ingredient.id);
+    // Generate response based on query type and found ingredient
+    switch (queryType.type) {
+        case 'substitution':
+            if (ingredient) {
+                const subs = getDetailedSubstitutions(ingredient.id);
+                const basicSubs = getSubstitutions(ingredient.id);
+                if (subs.length > 0 || basicSubs.length > 0) {
+                    let response = `## Substitutes for ${ingredient.label}\n\n`;
+                    const allSubs = subs.length > 0 ? subs : basicSubs.map(s => ({ ingredient: s.ingredient, ratio: s.ratio }));
+                    allSubs.slice(0, 4).forEach((sub, i) => {
+                        if (sub.ingredient) {
+                            response += `${i + 1}. **${sub.ingredient.label}** - ${sub.ratio || '1:1'}\n`;
+                        }
+                    });
+                    return { response, category: 'substitution' };
+                }
+            }
+            return {
+                response: "I couldn't find substitution data for that ingredient. Try common ingredients like butter, eggs, milk, or flour.",
+                category: 'substitution'
+            };
 
-    if (pairings.length === 0) {
-        return {
-            response: `I don't have specific pairing data for **${ingredient.label}** yet. Explore the graph visualization below to see what ingredients are commonly used together!`,
-            category: 'pairing'
-        };
+        case 'pairing':
+            if (ingredient) {
+                const pairs = getPairings(ingredient.id);
+                if (pairs.length > 0) {
+                    let response = `## Pairs well with ${ingredient.label}\n\n`;
+                    pairs.slice(0, 5).forEach(pair => {
+                        if (pair.ingredient) {
+                            response += `- **${pair.ingredient.label}** (${pair.strength || 'good'})\n`;
+                        }
+                    });
+                    return { response, category: 'pairing' };
+                }
+            }
+            return {
+                response: "I couldn't find pairing data for that ingredient. Try garlic, tomato, basil, or olive oil.",
+                category: 'pairing'
+            };
+
+        case 'recipe':
+            if (ingredient) {
+                const combos = getRecipeCombinations(ingredient.id);
+                if (combos.length > 0) {
+                    let response = `## Common combinations with ${ingredient.label}\n\n`;
+                    combos.slice(0, 5).forEach(combo => {
+                        if (combo.ingredient) {
+                            response += `- **${combo.ingredient.label}**${combo.context ? ` (${combo.context})` : ''}\n`;
+                        }
+                    });
+                    return { response, category: 'recipe' };
+                }
+            }
+            return {
+                response: "I couldn't find recipe combination data for that ingredient.",
+                category: 'recipe'
+            };
+
+        case 'dietary':
+            const dietaryFiltered = culinaryGraphData.nodes.filter(n =>
+                n.dietary && n.dietary.includes(queryType.dietaryType)
+            );
+            if (dietaryFiltered.length > 0) {
+                let response = `## ${queryType.dietaryType.charAt(0).toUpperCase() + queryType.dietaryType.slice(1)} Ingredients\n\n`;
+                dietaryFiltered.slice(0, 10).forEach(item => {
+                    response += `- **${item.label}** (${item.category})\n`;
+                });
+                if (dietaryFiltered.length > 10) {
+                    response += `\n...and ${dietaryFiltered.length - 10} more`;
+                }
+                return { response, category: 'dietary' };
+            }
+            return {
+                response: `No ${queryType.dietaryType} ingredients found in the database.`,
+                category: 'dietary'
+            };
+
+        case 'cuisine':
+            const cuisineFiltered = culinaryGraphData.nodes.filter(n =>
+                n.cuisine && n.cuisine.includes(queryType.cuisineType)
+            );
+            if (cuisineFiltered.length > 0) {
+                let response = `## ${queryType.cuisineType.charAt(0).toUpperCase() + queryType.cuisineType.slice(1)} Cuisine Ingredients\n\n`;
+                cuisineFiltered.slice(0, 10).forEach(item => {
+                    response += `- **${item.label}** (${item.category})\n`;
+                });
+                return { response, category: 'cuisine' };
+            }
+            return {
+                response: `No ${queryType.cuisineType} cuisine ingredients found.`,
+                category: 'cuisine'
+            };
+
+        case 'category':
+            const categoryFiltered = culinaryGraphData.nodes.filter(n => n.category === queryType.categoryType);
+            if (categoryFiltered.length > 0) {
+                let response = `## ${queryType.categoryType.charAt(0).toUpperCase() + queryType.categoryType.slice(1)} Ingredients\n\n`;
+                categoryFiltered.slice(0, 12).forEach(item => {
+                    response += `- **${item.label}**\n`;
+                });
+                return { response, category: 'category' };
+            }
+            return {
+                response: `No ${queryType.categoryType} ingredients found.`,
+                category: 'category'
+            };
+
+        default:
+            // General ingredient info
+            if (ingredient) {
+                let response = `## ${ingredient.label}\n\n`;
+                response += `**Category**: ${ingredient.category}\n`;
+                response += `**Cuisines**: ${ingredient.cuisine.join(', ')}\n`;
+                if (ingredient.dietary && ingredient.dietary.length > 0) {
+                    response += `**Dietary**: ${ingredient.dietary.join(', ')}\n`;
+                }
+                return { response, category: 'ingredient' };
+            }
+
+            // Help message
+            return {
+                response: `I can help you with:\n\n- **Substitutions**: "Substitute for eggs"\n- **Pairings**: "What pairs well with garlic?"\n- **Recipes**: "Recipes with chickpeas"\n- **Dietary**: "Show vegan proteins"\n- **Cuisine**: "Italian ingredients"\n\nTry one of these!`,
+                category: null
+            };
     }
-
-    let response = `## Ingredients that Pair Well with ${ingredient.label}\n\n`;
-
-    const strongPairs = pairings.filter(p => p.strength === 'strong');
-    const mediumPairs = pairings.filter(p => p.strength === 'medium');
-
-    if (strongPairs.length > 0) {
-        response += `### 🌟 Strong Pairings\n`;
-        strongPairs.forEach(pair => {
-            response += `- **${pair.ingredient.label}**\n`;
-        });
-        response += '\n';
-    }
-
-    if (mediumPairs.length > 0) {
-        response += `### ⭐ Good Pairings\n`;
-        mediumPairs.forEach(pair => {
-            response += `- **${pair.ingredient.label}**\n`;
-        });
-        response += '\n';
-    }
-
-    response += `\n💡 *Explore the graph to discover more connections!*`;
-
-    return { response, category: 'pairing' };
-}
-
-// Handle recipe combination queries
-function handleRecipeQuery(userMessage, input) {
-    // Extract ingredient name
-    const patterns = [
-        /recipe(?:s)? with ([a-z\s]+)/i,
-        /used with ([a-z\s]+)/i,
-        /combine(?:s)? (?:with )?([a-z\s]+)/i
-    ];
-
-    let ingredientName = null;
-    for (const pattern of patterns) {
-        const match = input.match(pattern);
-        if (match) {
-            ingredientName = match[1].replace(/\?/g, '').trim();
-            break;
-        }
-    }
-
-    if (!ingredientName) {
-        return {
-            response: "I can suggest recipe combinations! Tell me which ingredient you want to use. For example: 'Recipes with chickpeas' or 'What's used with rice?'",
-            category: 'recipe'
-        };
-    }
-
-    const ingredient = findIngredient(ingredientName);
-
-    if (!ingredient) {
-        return {
-            response: `I couldn't find "${ingredientName}". Try common ingredients like: rice, chicken, beans, pasta, or any vegetables.`,
-            category: 'recipe'
-        };
-    }
-
-    const combinations = getRecipeCombinations(ingredient.id);
-    const pairings = getPairings(ingredient.id);
-
-    if (combinations.length === 0 && pairings.length === 0) {
-        return {
-            response: `I don't have specific recipe combinations for **${ingredient.label}** yet. Explore the graph below to see visual connections with other ingredients!`,
-            category: 'recipe'
-        };
-    }
-
-    let response = `## Recipe Ideas with ${ingredient.label}\n\n`;
-
-    if (combinations.length > 0) {
-        response += `### Common Combinations\n`;
-        combinations.forEach(combo => {
-            response += `- **${combo.ingredient.label}**`;
-            if (combo.context) response += ` _(${combo.context})_`;
-            response += '\n';
-        });
-        response += '\n';
-    }
-
-    if (pairings.length > 0) {
-        const strongPairs = pairings.filter(p => p.strength === 'strong').slice(0, 5);
-        if (strongPairs.length > 0) {
-            response += `### Flavor Pairings to Try\n`;
-            strongPairs.forEach(pair => {
-                response += `- **${pair.ingredient.label}**\n`;
-            });
-        }
-    }
-
-    response += `\n💡 *Mix and match these ingredients for delicious results!*`;
-
-    return { response, category: 'recipe' };
-}
-
-// Handle dietary filtering queries
-function handleDietaryQuery(userMessage, input) {
-    let dietary = null;
-    let category = null;
-
-    if (input.includes('vegan')) dietary = 'vegan';
-    else if (input.includes('vegetarian')) dietary = 'vegetarian';
-    else if (input.includes('gluten-free') || input.includes('gluten free')) dietary = 'gluten-free';
-
-    // Check for category
-    if (input.includes('protein')) category = 'protein';
-    else if (input.includes('dairy')) category = 'dairy';
-    else if (input.includes('grain')) category = 'grain';
-    else if (input.includes('oil')) category = 'oil';
-
-    const results = filterIngredients({ dietary, category });
-
-    if (results.length === 0) {
-        return {
-            response: `I couldn't find any ingredients matching those criteria. Try: "vegan proteins", "vegetarian options", or "gluten-free grains".`,
-            category: 'dietary'
-        };
-    }
-
-    let response = `## ${dietary.charAt(0).toUpperCase() + dietary.slice(1)} ${category ? category.charAt(0).toUpperCase() + category.slice(1) + 's' : 'Ingredients'}\n\n`;
-    response += `Found **${results.length}** ingredients:\n\n`;
-
-    // Group by category
-    const grouped = {};
-    results.forEach(node => {
-        if (!grouped[node.category]) grouped[node.category] = [];
-        grouped[node.category].push(node.label);
-    });
-
-    for (const [cat, items] of Object.entries(grouped)) {
-        response += `### ${cat.charAt(0).toUpperCase() + cat.slice(1)}\n`;
-        items.slice(0, 10).forEach(item => {
-            response += `- ${item}\n`;
-        });
-        if (items.length > 10) {
-            response += `- *...and ${items.length - 10} more*\n`;
-        }
-        response += '\n';
-    }
-
-    return { response, category: 'dietary' };
-}
-
-// Handle cuisine filtering queries
-function handleCuisineQuery(userMessage, input) {
-    let cuisine = null;
-
-    if (input.includes('italian')) cuisine = 'italian';
-    else if (input.includes('asian')) cuisine = 'asian';
-    else if (input.includes('mexican')) cuisine = 'mexican';
-    else if (input.includes('mediterranean')) cuisine = 'mediterranean';
-
-    const results = filterIngredients({ cuisine });
-
-    if (results.length === 0) {
-        return {
-            response: `I couldn't find ingredients for that cuisine. Try: "Italian ingredients", "Asian ingredients", "Mexican ingredients", or "Mediterranean ingredients".`,
-            category: 'cuisine'
-        };
-    }
-
-    let response = `## ${cuisine.charAt(0).toUpperCase() + cuisine.slice(1)} Cuisine Ingredients\n\n`;
-    response += `Found **${results.length}** ingredients commonly used in ${cuisine} cooking:\n\n`;
-
-    // Group by category
-    const grouped = {};
-    results.forEach(node => {
-        if (!grouped[node.category]) grouped[node.category] = [];
-        grouped[node.category].push(node.label);
-    });
-
-    for (const [cat, items] of Object.entries(grouped)) {
-        response += `### ${cat.charAt(0).toUpperCase() + cat.slice(1)}\n`;
-        items.slice(0, 8).forEach(item => {
-            response += `- ${item}\n`;
-        });
-        if (items.length > 8) {
-            response += `- *...and ${items.length - 8} more*\n`;
-        }
-        response += '\n';
-    }
-
-    return { response, category: 'cuisine' };
-}
-
-// Handle category search queries
-function handleCategoryQuery(userMessage, input) {
-    let category = null;
-
-    if (input.includes('protein')) category = 'protein';
-    else if (input.includes('dairy')) category = 'dairy';
-    else if (input.includes('grain')) category = 'grain';
-    else if (input.includes('vegetable')) category = 'vegetable';
-    else if (input.includes('herb')) category = 'herb';
-    else if (input.includes('spice')) category = 'spice';
-
-    const results = filterIngredients({ category });
-
-    if (results.length === 0) {
-        return {
-            response: `No ingredients found in that category. Try: proteins, dairy, grains, vegetables, herbs, or spices.`,
-            category: 'category'
-        };
-    }
-
-    let response = `## ${category.charAt(0).toUpperCase() + category.slice(1)} Ingredients\n\n`;
-    response += `Our database includes **${results.length}** ${category} options:\n\n`;
-
-    results.slice(0, 20).forEach(item => {
-        response += `- **${item.label}**`;
-        if (item.dietary && item.dietary.length > 0) {
-            response += ` _(${item.dietary.join(', ')})_`;
-        }
-        response += '\n';
-    });
-
-    if (results.length > 20) {
-        response += `\n*...and ${results.length - 20} more! Explore the graph to see them all.*`;
-    }
-
-    return { response, category: 'category' };
-}
-
-// Handle general ingredient info
-function handleIngredientInfo(ingredient) {
-    let response = `## ${ingredient.label}\n\n`;
-    response += `**Category**: ${ingredient.category}\n`;
-    response += `**Cuisines**: ${ingredient.cuisine.join(', ')}\n`;
-    response += `**Dietary**: ${ingredient.dietary.join(', ')}\n\n`;
-
-    const subs = getSubstitutions(ingredient.id);
-    const pairs = getPairings(ingredient.id);
-    const combos = getRecipeCombinations(ingredient.id);
-
-    if (subs.length > 0) {
-        response += `**Substitutes**: ${subs.slice(0, 3).map(s => s.ingredient.label).join(', ')}\n`;
-    }
-
-    if (pairs.length > 0) {
-        response += `**Pairs well with**: ${pairs.slice(0, 3).map(p => p.ingredient.label).join(', ')}\n`;
-    }
-
-    if (combos.length > 0) {
-        response += `**Used with**: ${combos.slice(0, 3).map(c => c.ingredient.label).join(', ')}\n`;
-    }
-
-    response += `\n💡 *Ask me about substitutions, pairings, or recipes with ${ingredient.label}!*`;
-
-    return { response, category: 'ingredient' };
 }
 
 // ============================================
@@ -847,23 +654,31 @@ async function callGemini(messages) {
     throw new Error('Invalid response format from Gemini API');
 }
 
-// Main LLM call via backend proxy with GraphRAG enhancement
+// Main LLM call via backend proxy with focused GraphRAG enhancement
 async function getLLMResponse(userMessage) {
-    // Enhance query with graph context using GraphRAG
-    let enhancedMessage = userMessage;
+    // Classify the query for focused context extraction
+    const queryType = classifyQuery(userMessage);
+    console.log('Query classified as:', queryType.type);
+
+    // Get focused RAG context based on query type
+    let ragContext = '';
     if (culinaryAiConfig && typeof culinaryAiConfig.enhanceQueryWithGraphContext === 'function') {
-        enhancedMessage = culinaryAiConfig.enhanceQueryWithGraphContext(userMessage);
-        if (enhancedMessage !== userMessage) {
-            console.log('✨ GraphRAG: Query enhanced with knowledge graph context');
+        const ragResult = culinaryAiConfig.enhanceQueryWithGraphContext(userMessage, queryType);
+        ragContext = ragResult.ragContext || '';
+        if (ragContext) {
+            console.log('✨ GraphRAG: Focused context added for query type:', queryType.type);
         }
     }
 
     // Add dietary restrictions to user message
-    const userMessageWithRestrictions = enhancedMessage + getRestrictionsPrompt();
+    const userMessageWithRestrictions = userMessage + getRestrictionsPrompt();
+
+    // Build system prompt with RAG context injected
+    const systemPrompt = culinaryAiConfig.getContextualSystemPrompt(ragContext);
 
     // Build conversation history
     const messages = [
-        { role: 'system', content: culinaryAiConfig.getSystemPrompt() },
+        { role: 'system', content: systemPrompt },
         ...conversationHistory,
         { role: 'user', content: userMessageWithRestrictions }
     ];
@@ -873,29 +688,7 @@ async function getLLMResponse(userMessage) {
     return { response, provider: 'Gemini 2.5 Flash' };
 }
 
-// Enhance local knowledge base response with context
-function enhanceWithContext(userMessage, localResult) {
-    // Add ingredient count and database info to help AI
-    let context = '';
-    if (typeof ingredientNodes !== 'undefined' && typeof ingredientEdges !== 'undefined') {
-        context = `\n\n[Knowledge Base Context: ${ingredientNodes.length} ingredients, ${ingredientEdges.length} relationships]`;
-    }
-
-    // If we have local results, provide them as context
-    if (localResult && localResult.response) {
-        return {
-            userMessage: userMessage + context,
-            localData: localResult.response
-        };
-    }
-
-    return {
-        userMessage: userMessage + context,
-        localData: null
-    };
-}
-
-// Handle sending messages
+// Handle sending messages - ALWAYS uses LLM first, local fallback only on error
 async function sendMessage() {
     const userMessage = chatInput.value.trim();
 
@@ -915,49 +708,37 @@ async function sendMessage() {
     showTypingIndicator();
 
     try {
-        // Try AI first if enabled
-        if (useAI) {
-            try {
-                const result = await getLLMResponse(userMessage);
-                removeTypingIndicator();
+        // ALWAYS try LLM first - RAG context enhances the response
+        const result = await getLLMResponse(userMessage);
+        removeTypingIndicator();
 
-                // Add response with provider badge
-                const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>${result.response}`;
-                addMessage(responseWithBadge, true);
+        // Add response with provider badge
+        const responseWithBadge = `<span class="ai-provider-badge">${result.provider}</span>${result.response}`;
+        addMessage(responseWithBadge, true);
 
-                // Update conversation history
-                conversationHistory.push({ role: 'user', content: userMessage });
-                conversationHistory.push({ role: 'assistant', content: result.response });
+        // Update conversation history
+        conversationHistory.push({ role: 'user', content: userMessage });
+        conversationHistory.push({ role: 'assistant', content: result.response });
 
-                if (conversationHistory.length > 20) {
-                    conversationHistory = conversationHistory.slice(-20);
-                }
-            } catch (aiError) {
-                console.error('AI response failed, falling back to local knowledge base:', aiError);
-                // Fall back to local knowledge base
-                const result = processQuery(userMessage);
-                removeTypingIndicator();
-                const fallbackMessage = `<span class="ai-provider-badge">Local Knowledge Base</span>${result.response}\n\n💡 *AI is currently offline. Try asking again in a moment to use our enhanced AI assistant!*`;
-                addMessage(fallbackMessage, true, result.category);
-            }
-        } else {
-            // Use local knowledge base only
-            const result = processQuery(userMessage);
-            removeTypingIndicator();
-            addMessage(result.response, true, result.category);
-
-            // Update conversation history for local mode too
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: result.response });
-
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
+        if (conversationHistory.length > 20) {
+            conversationHistory = conversationHistory.slice(-20);
         }
     } catch (error) {
-        console.error('Error processing query:', error);
+        console.error('LLM response failed, using local fallback:', error);
         removeTypingIndicator();
-        addMessage("I'm sorry, I encountered an error processing your question. Please try rephrasing it or ask something else!", true);
+
+        // Fallback to local knowledge base ONLY when LLM fails
+        const fallbackResult = getLocalFallbackResponse(userMessage);
+        const fallbackMessage = `<span class="ai-provider-badge">Local Knowledge Base</span>${fallbackResult.response}\n\n> **Note:** AI is currently unavailable. This response is from the local knowledge graph.`;
+        addMessage(fallbackMessage, true, fallbackResult.category);
+
+        // Still update conversation history
+        conversationHistory.push({ role: 'user', content: userMessage });
+        conversationHistory.push({ role: 'assistant', content: fallbackResult.response });
+
+        if (conversationHistory.length > 20) {
+            conversationHistory = conversationHistory.slice(-20);
+        }
     } finally {
         // Re-enable input
         chatInput.disabled = false;
@@ -1004,27 +785,25 @@ function updateAIStatus(isBackendHealthy) {
         if (isBackendHealthy) {
             statusBadge.textContent = '🤖 AI: Gemini (Active)';
             statusBadge.className = 'ai-status-badge active';
-            useAI = true;
         } else {
-            statusBadge.textContent = '🤖 AI';
+            statusBadge.textContent = '🤖 AI: Fallback Mode';
             statusBadge.className = 'ai-status-badge';
-            useAI = false;
         }
     }
 }
 
 // Initialize chat on page load
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Culinary Chat Assistant initialized');
+    console.log('Culinary Chat Assistant initialized - RAG-Enhanced Architecture');
 
     // Load dietary restrictions from localStorage
     loadDietaryRestrictions();
 
-    // Check if ingredientNodes is available
-    if (typeof ingredientNodes !== 'undefined' && typeof ingredientEdges !== 'undefined') {
-        console.log(`Loaded ${ingredientNodes.length} ingredients and ${ingredientEdges.length} relationships`);
+    // Check if knowledge graph data is available
+    if (typeof culinaryGraphData !== 'undefined') {
+        console.log(`Loaded ${culinaryGraphData.nodes.length} ingredients and ${culinaryGraphData.edges.length} relationships`);
     } else {
-        console.warn('Warning: ingredientNodes or ingredientEdges not loaded yet');
+        console.warn('Warning: culinaryGraphData not loaded yet');
     }
 
     // Initialize AI configuration
@@ -1037,9 +816,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateAIStatus(isHealthy);
 
             if (isHealthy) {
-                console.log('AI backend is healthy - Gemini 2.5 Flash active');
+                console.log('AI backend is healthy - Gemini 2.5 Flash active with RAG enhancement');
             } else {
-                console.log('AI backend unavailable - using local knowledge base');
+                console.log('AI backend unavailable - will use local knowledge base as fallback');
             }
         } else {
             console.error('CulinaryAIConfig not loaded - AI features disabled');
