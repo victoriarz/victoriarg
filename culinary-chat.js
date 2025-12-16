@@ -587,6 +587,7 @@ function getLocalFallbackResponse(userMessage) {
 // ============================================
 
 // Call backend proxy which handles Gemini API
+// Returns { text, finishReason } to support auto-continuation
 async function callGemini(messages) {
     // Convert messages to Gemini format
     const contents = [];
@@ -636,15 +637,16 @@ async function callGemini(messages) {
     // Handle Gemini 2.5 response format
     if (data.candidates && data.candidates[0]) {
         const candidate = data.candidates[0];
+        const finishReason = candidate.finishReason || 'STOP';
 
         // Try to get text from parts array
         if (candidate.content && candidate.content.parts && candidate.content.parts[0]) {
-            return candidate.content.parts[0].text;
+            return { text: candidate.content.parts[0].text, finishReason };
         }
 
         // Fallback: check if there's text directly in content
         if (candidate.content && candidate.content.text) {
-            return candidate.content.text;
+            return { text: candidate.content.text, finishReason };
         }
 
         // If no text found, throw error
@@ -655,6 +657,7 @@ async function callGemini(messages) {
 }
 
 // Main LLM call via backend proxy with focused GraphRAG enhancement
+// Supports auto-continuation if response hits token limit
 async function getLLMResponse(userMessage) {
     // Classify the query for focused context extraction
     const queryType = classifyQuery(userMessage);
@@ -684,8 +687,34 @@ async function getLLMResponse(userMessage) {
     ];
 
     // Call backend proxy (which securely handles the API key)
-    const response = await callGemini(messages);
-    return { response, provider: 'Gemini 2.5 Flash' };
+    let result = await callGemini(messages);
+    let fullResponse = result.text;
+    let continuationCount = 0;
+    const maxContinuations = 3; // Prevent infinite loops
+
+    // Auto-continue if response was truncated due to token limit
+    while (result.finishReason === 'MAX_TOKENS' && continuationCount < maxContinuations) {
+        continuationCount++;
+        console.log(`Response truncated, auto-continuing (${continuationCount}/${maxContinuations})...`);
+
+        // Add the partial response and request continuation
+        const continuationMessages = [
+            { role: 'system', content: systemPrompt },
+            ...conversationHistory,
+            { role: 'user', content: userMessageWithRestrictions },
+            { role: 'assistant', content: fullResponse },
+            { role: 'user', content: 'Please continue from where you left off.' }
+        ];
+
+        result = await callGemini(continuationMessages);
+        fullResponse += '\n\n' + result.text;
+    }
+
+    if (continuationCount > 0) {
+        console.log(`Response completed after ${continuationCount} continuation(s)`);
+    }
+
+    return { response: fullResponse, provider: 'Gemini 2.5 Flash' };
 }
 
 // Handle sending messages - ALWAYS uses LLM first, local fallback only on error
