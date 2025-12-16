@@ -1,5 +1,6 @@
 // Saponify AI - Soap Making Chat Assistant with LLM Integration
-// Uses local knowledge bank first, then falls back to AI API to save tokens
+// RAG Architecture: LLM (Gemini 2.5 Flash) is the core response engine
+// Local knowledge bank provides context to augment LLM responses, never replaces them
 
 // Initialize AI configuration
 let aiConfig;
@@ -139,109 +140,12 @@ function checkForSavedDraft() {
 }
 
 // ===========================================
-// USER-FRIENDLY ERROR MESSAGES
-// Provides helpful feedback when things go wrong
+// ERROR HANDLING
+// No fallbacks - errors propagate so we can fix them
 // ===========================================
 
-/**
- * Generate user-friendly error message based on error type
- */
-function generateUserFriendlyError(error, userMessage) {
-    const errorMsg = error.message || '';
-
-    // FIRST: Try to answer from knowledge base before showing any error
-    const legacyResult = findResponse(userMessage);
-    if (legacyResult.category !== null) {
-        console.log('✅ Found answer in knowledge base despite API error');
-        return legacyResult.response;
-    }
-
-    // Also try the comprehensive knowledge bank
-    const knowledgeResult = searchKnowledgeBank(userMessage);
-    if (knowledgeResult && knowledgeResult.response) {
-        console.log('✅ Found answer in knowledge bank despite API error');
-        return knowledgeResult.response;
-    }
-
-    // Network/API errors - only show if we couldn't answer from knowledge base
-    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('Failed to fetch')) {
-        return `**Connection Issue**\n\n` +
-            `I couldn't reach the AI service. This might be a temporary network issue.\n\n` +
-            `**In the meantime, I can still help with:**\n` +
-            `- Calculating soap recipes (just tell me your oils!)\n` +
-            `- Answering questions from my knowledge base\n` +
-            `- Validating recipe safety\n\n` +
-            `Try your question again, or ask about something specific like "calculate a recipe with olive oil and coconut oil".`;
-    }
-
-    // API key/auth errors or no API configured
-    if (errorMsg.includes('401') || errorMsg.includes('403') || errorMsg.includes('API key') || errorMsg.includes('unauthorized') || errorMsg.includes('AI not available')) {
-        const hasKey = typeof aiConfig !== 'undefined' && aiConfig.hasDirectApiKey && aiConfig.hasDirectApiKey();
-        if (!hasKey && window.location.protocol === 'file:') {
-            return `**Enable AI for Smarter Answers**\n\n` +
-                `I couldn't find this in my knowledge base, and AI isn't set up yet.\n\n` +
-                `**To enable AI (free!):**\n` +
-                `1. Get a free API key at [Google AI Studio](https://aistudio.google.com/app/apikey)\n` +
-                `2. Open browser console (F12) and run:\n` +
-                `   \`aiConfig.setGeminiApiKey("your-key")\`\n\n` +
-                `**Without AI, I can still help with:**\n` +
-                `- Calculating soap recipes\n` +
-                `- Common soap making questions\n\n` +
-                `Try asking: "Create a beginner recipe" or "What is saponification?"`;
-        }
-        return `**AI Service Unavailable**\n\n` +
-            `The AI service isn't available right now, but no worries!\n\n` +
-            `**I can still help you with:**\n` +
-            `- Recipe calculations (my specialty!)\n` +
-            `- Soap making knowledge\n` +
-            `- Oil properties and recommendations\n\n` +
-            `What would you like to know about soap making?`;
-    }
-
-    // Rate limit errors
-    if (errorMsg.includes('429') || errorMsg.includes('rate limit') || errorMsg.includes('too many requests')) {
-        return `**Please wait a moment**\n\n` +
-            `I'm getting a lot of questions right now! Give me about 30 seconds and try again.\n\n` +
-            `While you wait, here's a tip: I can calculate soap recipes instantly without needing the AI - just say "create a recipe"!`;
-    }
-
-    // Recipe calculation errors
-    if (errorMsg.includes('oil') || errorMsg.includes('SAP') || errorMsg.includes('calculate')) {
-        return `**Recipe Calculation Issue**\n\n` +
-            `I had trouble with that calculation. This usually happens when:\n` +
-            `- An oil name wasn't recognized\n` +
-            `- The amounts don't add up correctly\n\n` +
-            `**Try again with:**\n` +
-            `- Standard oil names: "olive oil", "coconut oil", "shea butter"\n` +
-            `- Clear amounts: "300g olive oil, 200g coconut oil"\n\n` +
-            `Or just list your oils and I'll suggest amounts!`;
-    }
-
-    // CORS error detection (common when running from file://)
-    if (errorMsg.includes('CORS') || errorMsg.includes('cross-origin') ||
-        errorMsg.includes('NetworkError') || errorMsg.includes('Failed to fetch')) {
-        console.error('🚫 CORS/Network error detected. Protocol:', window.location.protocol);
-        return `**Connection Issue**\n\n` +
-            `I couldn't reach the AI service due to a network restriction.\n\n` +
-            `**Try one of these:**\n` +
-            `- Refresh the page and try again\n` +
-            `- If running locally, try opening the live site instead\n\n` +
-            `**I can still help with:**\n` +
-            `- "Create a beginner soap recipe"\n` +
-            `- "What is saponification?"\n` +
-            `- "Calculate a 500g batch with olive and coconut oil"`;
-    }
-
-    // Generic fallback with actual error for debugging
-    console.error('🔥 Unhandled error in generateUserFriendlyError:', errorMsg);
-    return `**Something went wrong**\n\n` +
-        `The AI service had an issue processing your request.\n\n` +
-        `**Try asking something like:**\n` +
-        `• "Create a beginner soap recipe"\n` +
-        `• "What is saponification?"\n` +
-        `• "What oils are good for soap?"\n\n` +
-        `*(Error: ${errorMsg.substring(0, 100)})*`;
-}
+// Note: generateUserFriendlyError has been removed.
+// Errors are now shown directly in sendMessage() to ensure visibility.
 
 /**
  * Generate specific error for recipe validation failures
@@ -676,9 +580,160 @@ function hasExplicitRecipeActionWord(input) {
     return recipeActionPatterns.some(pattern => pattern.test(input));
 }
 
+// ===========================================
+// RAG CONTEXT RETRIEVAL
+// Extracts relevant knowledge to augment LLM prompts
+// Does NOT return formatted responses - LLM generates those
+// ===========================================
+
 /**
- * Search the comprehensive knowledge bank for relevant information
+ * Retrieve relevant context from knowledge bank for RAG
+ * Returns raw data to augment LLM prompt, NOT formatted user responses
+ * @param {string} userInput - User's question
+ * @returns {object} - { context: string, topics: string[], hasCalculatorContext: boolean }
+ */
+function retrieveRAGContext(userInput) {
+    const result = {
+        context: '',
+        topics: [],
+        hasCalculatorContext: false,
+        hasRecipeIntent: false
+    };
+
+    // If knowledge bank not loaded, return empty context
+    if (typeof SOAP_KNOWLEDGE_BANK === 'undefined') {
+        console.log('📚 Knowledge bank not loaded');
+        return result;
+    }
+
+    const input = userInput.toLowerCase();
+    const kb = SOAP_KNOWLEDGE_BANK;
+    const contextParts = [];
+
+    // Define topic mappings for RAG retrieval (extracts DATA, not formatted responses)
+    const topicMappings = [
+        {
+            keywords: ['saponification', 'chemical reaction', 'how soap made', 'soap chemistry'],
+            topic: 'Saponification',
+            getData: () => kb.saponification ? JSON.stringify(kb.saponification, null, 2) : null
+        },
+        {
+            keywords: ['cold process', 'cp soap', 'cp method'],
+            topic: 'Cold Process',
+            getData: () => kb.methods?.coldProcess ? JSON.stringify(kb.methods.coldProcess, null, 2) : null
+        },
+        {
+            keywords: ['hot process', 'hp soap', 'crockpot soap'],
+            topic: 'Hot Process',
+            getData: () => kb.methods?.hotProcess ? JSON.stringify(kb.methods.hotProcess, null, 2) : null
+        },
+        {
+            keywords: ['melt and pour', 'melt pour', 'glycerin soap'],
+            topic: 'Melt & Pour',
+            getData: () => kb.methods?.meltAndPour ? JSON.stringify(kb.methods.meltAndPour, null, 2) : null
+        },
+        {
+            keywords: ['safety', 'lye safety', 'protective', 'goggles', 'gloves', 'burn', 'first aid', 'dangerous'],
+            topic: 'Safety',
+            getData: () => kb.safety ? JSON.stringify(kb.safety, null, 2) : null
+        },
+        {
+            keywords: ['troubleshoot', 'problem', 'wrong', 'failed', 'help', 'issue', 'fix', 'soft soap', 'seizing', 'soda ash', 'dos', 'orange spots'],
+            topic: 'Troubleshooting',
+            getData: () => kb.troubleshooting ? JSON.stringify(kb.troubleshooting, null, 2) : null
+        },
+        {
+            keywords: ['cure', 'curing', 'how long cure', 'storage', 'when ready'],
+            topic: 'Curing',
+            getData: () => kb.curingAndStorage ? JSON.stringify(kb.curingAndStorage, null, 2) : null
+        },
+        {
+            keywords: ['essential oil', 'fragrance', 'scent', 'smell', 'aroma'],
+            topic: 'Fragrance',
+            getData: () => kb.additives?.fragrance ? JSON.stringify(kb.additives.fragrance, null, 2) : null
+        },
+        {
+            keywords: ['colorant', 'color', 'pigment', 'mica', 'oxide', 'natural color'],
+            topic: 'Colorants',
+            getData: () => kb.additives?.naturalColorants ? JSON.stringify(kb.additives.naturalColorants, null, 2) : null
+        },
+        {
+            keywords: ['superfat', 'lye discount'],
+            topic: 'Superfat',
+            getData: () => kb.formulation?.superfat ? JSON.stringify(kb.formulation.superfat, null, 2) : null
+        },
+        {
+            keywords: ['soap properties', 'hardness', 'cleansing', 'conditioning', 'bubbly', 'creamy', 'ins', 'iodine'],
+            topic: 'Soap Properties',
+            getData: () => kb.formulation?.soapProperties ? JSON.stringify(kb.formulation.soapProperties, null, 2) : null
+        },
+        {
+            keywords: ['beginner recipe', 'classic recipe', 'recipe ratio'],
+            topic: 'Recipe Ratios',
+            getData: () => kb.formulation?.classicRatios ? JSON.stringify(kb.formulation.classicRatios, null, 2) : null
+        },
+        {
+            keywords: ['swirl', 'design', 'layer', 'technique'],
+            topic: 'Design Techniques',
+            getData: () => kb.designTechniques ? JSON.stringify(kb.designTechniques, null, 2) : null
+        },
+        {
+            keywords: ['sell soap', 'business', 'fda', 'regulation', 'label'],
+            topic: 'Business & Regulations',
+            getData: () => kb.businessRegulations ? JSON.stringify(kb.businessRegulations, null, 2) : null
+        }
+    ];
+
+    // Check for recipe calculation intent
+    const recipeKeywords = ['recipe', 'calculate', 'batch', 'make soap', 'create soap', 'lye amount', 'water amount'];
+    result.hasRecipeIntent = recipeKeywords.some(kw => input.includes(kw));
+
+    // Find matching topics and extract relevant data
+    for (const mapping of topicMappings) {
+        const hasMatch = mapping.keywords.some(kw => input.includes(kw.toLowerCase()));
+        if (hasMatch) {
+            const data = mapping.getData();
+            if (data) {
+                result.topics.push(mapping.topic);
+                contextParts.push(`\n### ${mapping.topic} Knowledge:\n${data}`);
+            }
+        }
+    }
+
+    // If recipe intent detected, add oil database info
+    if (result.hasRecipeIntent && soapCalculator) {
+        result.hasCalculatorContext = true;
+        const oils = soapCalculator.getAvailableOils();
+        contextParts.push(`\n### Available Oils in Calculator:\n${oils.map(o => `- ${o.name} (SAP: ${o.sapNaOH})`).join('\n')}`);
+    }
+
+    // Check for specific oil mentions and add their data
+    if (soapCalculator) {
+        const oilPatterns = ['olive', 'coconut', 'palm', 'castor', 'shea', 'cocoa', 'avocado', 'sunflower', 'almond', 'lard', 'tallow'];
+        for (const oil of oilPatterns) {
+            if (input.includes(oil)) {
+                const oilData = soapCalculator.findOil(oil);
+                if (oilData) {
+                    result.hasCalculatorContext = true;
+                    contextParts.push(`\n### ${oilData.name} Properties:\nSAP NaOH: ${oilData.sapNaOH}\nProperties: ${JSON.stringify(oilData.properties || {})}`);
+                }
+            }
+        }
+    }
+
+    // Build final context string
+    if (contextParts.length > 0) {
+        result.context = `\n\n## RELEVANT KNOWLEDGE BASE CONTEXT:\n${contextParts.join('\n')}`;
+    }
+
+    console.log(`📚 RAG Context: ${result.topics.length} topics retrieved: [${result.topics.join(', ')}]`);
+    return result;
+}
+
+/**
+ * DEPRECATED: Search the comprehensive knowledge bank for relevant information
  * Returns a formatted response if found, null if no good match
+ * NOTE: This function is being phased out in favor of RAG architecture
  */
 function searchKnowledgeBank(userInput) {
     // If knowledge bank not loaded, return null to trigger API call
@@ -1565,33 +1620,32 @@ async function callGemini(messages) {
     }
 }
 
-// Main LLM call - tries direct API first, then backend proxy
-async function getLLMResponse(userMessage) {
-    // OPTION 1: Try direct Gemini API if user has configured their own key
-    if (aiConfig.hasDirectApiKey()) {
-        try {
-            console.log('🤖 Trying direct Gemini API...');
-            const response = await aiConfig.callGeminiDirect(userMessage);
-            return { response, provider: 'Gemini 2.5 Flash-Lite (Direct)' };
-        } catch (error) {
-            console.warn('Direct Gemini call failed, trying backend:', error.message);
-        }
+// Main LLM call - includes RAG context in prompt
+// RAG context is ALWAYS included to augment LLM knowledge
+async function getLLMResponse(userMessage, ragContext = null) {
+    // Build augmented user message with RAG context
+    let augmentedMessage = userMessage;
+    if (ragContext && ragContext.context) {
+        augmentedMessage = userMessage + ragContext.context;
+        console.log(`🧠 RAG-augmented prompt (topics: ${ragContext.topics.join(', ')})`);
     }
 
-    // OPTION 2: Try backend proxy (works from any protocol including file://)
-    try {
-        console.log('🌐 Trying backend proxy...');
-        const messages = [
-            { role: 'system', content: aiConfig.getSystemPrompt() },
-            ...conversationHistory,
-            { role: 'user', content: userMessage }
-        ];
-        const response = await callGemini(messages);
-        return { response, provider: 'Gemini 2.5 Flash' };
-    } catch (error) {
-        console.error('Backend proxy failed:', error.message);
-        throw new Error('AI service unavailable. Please try again later.');
+    // OPTION 1: Try direct Gemini API if user has configured their own key
+    if (aiConfig.hasDirectApiKey()) {
+        console.log('🤖 Trying direct Gemini API...');
+        const response = await aiConfig.callGeminiDirect(augmentedMessage);
+        return { response, provider: 'Gemini 2.5 Flash (Direct)' };
     }
+
+    // OPTION 2: Use backend proxy
+    console.log('🌐 Using backend proxy...');
+    const messages = [
+        { role: 'system', content: aiConfig.getSystemPrompt() },
+        ...conversationHistory,
+        { role: 'user', content: augmentedMessage }
+    ];
+    const response = await callGemini(messages);
+    return { response, provider: 'Gemini 2.5 Flash' };
 }
 
 // DOM elements
@@ -2887,16 +2941,11 @@ function findResponse(userInput) {
     };
 }
 
-// Direct API request - no rate limiting or artificial delays
-async function makeDirectRequest(userMessage) {
-    try {
-        // Make the API call directly without any delays
-        const result = await getLLMResponse(userMessage);
-        return result;
-    } catch (error) {
-        // Simply throw the error - no retry logic
-        throw error;
-    }
+// Direct API request with RAG context - no rate limiting or artificial delays
+async function makeDirectRequest(userMessage, ragContext = null) {
+    // Make the API call with RAG context
+    const result = await getLLMResponse(userMessage, ragContext);
+    return result;
 }
 
 // ===========================================
@@ -3115,8 +3164,8 @@ function extractRecipeFromAIResponse(text) {
 }
 
 // Handle sending messages
-// STRATEGY: Check recipe intent FIRST, then knowledge bank, then AI API
-// Recipe calculations should always take priority to ensure safety
+// RAG-FIRST ARCHITECTURE: LLM is the core response engine
+// Knowledge bank provides context to augment LLM, never replaces it
 async function sendMessage() {
     const userMessage = chatInput.value.trim();
 
@@ -3135,117 +3184,13 @@ async function sendMessage() {
     // Show typing indicator
     showTypingIndicator('Processing your request');
 
-    let messageDisplayed = false;
-
     try {
-        // STEP 0: Check for follow-up questions that reference previous context
-        const followUpResult = checkFollowUpQuestion(userMessage.toLowerCase());
-        if (followUpResult) {
-            console.log('✅ Follow-up question detected - using context');
-            lastResponseSource = 'context';
-
-            removeTypingIndicator();
-            addMessage(followUpResult.response, true, followUpResult.category);
-            messageDisplayed = true;
-
-            // Update context tracking
-            updateConversationContext(followUpResult.category, userMessage);
-
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: followUpResult.response });
-
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
-
-            return; // Done - follow-up handled!
-        }
-
-        // STEP 1: Check for recipe intent FIRST (highest priority for safety!)
-        // This must happen BEFORE knowledge bank to prevent oil names triggering info lookups
-        const recipeResult = checkRecipeIntent(userMessage);
-
-        if (recipeResult) {
-            console.log('✅ Recipe intent detected - using calculator');
-            lastResponseSource = 'calculator';
-
-            removeTypingIndicator();
-            addMessage(recipeResult.response, true, recipeResult.category);
-            messageDisplayed = true;
-
-            // Update context tracking
-            updateConversationContext(recipeResult.category, userMessage);
-
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: recipeResult.response });
-
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
-
-            return; // Done - recipe handled locally!
-        }
-
-        // STEP 2: Check local knowledge bank (saves API tokens!)
-        updateTypingIndicator('Searching knowledge base');
-        const knowledgeBankResult = searchKnowledgeBank(userMessage);
-
-        if (knowledgeBankResult) {
-            // Found answer in knowledge bank - no API call needed!
-            console.log('✅ Answer found in knowledge bank - saving API tokens!');
-            lastResponseSource = 'knowledge_bank';
-
-            removeTypingIndicator();
-
-            // Add response with category badge
-            addMessage(knowledgeBankResult.response, true, knowledgeBankResult.category);
-            messageDisplayed = true;
-
-            // Update context tracking
-            updateConversationContext(knowledgeBankResult.category, userMessage);
-
-            // Update conversation history for context
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: knowledgeBankResult.response });
-
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
-
-            return; // Done - no API call needed!
-        }
-
-        // STEP 3: Check legacy findResponse for special commands (save recipe, view recipes, etc.)
-        const legacyResult = findResponse(userMessage);
-
-        // If legacy findResponse found something other than the default "That's a great question" response
-        if (legacyResult.category !== null) {
-            console.log('✅ Answer found in legacy knowledge - saving API tokens!');
-            lastResponseSource = 'local';
-
-            removeTypingIndicator();
-            addMessage(legacyResult.response, true, legacyResult.category);
-            messageDisplayed = true;
-
-            // Update context tracking
-            updateConversationContext(legacyResult.category, userMessage);
-
-            conversationHistory.push({ role: 'user', content: userMessage });
-            conversationHistory.push({ role: 'assistant', content: legacyResult.response });
-
-            if (conversationHistory.length > 20) {
-                conversationHistory = conversationHistory.slice(-20);
-            }
-
-            return; // Done - no API call needed!
-        }
-
-        // STEP 4: Check if question is soap-related before using AI tokens
+        // STEP 1: Off-topic filter (saves tokens on irrelevant questions)
         if (!isSoapRelatedQuestion(userMessage)) {
             console.log('🚫 Off-topic question detected - not using AI tokens');
             removeTypingIndicator();
 
-            const offTopicResponse = `**I'm a soap making assistant!** 🧼\n\n` +
+            const offTopicResponse = `**I'm a soap making assistant!**\n\n` +
                 `I can only help with soap-related topics like:\n` +
                 `- **Recipes**: "Create a beginner soap recipe"\n` +
                 `- **Techniques**: "What is cold process vs hot process?"\n` +
@@ -3255,12 +3200,16 @@ async function sendMessage() {
                 `What would you like to know about soap making?`;
 
             addMessage(offTopicResponse, true);
-            messageDisplayed = true;
             return;
         }
 
-        // STEP 5: Question is soap-related - call AI API
-        console.log('🤖 Soap-related question - calling AI API...');
+        // STEP 2: Retrieve RAG context from knowledge bank
+        updateTypingIndicator('Gathering context');
+        const ragContext = retrieveRAGContext(userMessage);
+        console.log(`📚 RAG context retrieved: ${ragContext.topics.length} topics`);
+
+        // STEP 3: Call Gemini API with RAG-augmented prompt (ALWAYS for soap questions)
+        console.log('🤖 Calling Gemini API with RAG context...');
         updateTypingIndicator('AI is thinking');
         lastResponseSource = 'api';
 
@@ -3276,7 +3225,7 @@ async function sendMessage() {
 
         let aiResult;
         try {
-            aiResult = await makeDirectRequest(userMessage);
+            aiResult = await makeDirectRequest(userMessage, ragContext);
         } finally {
             clearTimeout(wakeUpTimer);
             clearTimeout(longWaitTimer);
@@ -3284,14 +3233,13 @@ async function sendMessage() {
 
         removeTypingIndicator();
 
-        // POST-PROCESS: Check if AI response contains a recipe suggestion that should be calculated
+        // STEP 4: Post-process - run calculator if AI suggests a recipe
         const processedResponse = await processAIResponseForRecipe(aiResult.response, userMessage);
 
         // Add response (markdown will be rendered in addMessage)
         addMessage(processedResponse, true);
-        messageDisplayed = true;
 
-        // Update conversation history (keep last 10 messages for context)
+        // Update conversation history
         conversationHistory.push({ role: 'user', content: userMessage });
         conversationHistory.push({ role: 'assistant', content: aiResult.response });
 
@@ -3299,27 +3247,19 @@ async function sendMessage() {
             conversationHistory = conversationHistory.slice(-20);
         }
     } catch (error) {
+        // NO FALLBACKS - show the actual error so we can fix issues
         console.error('❌ Error in sendMessage:', error);
         console.error('📋 Error details:', {
             message: error.message,
             stack: error.stack,
-            messageDisplayed: messageDisplayed,
-            aiConfigExists: !!aiConfig,
-            apiKey: aiConfig ? (aiConfig.getApiKey() ? 'Present' : 'Missing') : 'No config'
+            aiConfigExists: !!aiConfig
         });
         removeTypingIndicator();
 
-        // If the message was already displayed successfully, don't show error to user
-        if (messageDisplayed) {
-            console.error('Error occurred after message was displayed - not showing error to user');
-            return; // Exit early - message was already shown successfully
-        }
-
-        // Generate user-friendly error message
-        const errorResponse = generateUserFriendlyError(error, userMessage);
-
-        // Show error with fallback response
-        addMessage(errorResponse, true, 'error');
+        // Show actual error to user (no hiding behind fake helpful responses)
+        const errorMessage = `**Error:** ${error.message}\n\n` +
+            `Please try again. If this persists, check the browser console for details.`;
+        addMessage(errorMessage, true, 'error');
     } finally {
         // Re-enable input
         chatInput.disabled = false;

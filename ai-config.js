@@ -12,7 +12,7 @@ class AIConfig {
         this.defaultGeminiKey = null; // Key is on backend, not in frontend code
 
         // Model settings
-        this.geminiModel = 'gemini-2.5-flash-lite'; // Best free tier limits (1000 req/day)
+        this.geminiModel = 'gemini-2.5-flash'; // Stable model - best price-performance
 
         // System prompt for soap making assistant
         this.systemPrompt = `You are a knowledgeable and friendly soap making assistant for Saponify AI, powered by a comprehensive soap calculator engine similar to SoapCalc.net. You help users with:
