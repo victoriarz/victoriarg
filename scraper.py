@@ -4,9 +4,12 @@ THE AI CHRONICLE - News Scraper and Knowledge Graph Builder
 Aggregates AI news from multiple sources and builds a knowledge graph.
 
 Usage:
-    python scraper.py                    # Full scrape with AI summarization
+    python scraper.py                    # Full scrape with AI summarization (requires GEMINI_API_KEY)
     python scraper.py --no-ai            # Scrape without AI (for testing)
     python scraper.py --days 7           # Scrape last 7 days
+
+Environment Variables:
+    GEMINI_API_KEY                       # Optional: For AI-generated article summaries
 """
 
 import os
@@ -37,7 +40,7 @@ RSS_FEEDS = {
 }
 
 HACKER_NEWS_API = "https://hn.algolia.com/api/v1/search_by_date"
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
 # Known entities for extraction
 KNOWN_ORGS = [
@@ -212,25 +215,21 @@ def clean_html(text: str) -> str:
     return text.strip()
 
 # ============================================
-# AI Summarization (Claude API)
+# AI Summarization (Gemini API)
 # ============================================
 
-def summarize_with_claude(articles: List[Dict], api_key: str) -> List[Dict]:
-    """Use Claude API to generate summaries for articles."""
+def summarize_with_gemini(articles: List[Dict], api_key: str) -> List[Dict]:
+    """Use Gemini API to generate summaries for articles."""
     if not api_key:
         print("No API key provided, skipping AI summarization")
         return articles
-    
-    headers = {
-        "x-api-key": api_key,
-        "content-type": "application/json",
-        "anthropic-version": "2023-06-01"
-    }
-    
+
+    url = f"{GEMINI_API_URL}?key={api_key}"
+
     for article in articles:
         if article.get("summary") and len(article["summary"]) > 100:
             continue  # Already has a good summary
-        
+
         try:
             prompt = f"""Summarize this AI news article in 1-2 sentences (max 200 characters). Focus on the key technical contribution or announcement.
 
@@ -240,24 +239,29 @@ Content: {article.get('summary', 'No content available')}
 Summary:"""
 
             payload = {
-                "model": "claude-3-haiku-20240307",
-                "max_tokens": 150,
-                "messages": [{"role": "user", "content": prompt}]
+                "contents": [{
+                    "parts": [{"text": prompt}]
+                }],
+                "generationConfig": {
+                    "temperature": 0.3,
+                    "maxOutputTokens": 150
+                }
             }
-            
-            response = requests.post(ANTHROPIC_API_URL, headers=headers, json=payload, timeout=30)
-            
+
+            response = requests.post(url, json=payload, timeout=30)
+
             if response.status_code == 200:
                 result = response.json()
-                summary = result["content"][0]["text"].strip()
-                article["summary"] = summary
-                print(f"  Summarized: {article['title'][:50]}...")
+                summary = result.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
+                if summary:
+                    article["summary"] = summary
+                    print(f"  Summarized: {article['title'][:50]}...")
             else:
                 print(f"  API error for {article['title'][:30]}: {response.status_code}")
-                
+
         except Exception as e:
             print(f"  Error summarizing: {e}")
-    
+
     return articles
 
 # ============================================
@@ -494,11 +498,11 @@ def main():
     # AI Summarization
     print("\n[3/4] AI Summarization...")
     if not args.no_ai:
-        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        api_key = os.environ.get("GEMINI_API_KEY")
         if api_key:
-            unique_articles = summarize_with_claude(unique_articles, api_key)
+            unique_articles = summarize_with_gemini(unique_articles, api_key)
         else:
-            print("  ANTHROPIC_API_KEY not set, skipping summarization")
+            print("  GEMINI_API_KEY not set, skipping summarization")
     else:
         print("  Skipped (--no-ai flag)")
     
