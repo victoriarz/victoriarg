@@ -81,10 +81,13 @@ class AIChronicleApp {
         document.getElementById('edgeCount').textContent = this.data.edges.length;
         document.getElementById('articleCount').textContent = stats.articles;
         
-        // Format last updated
+        // Format last updated with date and time
         const lastUpdated = new Date(this.data.metadata.lastUpdated);
-        const options = { month: 'short', day: 'numeric' };
-        document.getElementById('lastUpdated').textContent = lastUpdated.toLocaleDateString('en-US', options);
+        const dateOptions = { month: 'short', day: 'numeric' };
+        const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+        const dateStr = lastUpdated.toLocaleDateString('en-US', dateOptions);
+        const timeStr = lastUpdated.toLocaleTimeString('en-US', timeOptions);
+        document.getElementById('lastUpdated').textContent = `${dateStr}, ${timeStr}`;
     }
     
     populateTrending() {
