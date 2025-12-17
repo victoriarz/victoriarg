@@ -1145,7 +1145,7 @@
                     <div class="project-tech">
                         <span class="tech-tag">Knowledge Graphs</span>
                         <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Claude API</span>
+                        <span class="tech-tag">Gemini API</span>
                         <span class="tech-tag">GitHub Actions</span>
                         <span class="tech-tag">Canvas</span>
                         <span class="tech-tag">RSS Aggregation</span>
@@ -1297,7 +1297,7 @@
             <section id="project-overview">
                 <div class="section-frame pixel-border">
                     <h2>Overview</h2>
-                    <p>An AI-powered knowledge graph that automatically aggregates, summarizes, and visualizes connections between the latest developments in artificial intelligence. Updated daily from arXiv, Hacker News, and leading AI research blogs.</p>
+                    <p>AI Chronicles is a living knowledge graph that maps the AI landscape in real-time. Every day, it automatically scrapes 100+ articles from arXiv research papers, Hacker News discussions, and leading AI company blogs. Using Gemini AI, it extracts entities (organizations, models, topics) and builds a force-directed graph showing how ideas, companies, and technologies connect. Explore trending topics, discover relationships between research papers, and stay current on AI developments—all updated automatically via GitHub Actions.</p>
                 </div>
             </section>
 
@@ -1307,19 +1307,19 @@
                     <div class="features-grid">
                         <div class="feature-card">
                             <h3>Automated Aggregation</h3>
-                            <p>Daily collection of AI news from multiple sources including arXiv papers, Hacker News, and tech blogs via RSS and API integrations.</p>
+                            <p>Scrapes 8+ RSS feeds daily: arXiv (cs.AI, cs.LG, cs.CL), OpenAI, Google AI, Hugging Face, Anthropic, and MIT Tech Review. Also queries Hacker News API for trending AI discussions.</p>
                         </div>
                         <div class="feature-card">
                             <h3>AI Summarization</h3>
-                            <p>Claude API-powered summarization extracts key topics, organizations, and AI models from each article for structured knowledge representation.</p>
+                            <p>Gemini 2.0 Flash generates concise summaries for articles. Entity extraction identifies 20+ AI organizations, 20+ models, and 13 topic categories from article text.</p>
                         </div>
                         <div class="feature-card">
                             <h3>Knowledge Graph</h3>
-                            <p>Interactive visualization of relationships between articles, topics, organizations, and AI models using force-directed graph layout.</p>
+                            <p>HTML5 Canvas renders a force-directed physics simulation with 150+ nodes and 200+ edges. Four node types (articles, topics, orgs, models) are color-coded and sized by importance.</p>
                         </div>
                         <div class="feature-card">
                             <h3>Trend Detection</h3>
-                            <p>Identifies trending topics and emerging themes in AI based on connection frequency and recency across the knowledge graph.</p>
+                            <p>Nodes are scored by recency, Hacker News points, and connection count. The graph intelligently displays the top 50 most relevant nodes, highlighting trending topics.</p>
                         </div>
                     </div>
                 </div>
@@ -1329,11 +1329,12 @@
                 <div class="section-frame pixel-border">
                     <h2>Technology Stack</h2>
                     <ul class="tech-stack-list">
-                        <li><strong>AI Integration:</strong> Claude API for intelligent content summarization and entity extraction</li>
-                        <li><strong>Automation:</strong> GitHub Actions for scheduled daily data collection and processing</li>
-                        <li><strong>Visualization:</strong> HTML5 Canvas for interactive graph rendering with force-directed layout</li>
-                        <li><strong>Data Sources:</strong> RSS aggregation from arXiv, Hacker News API, and tech blog feeds</li>
-                        <li><strong>Backend:</strong> Python for data processing and knowledge graph construction</li>
+                        <li><strong>Data Pipeline:</strong> Python scraper with feedparser for RSS, requests for APIs, and intelligent entity extraction</li>
+                        <li><strong>AI Integration:</strong> Gemini 2.0 Flash API for article summarization (optional, works without it)</li>
+                        <li><strong>Visualization:</strong> HTML5 Canvas with custom force-directed physics (repulsion, attraction, damping, gravity)</li>
+                        <li><strong>Automation:</strong> GitHub Actions runs daily at 6 AM UTC, auto-commits updates to the knowledge graph</li>
+                        <li><strong>Data Sources:</strong> arXiv RSS (3 feeds), Hacker News Algolia API, 5 AI company blog feeds</li>
+                        <li><strong>Frontend:</strong> Vanilla JavaScript with pixel-art UI, responsive grid layout, real-time stats</li>
                     </ul>
                 </div>
             </section>
