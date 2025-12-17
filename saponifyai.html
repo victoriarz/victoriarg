@@ -278,12 +278,12 @@
 
         .bubble-1 { width: 20px; height: 20px; left: 10%; animation: rise1 14s ease-in-out infinite; }
         .bubble-2 { width: 14px; height: 14px; left: 25%; animation: rise2 18s ease-in-out infinite 2s; }
-        .bubble-3 { width: 10px; height: 10px; left: 45%; animation: rise3 12s ease-in-out infinite 4s; }
+        .bubble-3 { width: 10px; height: 10px; left: 45%; animation: risePop1 8s ease-in-out infinite 4s; }
         .bubble-4 { width: 16px; height: 16px; left: 65%; animation: rise1 16s ease-in-out infinite 1s; }
-        .bubble-5 { width: 8px; height: 8px; left: 80%; animation: rise2 10s ease-in-out infinite 6s; }
+        .bubble-5 { width: 8px; height: 8px; left: 80%; animation: risePop2 7s ease-in-out infinite 6s; }
         .bubble-6 { width: 12px; height: 12px; left: 35%; animation: rise3 14s ease-in-out infinite 3s; }
         .bubble-7 { width: 18px; height: 18px; left: 90%; animation: rise1 20s ease-in-out infinite 5s; }
-        .bubble-8 { width: 6px; height: 6px; left: 55%; animation: rise2 12s ease-in-out infinite 8s; }
+        .bubble-8 { width: 6px; height: 6px; left: 55%; animation: risePop3 9s ease-in-out infinite 8s; }
 
         @keyframes rise1 {
             0% { bottom: -20px; opacity: 0; transform: translateX(0); }
@@ -307,6 +307,34 @@
             50% { opacity: 0.6; transform: translateX(10px); }
             90% { opacity: 0.3; }
             100% { bottom: 100%; opacity: 0; transform: translateX(-5px); }
+        }
+
+        /* Popping bubble animations - bubble rises then pops */
+        @keyframes risePop1 {
+            0% { bottom: -20px; opacity: 0; transform: translateX(0) scale(1); }
+            10% { opacity: 0.5; }
+            40% { opacity: 0.6; transform: translateX(12px) scale(1); bottom: 40%; }
+            45% { opacity: 0.8; transform: translateX(12px) scale(1.5); }
+            50% { opacity: 0; transform: translateX(12px) scale(2); }
+            100% { opacity: 0; bottom: 40%; transform: translateX(12px) scale(0); }
+        }
+
+        @keyframes risePop2 {
+            0% { bottom: -20px; opacity: 0; transform: translateX(0) scale(1); }
+            10% { opacity: 0.5; }
+            55% { opacity: 0.6; transform: translateX(-15px) scale(1); bottom: 60%; }
+            60% { opacity: 0.8; transform: translateX(-15px) scale(1.6); }
+            65% { opacity: 0; transform: translateX(-15px) scale(2.2); }
+            100% { opacity: 0; bottom: 60%; transform: translateX(-15px) scale(0); }
+        }
+
+        @keyframes risePop3 {
+            0% { bottom: -20px; opacity: 0; transform: translateX(0) scale(1); }
+            10% { opacity: 0.5; }
+            70% { opacity: 0.5; transform: translateX(8px) scale(1); bottom: 75%; }
+            75% { opacity: 0.7; transform: translateX(8px) scale(1.4); }
+            80% { opacity: 0; transform: translateX(8px) scale(1.8); }
+            100% { opacity: 0; bottom: 75%; transform: translateX(8px) scale(0); }
         }
 
         .section-title {
