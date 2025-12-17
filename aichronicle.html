@@ -591,10 +591,63 @@
             overflow-y: auto;
         }
 
-        /* Larger details panel for selected node */
-        #nodeInfoContent {
-            max-height: 350px;
-            padding: 20px;
+        /* Details Panel (below graph) */
+        .details-panel {
+            background: var(--tan);
+            border-top: 3px solid var(--dark-brown);
+        }
+
+        .details-header {
+            padding: 12px 20px;
+            background: var(--cream);
+            border-bottom: 2px solid var(--dark-brown);
+        }
+
+        .details-header h3 {
+            font-size: 14px;
+            margin: 0;
+            color: var(--dark-brown);
+        }
+
+        .details-content {
+            padding: 20px 25px;
+            min-height: 80px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .details-content .placeholder-text {
+            font-size: 20px;
+        }
+
+        .details-content .node-info-title {
+            font-size: 24px;
+        }
+
+        .details-content .node-info-summary {
+            font-size: 20px;
+            line-height: 1.7;
+        }
+
+        .details-content .node-info-meta {
+            font-size: 18px;
+        }
+
+        .details-content .node-info-link {
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+
+        .details-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .details-content::-webkit-scrollbar-track {
+            background: var(--cream);
+        }
+
+        .details-content::-webkit-scrollbar-thumb {
+            background: var(--brown);
         }
 
         .card-content::-webkit-scrollbar {
@@ -1221,20 +1274,19 @@
                             <span>Model</span>
                         </div>
                     </div>
+                    <!-- Details Panel (below graph) -->
+                    <div class="details-panel" id="nodeInfoCard">
+                        <div class="details-header">
+                            <h3>📋 ARTICLE DETAILS</h3>
+                        </div>
+                        <div class="details-content" id="nodeInfoContent">
+                            <p class="placeholder-text">Click a node to view details</p>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Sidebar Panel -->
                 <aside class="sidebar-panel">
-                    <!-- Selected Node Info -->
-                    <section class="info-card" id="nodeInfoCard">
-                        <div class="card-header">
-                            <h3>📋 DETAILS</h3>
-                        </div>
-                        <div class="card-content" id="nodeInfoContent">
-                            <p class="placeholder-text">Click a node to view details</p>
-                        </div>
-                    </section>
-
                     <!-- Trending Topics -->
                     <section class="info-card">
                         <div class="card-header">
