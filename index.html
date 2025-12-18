@@ -474,8 +474,8 @@
 
         .contact-btn {
             display: inline-block;
-            background: var(--accent);
-            color: var(--cream);
+            background: #d4a574;
+            color: var(--dark-brown);
             padding: 15px 30px;
             text-decoration: none;
             font-size: 20px;
@@ -491,11 +491,48 @@
             box-shadow:
                 0 0 0 3px var(--dark-brown),
                 0 3px 0 3px var(--dark-brown);
-            background: var(--gold);
+            background: #c89563;
         }
 
         .contact-btn.secondary {
-            background: var(--blue);
+            background: var(--tan);
+            color: var(--dark-brown);
+        }
+
+        /* Quick CTA after projects */
+        .quick-cta {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .quick-cta-text {
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            color: var(--dark-brown);
+            margin-bottom: 15px;
+        }
+
+        .quick-cta-btn {
+            display: inline-block;
+            background: #d4a574;
+            color: var(--dark-brown);
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow:
+                0 0 0 2px var(--dark-brown),
+                0 4px 0 2px var(--dark-brown);
+            transition: all 0.1s;
+        }
+
+        .quick-cta-btn:hover {
+            transform: translateY(2px);
+            box-shadow:
+                0 0 0 2px var(--dark-brown),
+                0 2px 0 2px var(--dark-brown);
+            background: #c89563;
         }
 
         /* Footer */
@@ -748,26 +785,6 @@
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav aria-label="Main navigation">
-            <div class="nav-frame pixel-border">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link" aria-current="page">🏠 Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="projects.html" class="nav-link">⚡ Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="about.html" class="nav-link">👤 About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="contact.html" class="nav-link">📧 Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
         <!-- Projects Section -->
         <section id="projects" class="projects-section" aria-labelledby="projects-heading">
             <div class="section-frame pixel-border">
@@ -778,7 +795,7 @@
                         <span class="project-badge new">NEW</span>
                         <div class="project-title">AI Chronicles</div>
                         <div class="project-description">
-                            AI-powered news aggregation platform that curates and visualizes trending AI stories using knowledge graphs and automated content analysis.
+                            Automated pipeline ingesting 100+ AI articles daily via GitHub Actions. Extracts entities (orgs, models, topics) using Gemini API and visualizes connections in a force-directed knowledge graph.
                         </div>
                         <div class="tech-tags">
                             <span class="tech-tag">Knowledge Graphs</span>
@@ -791,7 +808,7 @@
                         <span class="project-badge new">NEW</span>
                         <div class="project-title">Saponify AI</div>
                         <div class="project-description">
-                            AI-powered application leveraging natural language processing and prompt engineering to create efficient workflows and transform concepts into deployable solutions.
+                            RAG-powered chemistry assistant with safety-critical lye calculations. Custom calculator engine processes 19+ oils with verified SAP values, paired with Claude/Gemini for domain-specific Q&A.
                         </div>
                         <div class="tech-tags">
                             <span class="tech-tag">Claude Code</span>
@@ -805,7 +822,7 @@
                         <span class="project-badge new">NEW</span>
                         <div class="project-title">Culinary Graph</div>
                         <div class="project-description">
-                            Knowledge graph-powered recipe discovery platform using Neo4j to model complex relationships between ingredients, recipes, and cuisines for intelligent recommendations.
+                            Knowledge graph modeling 275+ ingredients with substitution logic, dietary filters, and confidence-scored recommendations. Interactive Cytoscape.js visualization with real-time filtering.
                         </div>
                         <div class="tech-tags">
                             <span class="tech-tag">Knowledge Graphs</span>
@@ -841,6 +858,32 @@
                 </div>
             </div>
         </section>
+
+        <!-- Quick CTA -->
+        <div class="quick-cta">
+            <p class="quick-cta-text">Interested in working together?</p>
+            <a href="mailto:v-ruiz@outlook.com" class="quick-cta-btn">Get in Touch</a>
+        </div>
+
+        <!-- Navigation -->
+        <nav aria-label="Main navigation">
+            <div class="nav-frame pixel-border">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link" aria-current="page">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="projects.html" class="nav-link">⚡ Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">👤 About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">📧 Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
         <!-- Skills Section -->
         <section id="skills" aria-labelledby="skills-heading">
