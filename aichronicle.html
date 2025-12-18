@@ -202,6 +202,87 @@
 
         #project-detail-hero .section-frame {
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glowing Nodes Animation */
+        .nodes-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--dark-brown);
+            border-radius: 50%;
+            animation: node-glow 3s ease-in-out infinite;
+        }
+
+        .node::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(122, 101, 80, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .node:nth-child(1) { left: 15%; top: 25%; animation-delay: 0s; }
+        .node:nth-child(2) { left: 75%; top: 20%; animation-delay: 0.5s; }
+        .node:nth-child(3) { left: 30%; top: 60%; animation-delay: 1s; }
+        .node:nth-child(4) { left: 85%; top: 55%; animation-delay: 1.5s; }
+        .node:nth-child(5) { left: 50%; top: 35%; animation-delay: 2s; }
+        .node:nth-child(6) { left: 20%; top: 80%; animation-delay: 2.5s; }
+        .node:nth-child(7) { left: 65%; top: 75%; animation-delay: 0.3s; }
+        .node:nth-child(8) { left: 45%; top: 15%; animation-delay: 1.8s; }
+
+        @keyframes node-glow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 5px var(--brown), 0 0 10px rgba(122, 101, 80, 0.3);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.3);
+                box-shadow: 0 0 15px var(--brown), 0 0 30px rgba(122, 101, 80, 0.5);
+                opacity: 1;
+            }
+        }
+
+        /* Connection lines between nodes */
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brown), transparent);
+            opacity: 0.3;
+            transform-origin: left center;
+            animation: connection-pulse 4s ease-in-out infinite;
+        }
+
+        .connection:nth-child(9) { left: 17%; top: 27%; width: 120px; transform: rotate(25deg); animation-delay: 0s; }
+        .connection:nth-child(10) { left: 32%; top: 62%; width: 150px; transform: rotate(-20deg); animation-delay: 1s; }
+        .connection:nth-child(11) { left: 52%; top: 37%; width: 100px; transform: rotate(45deg); animation-delay: 2s; }
+        .connection:nth-child(12) { left: 67%; top: 76%; width: 80px; transform: rotate(-35deg); animation-delay: 0.5s; }
+        .connection:nth-child(13) { left: 22%; top: 82%; width: 130px; transform: rotate(15deg); animation-delay: 1.5s; }
+
+        @keyframes connection-pulse {
+            0%, 100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
 
         .section-title {
@@ -1191,6 +1272,21 @@
                         <span class="tech-tag">GitHub Actions</span>
                         <span class="tech-tag">Canvas</span>
                         <span class="tech-tag">RSS Aggregation</span>
+                    </div>
+                    <div class="nodes-container">
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="node"></div>
+                        <div class="connection"></div>
+                        <div class="connection"></div>
+                        <div class="connection"></div>
+                        <div class="connection"></div>
+                        <div class="connection"></div>
                     </div>
                 </div>
             </section>
