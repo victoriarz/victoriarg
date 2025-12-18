@@ -269,8 +269,9 @@
 
             console.log('Graph initialized successfully with', cy.nodes().length, 'nodes');
 
-            // Show all ingredients by default (no filter)
-            cy.fit(null, 30);
+            // Show only connected ingredients by default
+            showConnectedIngredients();
+            cy.fit(cy.nodes(':visible'), 30);
 
             // Node click event
             cy.on('tap', 'node', function(evt) {
@@ -860,6 +861,31 @@
 
         cy.fit();
         console.log('Applied main ingredients filter. Showing', mainIngredients.length, 'main ingredients');
+    }
+
+    function showConnectedIngredients() {
+        if (!cy) return;
+
+        // Find all nodes that have at least one edge
+        const connectedNodeIds = new Set();
+        cy.edges().forEach(edge => {
+            connectedNodeIds.add(edge.source().id());
+            connectedNodeIds.add(edge.target().id());
+        });
+
+        // Show only connected nodes
+        cy.nodes().forEach(node => {
+            if (connectedNodeIds.has(node.id())) {
+                node.show();
+            } else {
+                node.hide();
+            }
+        });
+
+        // Show all edges (they connect visible nodes by definition)
+        cy.edges().show();
+
+        console.log('Showing', connectedNodeIds.size, 'connected ingredients');
     }
 
     function revealIngredientInGraph(ingredientId) {
