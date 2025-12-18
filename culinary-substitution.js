@@ -24,6 +24,12 @@
         const findButton = document.getElementById('findSubstitute');
         const suggestionPills = document.querySelectorAll('.suggestion-pill');
 
+        // Skip setup if elements don't exist (substitution finder was removed)
+        if (!findButton || !searchInput) {
+            console.log('Substitution finder elements not found - skipping setup');
+            return;
+        }
+
         // Search button click
         findButton.addEventListener('click', function() {
             const ingredient = searchInput.value.trim().toLowerCase();
