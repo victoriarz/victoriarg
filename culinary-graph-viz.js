@@ -1344,17 +1344,22 @@
 
     // Graph-to-Chat integration: populate chat with suggestion when clicking a node
     function populateChatWithIngredient(ingredientName) {
-        const chatInput = document.getElementById('culinaryInput');
+        const chatInput = document.getElementById('chatInput');
         const chatSection = document.getElementById('culinary-chat-demo');
+
+        // Scroll to chat section first
+        if (chatSection) {
+            chatSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Then populate and focus the input
         if (chatInput) {
             chatInput.value = `What can I substitute for ${ingredientName}?`;
-            chatInput.focus();
-            // Trigger input event to update any UI that depends on it
-            chatInput.dispatchEvent(new Event('input', { bubbles: true }));
-            // Scroll to chat section
-            if (chatSection) {
-                chatSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            // Small delay to ensure scroll completes before focus
+            setTimeout(() => {
+                chatInput.focus();
+                chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }, 300);
         }
     }
 
