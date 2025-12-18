@@ -143,6 +143,7 @@
                         'background-color': function(ele) {
                             return getCategoryColor(ele.data('category'));
                         },
+                        'background-opacity': 0.9,
                         'label': 'data(label)',
                         'color': '#3d2e1f',
                         'font-size': getFontSize(),
@@ -152,9 +153,24 @@
                         'width': getNodeSize(),
                         'height': getNodeSize(),
                         'border-width': '2px',
-                        'border-color': '#e8dfd2',
+                        'border-color': function(ele) {
+                            // Darker border based on category color
+                            const color = getCategoryColor(ele.data('category'));
+                            return darkenColor(color, 20);
+                        },
                         'text-wrap': 'wrap',
-                        'text-max-width': '80px'
+                        'text-max-width': '80px',
+                        'overlay-padding': '6px',
+                        'overlay-opacity': 0,
+                        'transition-property': 'background-opacity, border-width, overlay-opacity, width, height',
+                        'transition-duration': '0.2s'
+                    }
+                },
+                {
+                    selector: 'node:active',
+                    style: {
+                        'overlay-opacity': 0.2,
+                        'overlay-color': '#d97642'
                     }
                 },
                 {
@@ -162,14 +178,37 @@
                     style: {
                         'border-width': '4px',
                         'border-color': '#d97642',
-                        'background-color': '#f5ede3'
+                        'background-opacity': 1,
+                        'overlay-opacity': 0.15,
+                        'overlay-color': '#d97642',
+                        'z-index': 999
                     }
                 },
                 {
                     selector: 'node.highlighted',
                     style: {
                         'border-width': '3px',
-                        'border-color': '#7fa563'
+                        'border-color': '#7fa563',
+                        'background-opacity': 1,
+                        'overlay-opacity': 0.1,
+                        'overlay-color': '#7fa563'
+                    }
+                },
+                {
+                    selector: 'node.dimmed',
+                    style: {
+                        'opacity': 0.3
+                    }
+                },
+                {
+                    selector: 'node.hovered',
+                    style: {
+                        'border-width': '3px',
+                        'border-color': '#c17f59',
+                        'background-opacity': 1,
+                        'overlay-opacity': 0.12,
+                        'overlay-color': '#c17f59',
+                        'z-index': 998
                     }
                 },
                 // Edge styles
@@ -344,6 +383,16 @@
             'vegetable': '#98fb98'
         };
         return colors[category] || '#f5ede3';
+    }
+
+    // Darken a hex color by a percentage
+    function darkenColor(hex, percent) {
+        const num = parseInt(hex.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = Math.max(0, (num >> 16) - amt);
+        const G = Math.max(0, ((num >> 8) & 0x00FF) - amt);
+        const B = Math.max(0, (num & 0x0000FF) - amt);
+        return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
     }
 
     function getEdgeColor(type) {
@@ -1182,7 +1231,7 @@
         const edgeTooltip = document.getElementById('edgeTooltip');
         if (!tooltip) return;
 
-        // Node hover tooltip
+        // Node hover tooltip and glow effect
         cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeData = node.data();
@@ -1190,6 +1239,9 @@
             const dietary = nodeData.dietary && nodeData.dietary.length > 0
                 ? nodeData.dietary.join(', ')
                 : 'No restrictions';
+
+            // Add hover glow effect
+            node.addClass('hovered');
 
             tooltip.innerHTML = `
                 <div class="tooltip-category">${icon} ${formatCategory(nodeData.category)}</div>
@@ -1219,7 +1271,8 @@
             tooltip.style.top = tooltipY + 'px';
         });
 
-        cy.on('mouseout', 'node', function() {
+        cy.on('mouseout', 'node', function(evt) {
+            evt.target.removeClass('hovered');
             tooltip.classList.remove('visible');
         });
 

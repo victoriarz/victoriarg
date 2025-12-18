@@ -1314,9 +1314,19 @@
         .graph-container {
             flex-grow: 1;
             min-height: 600px;
-            background: var(--cream);
+            background:
+                radial-gradient(circle at 50% 50%, rgba(160, 194, 128, 0.25) 0%, transparent 60%),
+                linear-gradient(90deg, rgba(122, 101, 80, 0.06) 1px, transparent 1px),
+                linear-gradient(rgba(122, 101, 80, 0.06) 1px, transparent 1px),
+                var(--cream);
+            background-size: 100% 100%, 24px 24px, 24px 24px, 100% 100%;
             border: 4px solid var(--dark-brown);
             position: relative;
+            cursor: grab;
+        }
+
+        .graph-container:active {
+            cursor: grabbing;
         }
 
         .graph-loading {
@@ -2226,7 +2236,7 @@
     <script src="culinary-graph-engine.js?v=1.2.0"></script>
 
     <!-- Graph Visualization Engine -->
-    <script src="culinary-graph-viz.js?v=1.2.1"></script>
+    <script src="culinary-graph-viz.js?v=1.3.0"></script>
 
     <!-- Substitution Finder Engine (with AI) -->
     <script src="culinary-substitution.js?v=1.2.0"></script>
