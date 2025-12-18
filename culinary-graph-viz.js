@@ -269,9 +269,8 @@
 
             console.log('Graph initialized successfully with', cy.nodes().length, 'nodes');
 
-            // Show only connected ingredients by default
+            // Focus view on connected ingredients by default
             showConnectedIngredients();
-            cy.fit(cy.nodes(':visible'), 30);
 
             // Node click event
             cy.on('tap', 'node', function(evt) {
@@ -873,19 +872,15 @@
             connectedNodeIds.add(edge.target().id());
         });
 
-        // Show only connected nodes
-        cy.nodes().forEach(node => {
-            if (connectedNodeIds.has(node.id())) {
-                node.show();
-            } else {
-                node.hide();
-            }
-        });
+        // Get connected nodes to fit view to them (don't hide anything)
+        const connectedNodes = cy.nodes().filter(node => connectedNodeIds.has(node.id()));
 
-        // Show all edges (they connect visible nodes by definition)
-        cy.edges().show();
+        // Fit view to connected nodes only
+        if (connectedNodes.length > 0) {
+            cy.fit(connectedNodes, 30);
+        }
 
-        console.log('Showing', connectedNodeIds.size, 'connected ingredients');
+        console.log('Focused on', connectedNodeIds.size, 'connected ingredients');
     }
 
     function revealIngredientInGraph(ingredientId) {
