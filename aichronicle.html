@@ -532,32 +532,65 @@
         .graph-legend {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            padding: 12px 20px;
-            background: var(--tan);
+            gap: 24px;
+            padding: 14px 24px;
+            background: var(--cream);
             border-top: 3px solid var(--dark-brown);
+            border-bottom: 2px solid var(--dark-brown);
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: 'VT323', monospace;
-            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 13px;
+            font-weight: 500;
             color: var(--dark-brown);
         }
 
         .legend-dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             border: 2px solid var(--dark-brown);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .article-dot { background: var(--node-article); }
         .topic-dot { background: var(--node-topic); }
         .org-dot { background: var(--node-org); }
         .model-dot { background: var(--node-model); }
+
+        /* Graph Tooltip */
+        .graph-tooltip {
+            position: absolute;
+            display: none;
+            padding: 8px 12px;
+            background: var(--dark-brown);
+            color: var(--cream);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 13px;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 1000;
+            max-width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .graph-tooltip.visible {
+            display: block;
+        }
+
+        .graph-tooltip .tooltip-type {
+            font-size: 10px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
 
         /* Sidebar Panel */
         .sidebar-panel {
@@ -1257,6 +1290,7 @@
                     </div>
                     <div class="graph-container" id="graphContainer">
                         <canvas id="graphCanvas"></canvas>
+                        <div class="graph-tooltip" id="graphTooltip"></div>
                     </div>
                     <div class="graph-legend">
                         <div class="legend-item">
@@ -1282,7 +1316,7 @@
                             <h3>📋 ARTICLE DETAILS</h3>
                         </div>
                         <div class="details-content" id="nodeInfoContent">
-                            <p class="placeholder-text">Click a node to view details</p>
+                            <p class="placeholder-text">👆 Click any node to explore its connections and details. Hover to preview, drag to rearrange.</p>
                         </div>
                     </div>
                 </section>

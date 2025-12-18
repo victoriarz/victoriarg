@@ -240,7 +240,7 @@ class AIChronicleApp {
         if (!container) return;
         
         if (!node) {
-            container.innerHTML = '<p class="placeholder-text">Click a node to view details</p>';
+            container.innerHTML = '<p class="placeholder-text">👆 Click any node to explore its connections and details. Hover to preview, drag to rearrange.</p>';
             return;
         }
         

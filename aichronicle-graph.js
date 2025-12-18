@@ -283,21 +283,28 @@ class AIChronicleGraph {
     
     onMouseMove(e) {
         const pos = this.getMousePos(e);
-        
+
         if (this.isDragging && this.dragNode) {
             this.dragNode.x = pos.x;
             this.dragNode.y = pos.y;
             this.dragNode.fx = pos.x;
             this.dragNode.fy = pos.y;
+            this.hideTooltip();
         } else if (this.isPanning) {
             this.panOffset.x += e.clientX - this.lastPan.x;
             this.panOffset.y += e.clientY - this.lastPan.y;
             this.lastPan = { x: e.clientX, y: e.clientY };
+            this.hideTooltip();
         } else {
             const node = this.findNodeAt(pos);
             if (node !== this.hoveredNode) {
                 this.hoveredNode = node;
                 this.canvas.style.cursor = node ? 'pointer' : 'grab';
+            }
+            if (node) {
+                this.showTooltip(node, e.clientX, e.clientY);
+            } else {
+                this.hideTooltip();
             }
         }
     }
@@ -344,6 +351,7 @@ class AIChronicleGraph {
     onMouseLeave() {
         this.hoveredNode = null;
         this.canvas.style.cursor = 'grab';
+        this.hideTooltip();
     }
     
     onTouchStart(e) {
@@ -656,6 +664,48 @@ class AIChronicleGraph {
             }
         });
         return connected;
+    }
+
+    // Tooltip methods
+    showTooltip(node, clientX, clientY) {
+        const tooltip = document.getElementById('graphTooltip');
+        if (!tooltip) return;
+
+        const icons = {
+            article: '📰',
+            topic: '🏷️',
+            organization: '🏢',
+            model: '🤖'
+        };
+
+        const icon = icons[node.type] || '●';
+        const title = node.title.length > 40 ? node.title.substring(0, 40) + '...' : node.title;
+        tooltip.innerHTML = `<div class="tooltip-type">${icon} ${node.type}</div><div>${title}</div>`;
+
+        // Position tooltip near cursor
+        const rect = this.container.getBoundingClientRect();
+        let x = clientX - rect.left + 15;
+        let y = clientY - rect.top + 15;
+
+        // Keep tooltip within bounds
+        const tooltipRect = tooltip.getBoundingClientRect();
+        if (x + tooltipRect.width > rect.width) {
+            x = clientX - rect.left - tooltipRect.width - 15;
+        }
+        if (y + tooltipRect.height > rect.height) {
+            y = clientY - rect.top - tooltipRect.height - 15;
+        }
+
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+        tooltip.classList.add('visible');
+    }
+
+    hideTooltip() {
+        const tooltip = document.getElementById('graphTooltip');
+        if (tooltip) {
+            tooltip.classList.remove('visible');
+        }
     }
 }
 
