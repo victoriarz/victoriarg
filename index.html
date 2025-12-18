@@ -181,56 +181,6 @@
             line-height: 1.6;
         }
 
-        /* Navigation Menu */
-        nav {
-            margin: 30px 0;
-        }
-
-        .nav-frame {
-            padding: 20px;
-        }
-
-        .nav-list {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            display: block;
-            background: var(--tan);
-            color: var(--dark-brown);
-            padding: 15px 20px;
-            text-decoration: none;
-            font-size: 20px;
-            text-align: center;
-            transition: all 0.1s;
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 4px 0 3px var(--brown);
-            position: relative;
-        }
-
-        .nav-link:hover {
-            transform: translateY(2px);
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 2px 0 3px var(--brown);
-            background: var(--wood);
-        }
-
-        .nav-link:active {
-            transform: translateY(4px);
-            box-shadow:
-                0 0 0 3px var(--dark-brown),
-                0 0 0 3px var(--brown);
-        }
-
         /* Projects Section */
         .projects-section {
             margin: 30px 0;
@@ -572,10 +522,6 @@
                 font-size: 18px;
             }
 
-            .nav-list {
-                grid-template-columns: 1fr;
-            }
-
             .project-grid,
             .skills-grid {
                 grid-template-columns: 1fr;
@@ -659,11 +605,6 @@
 
             .coin-display {
                 margin-left: 0;
-            }
-
-            .nav-link {
-                font-size: 16px;
-                padding: 12px 15px;
             }
 
             .project-title {
@@ -824,20 +765,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Navigation -->
-        <nav aria-label="Main navigation">
-            <div class="nav-frame pixel-border">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link" aria-current="page">🏠 Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="projects.html" class="nav-link">⚡ Projects</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
 
         <!-- Skills Section -->
         <section id="skills" aria-labelledby="skills-heading">
