@@ -1613,6 +1613,69 @@
             background: var(--accent);
         }
 
+        /* Graph Search Box */
+        .graph-search-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 300px;
+            margin: 0 15px;
+        }
+
+        .graph-search-input {
+            flex: 1;
+            padding: 8px 12px;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--dark-brown);
+            background: white;
+            border: 2px solid var(--dark-brown);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .graph-search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .graph-search-input::placeholder {
+            color: var(--brown);
+            opacity: 0.7;
+        }
+
+        /* Edge Tooltip */
+        .edge-tooltip {
+            position: absolute;
+            display: none;
+            padding: 8px 12px;
+            background: var(--dark-brown);
+            color: var(--cream);
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 1001;
+            max-width: 200px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .edge-tooltip.visible {
+            display: block;
+        }
+
+        .edge-tooltip .edge-type {
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .edge-tooltip .edge-detail {
+            font-weight: 600;
+        }
+
         /* Enhanced Graph Legend */
         .graph-legend-bar {
             display: flex;
@@ -1633,6 +1696,20 @@
             font-size: 12px;
             font-weight: 500;
             color: var(--dark-brown);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .legend-item-compact:hover {
+            background: var(--tan);
+            transform: scale(1.05);
+        }
+
+        .legend-item-compact.active {
+            background: var(--gold);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .legend-dot {
@@ -1791,10 +1868,64 @@
             color: var(--brown);
         }
 
+        /* Ask Chat Button */
+        .node-info-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(107, 93, 82, 0.2);
+        }
+
+        .ask-chat-btn {
+            width: 100%;
+            padding: 10px 15px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            background: var(--accent);
+            color: white;
+            border: 2px solid var(--dark-brown);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .ask-chat-btn:hover {
+            background: var(--gold);
+            color: var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Graph Shortcuts Hint */
+        .graph-shortcuts-hint {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            color: var(--brown);
+            text-align: center;
+            padding: 10px 15px;
+            margin: 0;
+            background: var(--cream);
+            border-top: 2px solid var(--dark-brown);
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .graph-legend-bar {
                 gap: 12px;
+            }
+
+            .panel-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .graph-search-container {
+                order: 3;
+                max-width: 100%;
+                width: 100%;
+                margin: 0;
             }
         }
 
@@ -1807,6 +1938,16 @@
                 width: 32px;
                 height: 32px;
                 font-size: 14px;
+            }
+
+            .legend-item-compact {
+                padding: 3px 6px;
+                font-size: 11px;
+            }
+
+            .legend-dot {
+                width: 10px;
+                height: 10px;
             }
         }
     </style>
@@ -1921,7 +2062,11 @@
                     <section class="graph-panel">
                         <div class="panel-header">
                             <h2>🥗 KNOWLEDGE GRAPH</h2>
+                            <div class="graph-search-container">
+                                <input type="text" id="graphSearch" class="graph-search-input" placeholder="🔍 Search ingredients..." aria-label="Search ingredients">
+                            </div>
                             <div class="graph-controls">
+                                <button class="control-btn" id="showAllBtn" title="Show All Ingredients">👁️</button>
                                 <button class="control-btn" id="resetGraph" title="Reset View">🔄</button>
                                 <button class="control-btn" id="toggleLabels" title="Toggle Labels">🏷️</button>
                                 <button class="control-btn" id="zoomIn" title="Zoom In">+</button>
@@ -1934,37 +2079,38 @@
                                 <p>Loading knowledge graph...</p>
                             </div>
                             <div class="graph-tooltip" id="graphTooltip"></div>
+                            <div class="edge-tooltip" id="edgeTooltip"></div>
                         </div>
-                        <div class="graph-legend-bar">
-                            <div class="legend-item-compact">
+                        <div class="graph-legend-bar" id="graphLegend">
+                            <div class="legend-item-compact" data-category="dairy" title="Click to filter">
                                 <span class="legend-dot dairy"></span>
                                 <span>Dairy</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="protein" title="Click to filter">
                                 <span class="legend-dot protein"></span>
                                 <span>Protein</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="grain" title="Click to filter">
                                 <span class="legend-dot grain"></span>
                                 <span>Grains</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="vegetable" title="Click to filter">
                                 <span class="legend-dot vegetable"></span>
                                 <span>Vegetables</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="herb" title="Click to filter">
                                 <span class="legend-dot herb"></span>
                                 <span>Herbs</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="spice" title="Click to filter">
                                 <span class="legend-dot spice"></span>
                                 <span>Spices</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="oil" title="Click to filter">
                                 <span class="legend-dot oil"></span>
                                 <span>Oils</span>
                             </div>
-                            <div class="legend-item-compact">
+                            <div class="legend-item-compact" data-category="sauce" title="Click to filter">
                                 <span class="legend-dot sauce"></span>
                                 <span>Sauces</span>
                             </div>
@@ -1978,6 +2124,7 @@
                                 <p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>
                             </div>
                         </div>
+                        <p class="graph-shortcuts-hint">⌨️ <strong>Shortcuts:</strong> / to search • A to show all • Esc to reset • Click legend to filter</p>
                     </section>
                 </div>
 
@@ -2024,7 +2171,7 @@
                         </div>
                         <div class="feature-card">
                             <h3>Interactive Graph Explorer</h3>
-                            <p>Browse ingredients visually with category filtering, hover tooltips showing dietary info, and a sidebar displaying most-connected ingredients and quick stats.</p>
+                            <p>Browse all 236 ingredients with instant search, clickable category legend, hover tooltips on nodes and edges, and keyboard shortcuts. Click any ingredient to ask the AI about it.</p>
                         </div>
                     </div>
                 </div>
@@ -2038,7 +2185,7 @@
                         <li><strong>Knowledge Graph:</strong> Custom ontology with 236+ ingredients, substitution rules, and flavor pairings</li>
                         <li><strong>Architecture:</strong> Focused context extraction - queries retrieve only relevant graph data</li>
                         <li><strong>Features:</strong> Dietary filtering, cuisine exploration, substitution ratios with confidence scores</li>
-                        <li><strong>Frontend:</strong> Cytoscape.js with hover tooltips, category filtering, real-time stats, vanilla JavaScript, localStorage for preferences</li>
+                        <li><strong>Frontend:</strong> Cytoscape.js visualization, instant search, clickable legend filtering, edge tooltips with relationship details, keyboard navigation, vanilla JavaScript</li>
                     </ul>
                 </div>
             </section>

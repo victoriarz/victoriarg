@@ -200,7 +200,23 @@
                 {
                     selector: 'edge[type="substitutes"]',
                     style: {
-                        'line-style': 'dashed'
+                        'line-style': 'dashed',
+                        'line-dash-pattern': [6, 3]
+                    }
+                },
+                {
+                    selector: 'edge[type="pairs-with"]',
+                    style: {
+                        'line-style': 'solid',
+                        'width': 3,
+                        'opacity': 0.7
+                    }
+                },
+                {
+                    selector: 'edge[type="used-with"]',
+                    style: {
+                        'line-style': 'dotted',
+                        'line-dash-pattern': [2, 4]
                     }
                 }
             ],
@@ -214,8 +230,8 @@
 
             console.log('Graph initialized successfully with', cy.nodes().length, 'nodes');
 
-            // Apply initial filter to show only main ingredients
-            applyMainIngredientsFilter();
+            // Show all ingredients by default (no filter)
+            cy.fit(null, 30);
 
             // Node click event
             cy.on('tap', 'node', function(evt) {
@@ -448,17 +464,10 @@
         ).join(' ');
     }
 
+    // Track current category filter
+    let currentCategoryFilter = null;
+
     function setupEventListeners() {
-        // Filter by cuisine
-        document.getElementById('filterCuisine').addEventListener('change', function(e) {
-            filterByCuisine(e.target.value);
-        });
-
-        // Filter by dietary
-        document.getElementById('filterDietary').addEventListener('change', function(e) {
-            filterByDietary(e.target.value);
-        });
-
         // Zoom controls
         document.getElementById('zoomIn').addEventListener('click', function() {
             zoomIn();
@@ -476,6 +485,76 @@
             const detailsContent = document.getElementById('ingredientDetailsContent');
             if (detailsContent) {
                 detailsContent.innerHTML = '<p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
+            }
+        });
+
+        // Show All button
+        const showAllBtn = document.getElementById('showAllBtn');
+        if (showAllBtn) {
+            showAllBtn.addEventListener('click', function() {
+                cy.nodes().show();
+                cy.edges().show();
+                currentCategoryFilter = null;
+                clearLegendActive();
+                cy.fit(null, 30);
+            });
+        }
+
+        // Search box functionality
+        const searchInput = document.getElementById('graphSearch');
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchIngredients(e.target.value.trim());
+                }, 200);
+            });
+
+            // Clear search on Escape
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    this.value = '';
+                    searchIngredients('');
+                    this.blur();
+                }
+            });
+        }
+
+        // Clickable legend for category filtering
+        const legendItems = document.querySelectorAll('.legend-item-compact[data-category]');
+        legendItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const category = this.dataset.category;
+                toggleCategoryFilter(category, this);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (!cy) return;
+            // Don't capture if user is typing in search
+            if (document.activeElement === searchInput) return;
+
+            switch(e.key) {
+                case 'Escape':
+                    resetFilters();
+                    hideNodeInfo();
+                    break;
+                case 'a':
+                case 'A':
+                    // Show all
+                    cy.nodes().show();
+                    cy.edges().show();
+                    currentCategoryFilter = null;
+                    clearLegendActive();
+                    cy.fit(null, 30);
+                    break;
+                case '/':
+                    // Focus search
+                    e.preventDefault();
+                    if (searchInput) searchInput.focus();
+                    break;
             }
         });
 
@@ -604,12 +683,103 @@
     }
 
     function resetFilters() {
-        document.getElementById('filterCuisine').value = 'all';
-        document.getElementById('filterDietary').value = 'all';
         cy.nodes().show();
         cy.edges().show();
         removeHighlights();
-        cy.fit();
+        currentCategoryFilter = null;
+        clearLegendActive();
+        // Clear search input
+        const searchInput = document.getElementById('graphSearch');
+        if (searchInput) searchInput.value = '';
+        cy.fit(null, 30);
+    }
+
+    function clearLegendActive() {
+        document.querySelectorAll('.legend-item-compact').forEach(item => {
+            item.classList.remove('active');
+        });
+    }
+
+    function toggleCategoryFilter(category, element) {
+        // If clicking the same category, clear the filter
+        if (currentCategoryFilter === category) {
+            currentCategoryFilter = null;
+            clearLegendActive();
+            cy.nodes().show();
+            cy.edges().show();
+            cy.fit(null, 30);
+            return;
+        }
+
+        // Set new filter
+        currentCategoryFilter = category;
+        clearLegendActive();
+        element.classList.add('active');
+
+        // Filter nodes by category
+        cy.nodes().forEach(node => {
+            const nodeCategory = node.data('category');
+            // Match category or similar (e.g., 'dairy' matches 'dairy-alt')
+            if (nodeCategory === category || nodeCategory.startsWith(category + '-') || category.startsWith(nodeCategory + '-')) {
+                node.show();
+            } else {
+                node.hide();
+            }
+        });
+
+        // Show only edges between visible nodes
+        cy.edges().forEach(edge => {
+            if (edge.source().visible() && edge.target().visible()) {
+                edge.show();
+            } else {
+                edge.hide();
+            }
+        });
+
+        cy.fit(null, 30);
+    }
+
+    function searchIngredients(query) {
+        if (!cy) return;
+
+        if (!query) {
+            // Show all when search is empty
+            cy.nodes().show();
+            cy.edges().show();
+            removeHighlights();
+            cy.fit(null, 30);
+            return;
+        }
+
+        const lowerQuery = query.toLowerCase();
+
+        // Find matching nodes
+        cy.nodes().forEach(node => {
+            const label = node.data('label').toLowerCase();
+            const id = node.data('id').toLowerCase();
+            if (label.includes(lowerQuery) || id.includes(lowerQuery)) {
+                node.show();
+                node.addClass('highlighted');
+            } else {
+                node.hide();
+                node.removeClass('highlighted');
+            }
+        });
+
+        // Show edges between visible nodes
+        cy.edges().forEach(edge => {
+            if (edge.source().visible() && edge.target().visible()) {
+                edge.show();
+            } else {
+                edge.hide();
+            }
+        });
+
+        // Fit to visible nodes
+        const visibleNodes = cy.nodes(':visible');
+        if (visibleNodes.length > 0) {
+            cy.fit(visibleNodes, 50);
+        }
     }
 
     function applyMainIngredientsFilter() {
@@ -1009,8 +1179,10 @@
         if (!cy) return;
 
         const tooltip = document.getElementById('graphTooltip');
+        const edgeTooltip = document.getElementById('edgeTooltip');
         if (!tooltip) return;
 
+        // Node hover tooltip
         cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeData = node.data();
@@ -1054,7 +1226,82 @@
         cy.on('drag', 'node', function() {
             tooltip.classList.remove('visible');
         });
+
+        // Edge hover tooltip
+        if (edgeTooltip) {
+            cy.on('mouseover', 'edge', function(evt) {
+                const edge = evt.target;
+                const edgeData = edge.data();
+                const sourceLabel = edge.source().data('label');
+                const targetLabel = edge.target().data('label');
+
+                let typeLabel = '';
+                let detailText = '';
+
+                switch(edgeData.type) {
+                    case 'substitutes':
+                        typeLabel = '🔄 Substitution';
+                        detailText = edgeData.ratio || '1:1';
+                        if (edgeData.context) detailText += ` (${edgeData.context})`;
+                        break;
+                    case 'pairs-with':
+                        typeLabel = '💚 Pairs With';
+                        detailText = edgeData.strength ? edgeData.strength.toUpperCase() : 'Compatible';
+                        break;
+                    case 'used-with':
+                        typeLabel = '🍳 Used Together';
+                        detailText = edgeData.context || 'Common pairing';
+                        break;
+                    default:
+                        typeLabel = 'Connection';
+                        detailText = edgeData.type || '';
+                }
+
+                edgeTooltip.innerHTML = `
+                    <div class="edge-type">${typeLabel}</div>
+                    <div class="edge-detail">${detailText}</div>
+                `;
+
+                edgeTooltip.classList.add('visible');
+
+                // Position tooltip at edge midpoint
+                const midpoint = edge.midpoint();
+                const container = document.getElementById('graphContainer');
+                const containerRect = container.getBoundingClientRect();
+
+                let tooltipX = midpoint.x + 10;
+                let tooltipY = midpoint.y - 30;
+
+                if (tooltipX + 150 > containerRect.width) {
+                    tooltipX = midpoint.x - 160;
+                }
+                if (tooltipY < 10) {
+                    tooltipY = midpoint.y + 10;
+                }
+
+                edgeTooltip.style.left = tooltipX + 'px';
+                edgeTooltip.style.top = tooltipY + 'px';
+            });
+
+            cy.on('mouseout', 'edge', function() {
+                edgeTooltip.classList.remove('visible');
+            });
+        }
     }
+
+    // Graph-to-Chat integration: populate chat with suggestion when clicking a node
+    function populateChatWithIngredient(ingredientName) {
+        const chatInput = document.getElementById('culinaryInput');
+        if (chatInput) {
+            chatInput.value = `What can I substitute for ${ingredientName}?`;
+            chatInput.focus();
+            // Trigger input event to update any UI that depends on it
+            chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+
+    // Expose for use by showEnhancedNodeInfo
+    window.populateChatWithIngredient = populateChatWithIngredient;
 
     // ============================================
     // ENHANCED NODE INFO DISPLAY
@@ -1159,6 +1406,15 @@
                 </div>
             `;
         }
+
+        // Add "Ask about this" button for chat integration
+        html += `
+            <div class="node-info-actions">
+                <button class="ask-chat-btn" onclick="window.populateChatWithIngredient('${nodeData.label.replace(/'/g, "\\'")}')">
+                    💬 Ask about ${nodeData.label}
+                </button>
+            </div>
+        `;
 
         html += '</div>';
         detailsContent.innerHTML = html;
