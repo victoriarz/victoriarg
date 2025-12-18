@@ -1680,19 +1680,6 @@ footer p {
     transform: translateY(-2px);
 }
 
-.keyboard-shortcuts-hint {
-    margin-top: 15px !important;
-    padding-top: 15px;
-    border-top: 1px solid #e8dfd2;
-    font-size: 0.75rem !important;
-    color: #888 !important;
-    text-align: center;
-}
-
-.keyboard-shortcuts-hint strong {
-    color: #6b5d52;
-}
-
 /* AI Settings Modal */
 .ai-settings-modal {
     display: none;
