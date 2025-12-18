@@ -1,13 +1,35 @@
 // Culinary Graph Visualization using Cytoscape.js
 // Renders the interactive knowledge graph
+// Enhanced with tooltips, stats, sidebar panels, and loading screen
 
 (function() {
     'use strict';
+
+    // Category icons for display
+    const categoryIcons = {
+        'dairy': '🧈',
+        'dairy-alt': '🥛',
+        'protein': '🥩',
+        'grain': '🌾',
+        'vegetable': '🥬',
+        'aromatic': '🧄',
+        'herb': '🌿',
+        'spice': '🌶️',
+        'oil': '🫒',
+        'sauce': '🍯',
+        'sweetener': '🍯',
+        'baking': '🧁',
+        'nuts': '🥜',
+        'acid': '🍋',
+        'liquid': '💧'
+    };
 
     // Wait for DOM to load
     document.addEventListener('DOMContentLoaded', function() {
         initializeGraph();
         setupEventListeners();
+        populateStats();
+        populateSidebar();
     });
 
     let cy; // Cytoscape instance
@@ -199,6 +221,7 @@
             cy.on('tap', 'node', function(evt) {
                 const node = evt.target;
                 showNodeInfo(node);
+                showEnhancedNodeInfo(node);
                 highlightConnections(node);
             });
 
@@ -207,8 +230,16 @@
                 if (evt.target === cy) {
                     hideNodeInfo();
                     removeHighlights();
+                    // Reset details panel
+                    const detailsContent = document.getElementById('ingredientDetailsContent');
+                    if (detailsContent) {
+                        detailsContent.innerHTML = '<p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
+                    }
                 }
             });
+
+            // Setup hover tooltips
+            setupTooltips();
 
         } catch (error) {
             console.error('Error initializing graph:', error);
@@ -441,7 +472,36 @@
         document.getElementById('resetGraph').addEventListener('click', function() {
             resetFilters();
             hideNodeInfo();
+            // Reset details panel
+            const detailsContent = document.getElementById('ingredientDetailsContent');
+            if (detailsContent) {
+                detailsContent.innerHTML = '<p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
+            }
         });
+
+        // Toggle labels button
+        const toggleLabelsBtn = document.getElementById('toggleLabels');
+        if (toggleLabelsBtn) {
+            toggleLabelsBtn.addEventListener('click', function() {
+                if (!cy) return;
+                const currentFontSize = cy.style().selector('node').style('font-size');
+                if (currentFontSize === '0px' || currentFontSize === 0) {
+                    // Show labels
+                    cy.style()
+                        .selector('node')
+                        .style({ 'font-size': getFontSize() })
+                        .update();
+                    this.classList.add('active');
+                } else {
+                    // Hide labels
+                    cy.style()
+                        .selector('node')
+                        .style({ 'font-size': '0px' })
+                        .update();
+                    this.classList.remove('active');
+                }
+            });
+        }
 
         // Handle window resize for responsive graph
         let resizeTimeout;
@@ -777,5 +837,334 @@
     window.generateRecipeFromIngredients = generateRecipeFromIngredients;
     window.optimizePantry = optimizePantry;
     window.getCulinaryGraphEngine = () => graphEngine;
+
+    // ============================================
+    // STATS BAR POPULATION
+    // ============================================
+
+    function populateStats() {
+        if (typeof culinaryGraphData === 'undefined') return;
+
+        const data = culinaryGraphData;
+
+        // Count ingredients
+        const ingredientCount = data.nodes.length;
+        document.getElementById('ingredientCount').textContent = ingredientCount;
+
+        // Count connections
+        const connectionCount = data.edges.length;
+        document.getElementById('connectionCount').textContent = connectionCount;
+
+        // Count substitutions
+        const substitutionCount = data.edges.filter(e => e.type === 'substitutes').length;
+        document.getElementById('substitutionCount').textContent = substitutionCount;
+
+        // Count unique cuisines
+        const cuisines = new Set();
+        data.nodes.forEach(node => {
+            if (node.cuisine) {
+                node.cuisine.forEach(c => {
+                    if (c !== 'all') cuisines.add(c);
+                });
+            }
+        });
+        document.getElementById('cuisineCount').textContent = cuisines.size;
+    }
+
+    // ============================================
+    // SIDEBAR POPULATION
+    // ============================================
+
+    function populateSidebar() {
+        if (typeof culinaryGraphData === 'undefined') return;
+
+        populateTrendingIngredients();
+        populateCategories();
+    }
+
+    function populateTrendingIngredients() {
+        const data = culinaryGraphData;
+
+        // Count connections per ingredient
+        const connectionCounts = {};
+        data.nodes.forEach(node => {
+            connectionCounts[node.id] = 0;
+        });
+
+        data.edges.forEach(edge => {
+            if (connectionCounts[edge.source] !== undefined) {
+                connectionCounts[edge.source]++;
+            }
+            if (connectionCounts[edge.target] !== undefined) {
+                connectionCounts[edge.target]++;
+            }
+        });
+
+        // Sort by connection count
+        const sorted = Object.entries(connectionCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        // Find node labels
+        const nodeMap = {};
+        data.nodes.forEach(node => {
+            nodeMap[node.id] = node;
+        });
+
+        // Populate the trending list
+        const trendingContainer = document.querySelector('#trendingIngredients .trending-list');
+        if (!trendingContainer) return;
+
+        trendingContainer.innerHTML = sorted.map(([id, count], index) => {
+            const node = nodeMap[id];
+            const icon = categoryIcons[node?.category] || '🍽️';
+            return `
+                <div class="trending-item" data-ingredient="${id}">
+                    <span class="trending-rank">#${index + 1}</span>
+                    <span class="trending-name">${icon} ${node?.label || id}</span>
+                    <span class="trending-count">${count} links</span>
+                </div>
+            `;
+        }).join('');
+
+        // Add click handlers
+        trendingContainer.querySelectorAll('.trending-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const ingredientId = item.dataset.ingredient;
+                if (window.revealIngredientInGraph) {
+                    window.revealIngredientInGraph(ingredientId);
+                }
+            });
+        });
+    }
+
+    function populateCategories() {
+        const data = culinaryGraphData;
+
+        // Count ingredients per category
+        const categoryCounts = {};
+        data.nodes.forEach(node => {
+            const cat = node.category || 'other';
+            categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+        });
+
+        // Sort by count
+        const sorted = Object.entries(categoryCounts)
+            .sort((a, b) => b[1] - a[1]);
+
+        // Populate the categories list
+        const categoriesContainer = document.querySelector('#categoriesList .category-list');
+        if (!categoriesContainer) return;
+
+        categoriesContainer.innerHTML = sorted.map(([category, count]) => {
+            const icon = categoryIcons[category] || '🍽️';
+            const displayName = category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            return `
+                <div class="category-item" data-category="${category}">
+                    <span class="category-icon">${icon}</span>
+                    <span class="category-name">${displayName}</span>
+                    <span class="category-count">${count}</span>
+                </div>
+            `;
+        }).join('');
+
+        // Add click handlers to filter by category
+        categoriesContainer.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const category = item.dataset.category;
+                filterByCategory(category);
+            });
+        });
+    }
+
+    function filterByCategory(category) {
+        if (!cy) return;
+
+        // Show only nodes of this category
+        cy.nodes().forEach(node => {
+            if (node.data('category') === category) {
+                node.show();
+            } else {
+                node.hide();
+            }
+        });
+
+        // Show only edges between visible nodes
+        cy.edges().forEach(edge => {
+            if (edge.source().visible() && edge.target().visible()) {
+                edge.show();
+            } else {
+                edge.hide();
+            }
+        });
+
+        cy.fit();
+    }
+
+    // ============================================
+    // HOVER TOOLTIPS
+    // ============================================
+
+    function setupTooltips() {
+        if (!cy) return;
+
+        const tooltip = document.getElementById('graphTooltip');
+        if (!tooltip) return;
+
+        cy.on('mouseover', 'node', function(evt) {
+            const node = evt.target;
+            const nodeData = node.data();
+            const icon = categoryIcons[nodeData.category] || '🍽️';
+            const dietary = nodeData.dietary && nodeData.dietary.length > 0
+                ? nodeData.dietary.join(', ')
+                : 'No restrictions';
+
+            tooltip.innerHTML = `
+                <div class="tooltip-category">${icon} ${formatCategory(nodeData.category)}</div>
+                <div class="tooltip-name">${nodeData.label}</div>
+                <div class="tooltip-dietary">🥗 ${dietary}</div>
+            `;
+
+            tooltip.classList.add('visible');
+
+            // Position tooltip near the node
+            const position = node.renderedPosition();
+            const container = document.getElementById('graphContainer');
+            const containerRect = container.getBoundingClientRect();
+
+            let tooltipX = position.x + 20;
+            let tooltipY = position.y - 10;
+
+            // Keep tooltip within bounds
+            if (tooltipX + 200 > containerRect.width) {
+                tooltipX = position.x - 220;
+            }
+            if (tooltipY < 10) {
+                tooltipY = 10;
+            }
+
+            tooltip.style.left = tooltipX + 'px';
+            tooltip.style.top = tooltipY + 'px';
+        });
+
+        cy.on('mouseout', 'node', function() {
+            tooltip.classList.remove('visible');
+        });
+
+        cy.on('drag', 'node', function() {
+            tooltip.classList.remove('visible');
+        });
+    }
+
+    // ============================================
+    // ENHANCED NODE INFO DISPLAY
+    // ============================================
+
+    function showEnhancedNodeInfo(node) {
+        const nodeData = node.data();
+        const detailsPanel = document.getElementById('ingredientDetailsPanel');
+        const detailsContent = document.getElementById('ingredientDetailsContent');
+
+        if (!detailsContent) {
+            // Fall back to original showNodeInfo
+            showNodeInfo(node);
+            return;
+        }
+
+        const icon = categoryIcons[nodeData.category] || '🍽️';
+        const dietary = nodeData.dietary && nodeData.dietary.length > 0
+            ? nodeData.dietary.map(d => `<span class="dietary-badge">${d}</span>`).join(' ')
+            : '<span class="dietary-badge">No restrictions</span>';
+        const cuisines = nodeData.cuisine && nodeData.cuisine.length > 0
+            ? nodeData.cuisine.join(', ')
+            : 'All cuisines';
+
+        // Get connected nodes
+        const connectedEdges = node.connectedEdges();
+        const substitutes = [];
+        const pairsWith = [];
+        const usedWith = [];
+
+        connectedEdges.forEach(edge => {
+            const edgeData = edge.data();
+            const otherNode = edge.source().id() === nodeData.id ? edge.target() : edge.source();
+            const otherLabel = otherNode.data('label');
+            const otherIcon = categoryIcons[otherNode.data('category')] || '🍽️';
+
+            if (edgeData.type === 'substitutes') {
+                if (edge.source().id() === nodeData.id) {
+                    substitutes.push({ label: otherLabel, icon: otherIcon, ratio: edgeData.ratio, context: edgeData.context });
+                }
+            } else if (edgeData.type === 'pairs-with') {
+                pairsWith.push({ label: otherLabel, icon: otherIcon, strength: edgeData.strength });
+            } else if (edgeData.type === 'used-with') {
+                usedWith.push({ label: otherLabel, icon: otherIcon, context: edgeData.context });
+            }
+        });
+
+        let html = `
+            <div class="node-info-enhanced">
+                <div class="node-info-header-row">
+                    <span class="node-info-icon">${icon}</span>
+                    <div>
+                        <h4 class="node-info-title">${nodeData.label}</h4>
+                        <p class="node-info-category">${formatCategory(nodeData.category)}</p>
+                    </div>
+                </div>
+                <div class="node-info-meta-row">
+                    <div><strong>Cuisines:</strong> ${cuisines}</div>
+                    <div><strong>Dietary:</strong> ${dietary}</div>
+                </div>
+        `;
+
+        if (substitutes.length > 0) {
+            html += `
+                <div class="node-info-section">
+                    <h5>🔄 Substitutions</h5>
+                    <ul>
+                        ${substitutes.map(s => `
+                            <li>
+                                ${s.icon} <strong>${s.label}</strong>
+                                ${s.ratio ? `<span class="ratio">(${s.ratio})</span>` : ''}
+                                ${s.context ? `<span class="context">for ${s.context}</span>` : ''}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        if (pairsWith.length > 0) {
+            html += `
+                <div class="node-info-section">
+                    <h5>💚 Pairs Well With</h5>
+                    <ul>
+                        ${pairsWith.map(p => `
+                            <li>${p.icon} ${p.label} ${p.strength ? `<span class="strength ${p.strength}">${p.strength}</span>` : ''}</li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        if (usedWith.length > 0) {
+            html += `
+                <div class="node-info-section">
+                    <h5>🍳 Used Together</h5>
+                    <ul>
+                        ${usedWith.map(u => `
+                            <li>${u.icon} ${u.label} ${u.context ? `<span class="context">in ${u.context}</span>` : ''}</li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        html += '</div>';
+        detailsContent.innerHTML = html;
+    }
+
+    // Override the original showNodeInfo to use enhanced version
+    const originalShowNodeInfo = showNodeInfo;
 
 })();
