@@ -286,6 +286,84 @@
             box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
         }
 
+        /* Timeline Section */
+        .timeline-section {
+            margin: 30px 0;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            padding: 40px 0 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 62px;
+            height: 4px;
+            background: var(--brown);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+        }
+
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 0 5px;
+        }
+
+        .timeline-marker {
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            margin: 0 auto 15px;
+            position: relative;
+            z-index: 2;
+            box-shadow:
+                0 0 0 4px var(--dark-brown),
+                0 0 0 6px var(--tan);
+        }
+
+        .timeline-item:first-child .timeline-marker {
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-label {
+            display: inline-block;
+            background: var(--green);
+            color: var(--cream);
+            padding: 2px 8px;
+            font-size: 10px;
+            font-family: 'Press Start 2P', monospace;
+            margin-bottom: 8px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            min-height: 18px;
+        }
+
+        .timeline-item:last-child .timeline-label {
+            background: var(--brown);
+        }
+
+        /* Invisible placeholder for items without labels */
+        .timeline-item:not(:first-child):not(:last-child)::before {
+            content: '';
+            display: block;
+            height: 26px;
+        }
+
+        .timeline-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: var(--dark-brown);
+            margin-top: 10px;
+        }
+
         /* Skills Section */
         .skills-grid {
             display: grid;
@@ -568,6 +646,24 @@
             .skill-category-title {
                 font-size: 14px;
             }
+
+            .timeline-title {
+                font-size: 10px;
+            }
+
+            .timeline-label {
+                font-size: 8px;
+                padding: 2px 6px;
+            }
+
+            .timeline-marker {
+                width: 12px;
+                height: 12px;
+            }
+
+            .timeline::before {
+                top: 58px;
+            }
         }
 
         /* Responsive - Small Mobile */
@@ -632,6 +728,35 @@
 
             .skill-item {
                 font-size: 16px;
+            }
+
+            .timeline {
+                overflow-x: auto;
+                padding: 30px 10px 15px;
+                gap: 10px;
+            }
+
+            .timeline::before {
+                top: 52px;
+            }
+
+            .timeline-item {
+                min-width: 70px;
+                flex: 0 0 auto;
+            }
+
+            .timeline-marker {
+                width: 10px;
+                height: 10px;
+            }
+
+            .timeline-title {
+                font-size: 8px;
+            }
+
+            .timeline-label {
+                font-size: 6px;
+                padding: 1px 4px;
             }
 
             .experience-item h3 {
@@ -768,6 +893,42 @@
                             <span class="tech-tag">GitHub Pages</span>
                         </div>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="timeline-section" aria-labelledby="timeline-heading">
+            <div class="section-frame pixel-border">
+                <h2 id="timeline-heading" class="section-title">Project Timeline</h2>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-label">Latest</div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-title">AI Chronicles</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-title">Culinary Graph</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-title">Saponify AI</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-title">Portfolio Site</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-label">First</div>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-title">Willow Earth</div>
+                    </div>
                 </div>
             </div>
         </section>
