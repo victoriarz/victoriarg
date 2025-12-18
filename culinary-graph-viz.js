@@ -801,19 +801,23 @@
         }
 
         const lowerQuery = query.toLowerCase();
+        let matchCount = 0;
 
         // Find matching nodes
         cy.nodes().forEach(node => {
-            const label = node.data('label').toLowerCase();
-            const id = node.data('id').toLowerCase();
+            const label = (node.data('label') || '').toLowerCase();
+            const id = (node.data('id') || '').toLowerCase();
             if (label.includes(lowerQuery) || id.includes(lowerQuery)) {
                 node.show();
                 node.addClass('highlighted');
+                matchCount++;
             } else {
                 node.hide();
                 node.removeClass('highlighted');
             }
         });
+
+        console.log('Search for "' + query + '" found', matchCount, 'matches');
 
         // Show edges between visible nodes
         cy.edges().forEach(edge => {
