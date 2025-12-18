@@ -1071,27 +1071,33 @@
         const data = culinaryGraphData;
 
         // Count ingredients
-        const ingredientCount = data.nodes.length;
-        document.getElementById('ingredientCount').textContent = ingredientCount;
+        const ingredientCountEl = document.getElementById('ingredientCount');
+        if (ingredientCountEl) ingredientCountEl.textContent = data.nodes.length;
 
         // Count connections
-        const connectionCount = data.edges.length;
-        document.getElementById('connectionCount').textContent = connectionCount;
+        const connectionCountEl = document.getElementById('connectionCount');
+        if (connectionCountEl) connectionCountEl.textContent = data.edges.length;
 
         // Count substitutions
-        const substitutionCount = data.edges.filter(e => e.type === 'substitutes').length;
-        document.getElementById('substitutionCount').textContent = substitutionCount;
+        const substitutionCountEl = document.getElementById('substitutionCount');
+        if (substitutionCountEl) {
+            const substitutionCount = data.edges.filter(e => e.type === 'substitutes').length;
+            substitutionCountEl.textContent = substitutionCount;
+        }
 
         // Count unique cuisines
-        const cuisines = new Set();
-        data.nodes.forEach(node => {
-            if (node.cuisine) {
-                node.cuisine.forEach(c => {
-                    if (c !== 'all') cuisines.add(c);
-                });
-            }
-        });
-        document.getElementById('cuisineCount').textContent = cuisines.size;
+        const cuisineCountEl = document.getElementById('cuisineCount');
+        if (cuisineCountEl) {
+            const cuisines = new Set();
+            data.nodes.forEach(node => {
+                if (node.cuisine) {
+                    node.cuisine.forEach(c => {
+                        if (c !== 'all') cuisines.add(c);
+                    });
+                }
+            });
+            cuisineCountEl.textContent = cuisines.size;
+        }
     }
 
     // ============================================
