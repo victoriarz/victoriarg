@@ -14,6 +14,9 @@ const suggestionButtons = document.querySelectorAll('.suggestion-btn');
 const restrictionsInput = document.getElementById('restrictionsInput');
 const addRestrictionBtn = document.getElementById('addRestrictionBtn');
 const restrictionsChips = document.getElementById('restrictionsChips');
+const restrictionsBanner = document.getElementById('restrictionsBanner');
+const restrictionsToggle = document.getElementById('restrictionsToggle');
+const restrictionsCount = document.getElementById('restrictionsCount');
 
 // Configure marked for better markdown rendering
 if (typeof marked !== 'undefined') {
@@ -111,10 +114,19 @@ function removeRestriction(restriction) {
     addMessage(`Removed restriction: **${restriction}**. I can now include this in recommendations.`, true);
 }
 
-// Render restriction chips
+// Render restriction chips and update count
 function renderRestrictionChips() {
+    // Update count display
+    if (restrictionsCount) {
+        if (dietaryRestrictions.length > 0) {
+            restrictionsCount.textContent = `(${dietaryRestrictions.length})`;
+        } else {
+            restrictionsCount.textContent = '';
+        }
+    }
+
     if (dietaryRestrictions.length === 0) {
-        restrictionsChips.innerHTML = '<p class="no-restrictions">No restrictions added yet</p>';
+        restrictionsChips.innerHTML = '';
         return;
     }
 
@@ -864,6 +876,13 @@ if (restrictionsInput) {
         if (e.key === 'Enter') {
             addRestriction();
         }
+    });
+}
+
+// Handle restrictions toggle
+if (restrictionsToggle && restrictionsBanner) {
+    restrictionsToggle.addEventListener('click', () => {
+        restrictionsBanner.classList.toggle('collapsed');
     });
 }
 
