@@ -801,7 +801,7 @@
         }
 
         const lowerQuery = query.toLowerCase();
-        let matchCount = 0;
+        const matchingNodes = [];
 
         // Find matching nodes
         cy.nodes().forEach(node => {
@@ -810,14 +810,14 @@
             if (label.includes(lowerQuery) || id.includes(lowerQuery)) {
                 node.show();
                 node.addClass('highlighted');
-                matchCount++;
+                matchingNodes.push(node);
             } else {
                 node.hide();
                 node.removeClass('highlighted');
             }
         });
 
-        console.log('Search for "' + query + '" found', matchCount, 'matches');
+        console.log('Search for "' + query + '" found', matchingNodes.length, 'matches');
 
         // Show edges between visible nodes
         cy.edges().forEach(edge => {
@@ -828,10 +828,13 @@
             }
         });
 
-        // Fit to visible nodes
-        const visibleNodes = cy.nodes(':visible');
-        if (visibleNodes.length > 0) {
-            cy.fit(visibleNodes, 50);
+        // Zoom to matching nodes
+        if (matchingNodes.length > 0) {
+            const collection = cy.collection(matchingNodes);
+            cy.animate({
+                fit: { eles: collection, padding: 50 },
+                duration: 300
+            });
         }
     }
 
