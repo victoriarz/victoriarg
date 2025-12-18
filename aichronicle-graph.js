@@ -26,7 +26,7 @@ class AIChronicleGraph {
         this.zoom = 1;
         
         // Display settings
-        this.showLabels = true;
+        this.showLabels = false;
         this.filterTrending = false;
         this.maxDisplayNodes = 50;
 
@@ -135,13 +135,13 @@ class AIChronicleGraph {
     getNodeRadius(node) {
         switch (node.type) {
             case 'article':
-                return 12 + (node.trendingScore || 50) / 20;
+                return 14 + (node.trendingScore || 50) / 25;
             case 'topic':
-                return 18 + (node.connectionCount || 0) * 1.5;
+                return 16 + Math.min((node.connectionCount || 0) * 0.6, 16);
             case 'organization':
-                return 16 + (node.connectionCount || 0);
+                return 15 + Math.min((node.connectionCount || 0) * 0.5, 12);
             case 'model':
-                return 14 + (node.connectionCount || 0);
+                return 14 + Math.min((node.connectionCount || 0) * 0.5, 10);
             default:
                 return 12;
         }
