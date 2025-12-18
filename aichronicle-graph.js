@@ -29,6 +29,16 @@ class AIChronicleGraph {
         this.showLabels = true;
         this.filterTrending = false;
         this.maxDisplayNodes = 50;
+
+        // Default filters
+        this.filters = {
+            timeRange: '7',
+            source: 'all',
+            showArticles: true,
+            showTopics: true,
+            showOrgs: true,
+            showModels: true
+        };
         
         // Physics settings
         this.physics = {
@@ -139,50 +149,77 @@ class AIChronicleGraph {
     
     updateVisibleNodes() {
         this.visibleNodes.clear();
-        
-        // Score nodes by importance
-        const scoredNodes = this.nodes.map(node => {
+
+        // Apply filters first
+        const filteredNodes = this.nodes.filter(node => {
+            // Node type filter
+            if (node.type === 'article' && !this.filters.showArticles) return false;
+            if (node.type === 'topic' && !this.filters.showTopics) return false;
+            if (node.type === 'organization' && !this.filters.showOrgs) return false;
+            if (node.type === 'model' && !this.filters.showModels) return false;
+
+            // Time range filter (articles only)
+            if (node.type === 'article' && this.filters.timeRange !== 'all') {
+                const days = parseInt(this.filters.timeRange);
+                const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+                if (new Date(node.date) < cutoff) return false;
+            }
+
+            // Source filter (articles only)
+            if (node.type === 'article' && this.filters.source !== 'all') {
+                const source = (node.source || '').toLowerCase();
+                if (this.filters.source === 'arxiv' && !source.includes('arxiv')) return false;
+                if (this.filters.source === 'hackernews' && !source.includes('hacker')) return false;
+                if (this.filters.source === 'blogs' && (source.includes('arxiv') || source.includes('hacker'))) return false;
+            }
+
+            return true;
+        });
+
+        // Score filtered nodes by importance
+        const scoredNodes = filteredNodes.map(node => {
             let score = 0;
-            
+
             // Recency bonus for articles
             if (node.type === 'article' && node.date) {
                 const daysSince = (Date.now() - new Date(node.date)) / (1000 * 60 * 60 * 24);
                 score += Math.max(0, 10 - daysSince) * 5;
             }
-            
+
             // Trending score
             if (node.trendingScore) {
                 score += node.trendingScore;
             }
-            
+
             // Connection count
             const connections = this.edges.filter(
                 e => e.source.id === node.id || e.target.id === node.id
             ).length;
             score += connections * 10;
-            
+
             return { node, score };
         });
-        
+
         // Sort and take top N
         scoredNodes.sort((a, b) => b.score - a.score);
-        
+
         const topNodes = scoredNodes.slice(0, this.maxDisplayNodes);
         topNodes.forEach(({ node }) => this.visibleNodes.add(node.id));
-        
-        // Also add connected nodes
+
+        // Also add connected nodes (only if they pass filters)
+        const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
         const initialVisible = new Set(this.visibleNodes);
         initialVisible.forEach(nodeId => {
             this.edges.forEach(edge => {
-                if (edge.source.id === nodeId) {
+                if (edge.source.id === nodeId && filteredNodeIds.has(edge.target.id)) {
                     this.visibleNodes.add(edge.target.id);
                 }
-                if (edge.target.id === nodeId) {
+                if (edge.target.id === nodeId && filteredNodeIds.has(edge.source.id)) {
                     this.visibleNodes.add(edge.source.id);
                 }
             });
         });
-        
+
         // Trim if too many
         if (this.visibleNodes.size > this.maxDisplayNodes) {
             const visible = Array.from(this.visibleNodes);
@@ -595,7 +632,7 @@ class AIChronicleGraph {
     }
     
     setFilter(options) {
-        // Apply filters and update visible nodes
+        this.filters = { ...this.filters, ...options };
         this.updateVisibleNodes();
     }
     
