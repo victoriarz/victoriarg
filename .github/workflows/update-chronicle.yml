@@ -21,6 +21,8 @@ on:
 jobs:
   update-knowledge-graph:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout repository
