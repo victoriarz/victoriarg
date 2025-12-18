@@ -231,13 +231,17 @@
         }
 
         .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
             margin-top: 20px;
         }
 
         .project-card {
+            flex: 0 1 calc(33.333% - 14px);
+            min-width: 280px;
+            max-width: 400px;
             background: var(--wood);
             padding: 20px;
             box-shadow:
@@ -246,7 +250,6 @@
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
             text-decoration: none;
-            display: block;
             color: inherit;
         }
 
@@ -610,7 +613,11 @@
                 font-size: 18px;
             }
 
-            .project-grid,
+            .project-card {
+                flex: 0 1 100%;
+                max-width: 100%;
+            }
+
             .skills-grid {
                 grid-template-columns: 1fr;
             }
