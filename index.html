@@ -391,21 +391,27 @@
             color: var(--accent);
         }
 
-        .view-all-experience {
-            text-align: center;
-            margin-top: 20px;
+        /* Expand/Collapse for Experience */
+        .responsibilities.collapsed li:nth-child(n+3) {
+            display: none;
         }
 
-        .text-link {
+        .expand-btn {
+            background: var(--tan);
             color: var(--dark-brown);
-            font-size: 20px;
-            text-decoration: underline;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 16px;
+            border: none;
+            padding: 8px 16px;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 0 2px var(--dark-brown);
+            transition: all 0.1s;
         }
 
-        .text-link:hover {
-            color: var(--brown);
+        .expand-btn:hover {
+            background: var(--wood);
+            transform: translateY(1px);
         }
 
         /* Contact Section */
@@ -810,13 +816,16 @@
                         <div class="experience-meta">
                             <p class="location-tag">Remote</p>
                             <p class="dates">May 2024 – Aug 2025</p>
+                            <p class="dates">Sept 2021 – July 2022</p>
                         </div>
                     </div>
-                    <ul class="responsibilities">
-                        <li>Achieved top recognition for testing accuracy, completing the most testing packets with the fewest corrections</li>
-                        <li>Managed complex financial regulatory compliance including IRS filings and financial statements</li>
+                    <ul class="responsibilities collapsed">
+                        <li>Achieved top recognition for testing accuracy, completing the most testing packets with the fewest corrections among peers</li>
+                        <li>Managed complex financial regulatory compliance including IRS filings, financial statements, and balance sheets</li>
                         <li>Performed nondiscrimination testing for retirement plans</li>
+                        <li>Conducted financial accounting and prepared Form 5500s</li>
                     </ul>
+                    <button class="expand-btn" onclick="toggleExpand(this)">Show more ▼</button>
                 </div>
 
                 <div class="experience-item">
@@ -830,15 +839,32 @@
                             <p class="dates">Oct 2020 – Sep 2021</p>
                         </div>
                     </div>
-                    <ul class="responsibilities">
+                    <ul class="responsibilities collapsed">
                         <li>Ensured exam integrity by adhering to strict academic policies</li>
                         <li>Resolved technical issues and provided exceptional customer service</li>
+                        <li>Presented a smooth and secure testing environment for students</li>
+                        <li>Documented system development through reports and simulations</li>
+                    </ul>
+                    <button class="expand-btn" onclick="toggleExpand(this)">Show more ▼</button>
+                </div>
+
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <h3>Lead Customer Service Agent</h3>
+                            <p class="company">Hallmark-Aviation Services</p>
+                        </div>
+                        <div class="experience-meta">
+                            <p class="location-tag">Dallas, TX</p>
+                            <p class="dates">July 2019 – Mar 2020</p>
+                        </div>
+                    </div>
+                    <ul class="responsibilities">
+                        <li>Managed lost and found, maintained accurate records, and resolved inquiries efficiently</li>
+                        <li>Trained and supervised a team of agents to deliver high-quality customer service</li>
                     </ul>
                 </div>
 
-                <div class="view-all-experience">
-                    <a href="about.html" class="text-link">View Full Experience →</a>
-                </div>
             </div>
         </section>
 
@@ -928,6 +954,13 @@
 
         updateTime();
         setInterval(updateTime, 1000);
+
+        // Toggle expand/collapse for experience items
+        function toggleExpand(btn) {
+            const list = btn.previousElementSibling;
+            list.classList.toggle('collapsed');
+            btn.textContent = list.classList.contains('collapsed') ? 'Show more ▼' : 'Show less ▲';
+        }
 
         // Add click sound effect simulation
         document.querySelectorAll('a, button').forEach(element => {
