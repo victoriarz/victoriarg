@@ -2138,47 +2138,6 @@
                 </div>
             </section>
 
-            <section id="substitution-finder">
-                <div class="section-frame pixel-border">
-                    <div class="substitution-header">
-                        <h2>Smart Ingredient Substitution Finder</h2>
-                        <p class="substitution-intro">Enter any ingredient to get intelligent substitution recommendations based on flavor profiles, cooking properties, and dietary compatibility. Our knowledge graph analyzes ingredient relationships to find the perfect match.</p>
-                    </div>
-
-                    <div class="substitution-tool">
-                        <div class="search-container">
-                            <div class="search-input-wrapper">
-                                <span class="search-icon">🔍</span>
-                                <input type="text" id="ingredientSearch" class="ingredient-input" placeholder="Search for an ingredient (e.g., butter, eggs, milk, flour)..." autocomplete="off">
-                            </div>
-                            <button id="findSubstitute" class="find-button">
-                                <span>Find Substitutes</span>
-                                <span class="button-arrow">→</span>
-                            </button>
-                        </div>
-
-                        <div class="quick-suggestions">
-                            <p>Popular searches:</p>
-                            <div class="suggestion-pills">
-                                <button class="suggestion-pill" data-ingredient="butter">🧈 Butter</button>
-                                <button class="suggestion-pill" data-ingredient="eggs">🥚 Eggs</button>
-                                <button class="suggestion-pill" data-ingredient="milk">🥛 Milk</button>
-                                <button class="suggestion-pill" data-ingredient="flour">🌾 Flour</button>
-                                <button class="suggestion-pill" data-ingredient="sugar">🍬 Sugar</button>
-                            </div>
-                        </div>
-
-                        <div id="substitutionResults" class="substitution-results" style="display: none;">
-                            <div class="results-header">
-                                <h3>Recommended Substitutes</h3>
-                                <button class="close-results" onclick="document.getElementById('substitutionResults').style.display='none'">Clear Results</button>
-                            </div>
-                            <div id="substitutesList"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <section id="graph-demo">
                 <!-- Main Content Layout with Sidebar -->
                 <div class="main-content-layout">
@@ -2271,43 +2230,6 @@
                             </div>
                         </section>
 
-                        <!-- Filter Controls -->
-                        <section class="info-card">
-                            <div class="card-header">
-                                <h3>🔍 FILTERS</h3>
-                            </div>
-                            <div class="card-content">
-                                <div class="filter-group">
-                                    <label class="filter-label">Cuisine</label>
-                                    <select class="filter-select" id="filterCuisine">
-                                        <option value="all">All Cuisines</option>
-                                        <option value="italian">Italian</option>
-                                        <option value="mexican">Mexican</option>
-                                        <option value="mediterranean">Mediterranean</option>
-                                        <option value="asian">Asian</option>
-                                        <option value="greek">Greek</option>
-                                        <option value="french">French</option>
-                                        <option value="indian">Indian</option>
-                                        <option value="chinese">Chinese</option>
-                                        <option value="japanese">Japanese</option>
-                                        <option value="thai">Thai</option>
-                                    </select>
-                                </div>
-                                <div class="filter-group">
-                                    <label class="filter-label">Dietary</label>
-                                    <select class="filter-select" id="filterDietary">
-                                        <option value="all">All</option>
-                                        <option value="vegan">Vegan</option>
-                                        <option value="vegetarian">Vegetarian</option>
-                                        <option value="gluten-free">Gluten-Free</option>
-                                        <option value="dairy-free">Dairy-Free</option>
-                                        <option value="nut-free">Nut-Free</option>
-                                        <option value="keto">Keto</option>
-                                        <option value="paleo">Paleo</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </section>
                     </aside>
                 </div>
 
@@ -2325,9 +2247,10 @@
                 <div class="section-frame pixel-border">
                     <h2>Overview</h2>
                     <p>Culinary Graph pairs a structured knowledge graph with conversational AI to create a cooking assistant
-                        that actually understands food. The graph maps relationships between 236+ ingredients - what substitutes
-                        for what, which flavors pair well, and how dietary restrictions connect to ingredient choices. When you
-                        ask a question, the AI retrieves relevant context from the graph to give you precise, useful answers.</p>
+                        that actually understands food. The graph maps relationships between hundreds of ingredients - what substitutes
+                        for what, which flavors pair well, and how dietary restrictions connect to ingredient choices. Explore the
+                        interactive visualization with category filtering, hover tooltips, and real-time statistics, or ask the AI
+                        for precise, context-aware answers grounded in the knowledge graph.</p>
                 </div>
             </section>
 
@@ -2351,6 +2274,10 @@
                             <h3>Dietary Filtering</h3>
                             <p>Set your dietary restrictions once and every response respects them - no more manually checking if recipes work for you.</p>
                         </div>
+                        <div class="feature-card">
+                            <h3>Interactive Graph Explorer</h3>
+                            <p>Browse ingredients visually with category filtering, hover tooltips showing dietary info, and a sidebar displaying most-connected ingredients and quick stats.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -2363,18 +2290,8 @@
                         <li><strong>Knowledge Graph:</strong> Custom ontology with 236+ ingredients, substitution rules, and flavor pairings</li>
                         <li><strong>Architecture:</strong> Focused context extraction - queries retrieve only relevant graph data</li>
                         <li><strong>Features:</strong> Dietary filtering, cuisine exploration, substitution ratios with confidence scores</li>
-                        <li><strong>Frontend:</strong> Cytoscape.js visualization, vanilla JavaScript, localStorage for preferences</li>
+                        <li><strong>Frontend:</strong> Cytoscape.js with hover tooltips, category filtering, real-time stats, vanilla JavaScript, localStorage for preferences</li>
                     </ul>
-                </div>
-            </section>
-
-            <section id="project-impact">
-                <div class="section-frame pixel-border">
-                    <h2>Impact & Results</h2>
-                    <p>Culinary Graph proves that AI assistants work best when grounded in structured data. By combining a
-                        knowledge graph with an LLM, it can answer "what can I substitute for eggs?" with specific ratios
-                        and context - not just generic suggestions. The RAG architecture ensures responses are accurate and
-                        relevant, while the graph visualization helps users explore ingredient relationships visually.</p>
                 </div>
             </section>
 
