@@ -124,8 +124,22 @@
         .header-status-bar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 20px;
+        }
+
+        .status-column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .status-column:first-child {
+            align-items: flex-start;
+        }
+
+        .status-column:last-child {
+            align-items: flex-end;
         }
 
         @keyframes slideDown {
@@ -168,15 +182,15 @@
         }
 
         .subtitle {
-            font-size: 24px;
+            font-size: 18px;
             color: var(--brown);
-            margin: 15px 0;
+            margin: 0;
         }
 
         .location {
-            font-size: 20px;
-            color: var(--green);
-            margin: 10px 0;
+            font-size: 18px;
+            color: var(--dark-brown);
+            margin: 0;
         }
 
         .hero-bio {
@@ -829,13 +843,17 @@
                 <div class="corner-decoration bottom-right"></div>
 
                 <div class="header-status-bar">
-                    <div class="coin-display" role="status" aria-label="Employment status">Open to Work</div>
-                    <div class="time-display" id="time" aria-label="Current time">Loading...</div>
+                    <div class="status-column">
+                        <div class="coin-display" role="status" aria-label="Employment status">Open to Work</div>
+                        <p class="subtitle">AI Engineer & Developer</p>
+                    </div>
+                    <div class="status-column">
+                        <div class="time-display" id="time" aria-label="Current time">Loading...</div>
+                        <p class="location">Woodland Park, CO</p>
+                    </div>
                 </div>
 
                 <h1>VICTORIA RUIZ GRIFFITH</h1>
-                <p class="subtitle">AI Engineer & Developer</p>
-                <p class="location">📍 Woodland Park, Colorado</p>
 
                 <p class="hero-bio">
                     Former financial analyst turned AI engineer. I taught myself to build production systems: knowledge graphs with Neo4j-style data modeling, RAG architectures with domain-specific retrieval, and force-directed visualizations with Canvas physics. My projects process real data (100+ articles/day), handle safety-critical chemistry calculations, and model 275+ ingredient relationships. Open to AI engineering roles.
