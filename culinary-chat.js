@@ -185,8 +185,9 @@ function addMessage(message, isBot = false, category = null) {
         const renderedMessage = renderMarkdown(message);
         contentDiv.innerHTML = `${icon}<div class="bot-text markdown-content">${categoryBadge}${renderedMessage}</div>`;
     } else {
-        // User messages don't need markdown
-        contentDiv.textContent = message;
+        // User messages don't need markdown, but need user-text wrapper for styling
+        const escapedMessage = message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        contentDiv.innerHTML = `<div class="user-text">${escapedMessage}</div>`;
     }
 
     messageDiv.appendChild(contentDiv);
