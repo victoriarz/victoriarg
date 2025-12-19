@@ -310,10 +310,7 @@ class AIChronicleGraph {
     }
     
     onMouseUp(e) {
-        if (this.dragNode) {
-            delete this.dragNode.fx;
-            delete this.dragNode.fy;
-        }
+        // Node stays pinned at dropped position (fx/fy remain set)
         this.isDragging = false;
         this.dragNode = null;
         this.isPanning = false;
@@ -631,6 +628,13 @@ class AIChronicleGraph {
     resetView() {
         this.panOffset = { x: 0, y: 0 };
         this.zoom = 1;
+
+        // Unpin all nodes
+        this.nodes.forEach(node => {
+            delete node.fx;
+            delete node.fy;
+        });
+
         this.updateVisibleNodes();
     }
     
