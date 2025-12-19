@@ -297,10 +297,14 @@ class AIChronicleApp {
         html += '</div>';
         container.innerHTML = html;
 
-        // Scroll to details panel
-        const panel = document.getElementById('nodeInfoCard');
-        if (panel) {
-            panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Scroll to details panel only for articles (calmer scroll)
+        if (node.type === 'article') {
+            const panel = document.getElementById('nodeInfoCard');
+            if (panel) {
+                setTimeout(() => {
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 150);
+            }
         }
 
         // Add click handlers for connection tags
