@@ -5,25 +5,6 @@
 (function() {
     'use strict';
 
-    // Category icons for display
-    const categoryIcons = {
-        'dairy': '🧈',
-        'dairy-alt': '🥛',
-        'protein': '🥩',
-        'grain': '🌾',
-        'vegetable': '🥬',
-        'aromatic': '🧄',
-        'herb': '🌿',
-        'spice': '🌶️',
-        'oil': '🫒',
-        'sauce': '🍯',
-        'sweetener': '🍯',
-        'baking': '🧁',
-        'nuts': '🥜',
-        'acid': '🍋',
-        'liquid': '💧'
-    };
-
     // Wait for DOM to load
     document.addEventListener('DOMContentLoaded', function() {
         initializeGraph();
@@ -1205,11 +1186,10 @@
 
         trendingContainer.innerHTML = sorted.map(([id, count], index) => {
             const node = nodeMap[id];
-            const icon = categoryIcons[node?.category] || '🍽️';
             return `
                 <div class="trending-item" data-ingredient="${id}">
                     <span class="trending-rank">#${index + 1}</span>
-                    <span class="trending-name">${icon} ${node?.label || id}</span>
+                    <span class="trending-name">${node?.label || id}</span>
                     <span class="trending-count">${count} links</span>
                 </div>
             `;
@@ -1245,11 +1225,9 @@
         if (!categoriesContainer) return;
 
         categoriesContainer.innerHTML = sorted.map(([category, count]) => {
-            const icon = categoryIcons[category] || '🍽️';
             const displayName = category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
             return `
                 <div class="category-item" data-category="${category}">
-                    <span class="category-icon">${icon}</span>
                     <span class="category-name">${displayName}</span>
                     <span class="category-count">${count}</span>
                 </div>
@@ -1304,7 +1282,6 @@
         cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeData = node.data();
-            const icon = categoryIcons[nodeData.category] || '🍽️';
             const dietary = nodeData.dietary && nodeData.dietary.length > 0
                 ? nodeData.dietary.join(', ')
                 : 'No restrictions';
@@ -1313,9 +1290,9 @@
             node.addClass('hovered');
 
             tooltip.innerHTML = `
-                <div class="tooltip-category">${icon} ${formatCategory(nodeData.category)}</div>
+                <div class="tooltip-category">${formatCategory(nodeData.category)}</div>
                 <div class="tooltip-name">${nodeData.label}</div>
-                <div class="tooltip-dietary">🥗 ${dietary}</div>
+                <div class="tooltip-dietary">${dietary}</div>
             `;
 
             tooltip.classList.add('visible');
@@ -1468,7 +1445,6 @@
             return;
         }
 
-        const icon = categoryIcons[nodeData.category] || '🍽️';
         const dietary = renderDietaryBadges(nodeData.dietary);
         const cuisines = nodeData.cuisine && nodeData.cuisine.length > 0
             ? nodeData.cuisine.join(', ')
@@ -1484,16 +1460,15 @@
             const edgeData = edge.data();
             const otherNode = edge.source().id() === nodeData.id ? edge.target() : edge.source();
             const otherLabel = otherNode.data('label');
-            const otherIcon = categoryIcons[otherNode.data('category')] || '🍽️';
 
             if (edgeData.type === 'substitutes') {
                 if (edge.source().id() === nodeData.id) {
-                    substitutes.push({ label: otherLabel, icon: otherIcon, ratio: edgeData.ratio, context: edgeData.context });
+                    substitutes.push({ label: otherLabel, ratio: edgeData.ratio, context: edgeData.context });
                 }
             } else if (edgeData.type === 'pairs-with') {
-                pairsWith.push({ label: otherLabel, icon: otherIcon, strength: edgeData.strength });
+                pairsWith.push({ label: otherLabel, strength: edgeData.strength });
             } else if (edgeData.type === 'used-with') {
-                usedWith.push({ label: otherLabel, icon: otherIcon, context: edgeData.context });
+                usedWith.push({ label: otherLabel, context: edgeData.context });
             }
         });
 
@@ -1557,6 +1532,11 @@
 
         html += '</div>';
         detailsContent.innerHTML = html;
+
+        // Scroll to details panel so users can see the ingredient info
+        setTimeout(() => {
+            detailsPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 150);
     }
 
     // Override the original showNodeInfo to use enhanced version

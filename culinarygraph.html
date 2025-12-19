@@ -453,11 +453,13 @@
             }
 
             .ai-status-badge {
-                font-size: 12px;
+                font-size: 10px;
+                padding: 5px 8px;
             }
 
             .start-over-btn {
-                font-size: 12px;
+                font-size: 10px;
+                padding: 5px 10px;
             }
 
             .graph-filter-controls {
@@ -582,18 +584,14 @@
                 padding: 10px 14px;
             }
 
-            .ai-controls {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
             .ai-status-badge {
-                font-size: 12px;
+                font-size: 9px;
+                padding: 5px 8px;
             }
 
             .start-over-btn {
-                font-size: 12px;
-                padding: 10px 16px;
+                font-size: 9px;
+                padding: 5px 10px;
             }
 
             .chat-intro {
@@ -690,6 +688,7 @@
         /* Culinary-specific styles */
         .chat-header-controls {
             margin-bottom: 20px;
+            text-align: center;
         }
 
         .chat-intro {
@@ -706,12 +705,13 @@
             flex-wrap: wrap;
             margin-top: 15px;
             align-items: center;
+            justify-content: center;
         }
 
         .ai-status-badge {
             background: var(--green);
-            padding: 8px 14px;
-            font-size: 14px;
+            padding: 6px 10px;
+            font-size: 11px;
             border-radius: 20px;
             border: 2px solid var(--dark-brown);
             font-family: 'Press Start 2P', monospace;
@@ -721,9 +721,9 @@
         .start-over-btn {
             background: white;
             color: var(--dark-brown);
-            padding: 8px 16px;
+            padding: 6px 12px;
             border: 2px solid var(--dark-brown);
-            font-size: 14px;
+            font-size: 11px;
             font-family: 'Press Start 2P', monospace;
             border-radius: 20px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -1034,6 +1034,7 @@
             background: var(--tan);
             border: 2px solid var(--brown);
             border-radius: 8px;
+            text-align: center;
         }
 
         .chat-suggestions > p:first-child {
@@ -1047,6 +1048,7 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .suggestion-btn {
@@ -1556,8 +1558,8 @@
         }
 
         .details-content {
-            padding: 25px 30px;
-            min-height: 120px;
+            padding: 15px 20px;
+            min-height: 60px;
             max-height: 350px;
             overflow-y: auto;
         }
@@ -1919,8 +1921,8 @@
         .node-info-header-row {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
         }
 
@@ -1963,10 +1965,10 @@
         .node-info-section-inline {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 8px;
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .node-info-section-inline .section-label {
@@ -1981,13 +1983,13 @@
         }
 
         .node-info-section {
-            margin-bottom: 16px;
+            margin-bottom: 10px;
         }
 
         .node-info-section h5 {
             font-family: 'VT323', monospace;
             font-size: 22px;
-            margin: 0 0 10px 0;
+            margin: 0 0 6px 0;
             color: var(--dark-brown);
         }
 
@@ -1998,7 +2000,7 @@
         }
 
         .node-info-section li {
-            padding: 8px 0;
+            padding: 4px 0;
             font-size: 16px;
             border-bottom: 1px solid rgba(107, 93, 82, 0.1);
         }
@@ -2043,14 +2045,14 @@
 
         /* Ask Chat Button */
         .node-info-actions {
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 2px solid rgba(107, 93, 82, 0.2);
+            text-align: center;
         }
 
         .ask-chat-btn {
-            width: 100%;
-            padding: 10px 15px;
+            padding: 8px 12px;
             font-family: 'VT323', monospace;
             font-size: 18px;
             background: var(--accent);
@@ -2058,9 +2060,8 @@
             border: 2px solid var(--dark-brown);
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
         }
 
@@ -2416,7 +2417,7 @@
     <script src="culinary-graph-engine.js?v=1.2.0"></script>
 
     <!-- Graph Visualization Engine -->
-    <script src="culinary-graph-viz.js?v=1.6.1"></script>
+    <script src="culinary-graph-viz.js?v=1.7.0"></script>
 
     <!-- Substitution Finder Engine (with AI) -->
     <script src="culinary-substitution.js?v=1.2.1"></script>
