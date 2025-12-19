@@ -275,7 +275,6 @@
             // Node click event
             cy.on('tap', 'node', function(evt) {
                 const node = evt.target;
-                showNodeInfo(node);
                 showEnhancedNodeInfo(node);
                 highlightConnections(node);
             });
@@ -283,7 +282,6 @@
             // Background click event (deselect)
             cy.on('tap', function(evt) {
                 if (evt.target === cy) {
-                    hideNodeInfo();
                     removeHighlights();
                     // Reset details panel
                     const detailsContent = document.getElementById('ingredientDetailsContent');
@@ -529,7 +527,6 @@
         // Reset graph
         document.getElementById('resetGraph').addEventListener('click', function() {
             resetFilters();
-            hideNodeInfo();
             // Reset details panel
             const detailsContent = document.getElementById('ingredientDetailsContent');
             if (detailsContent) {
@@ -588,7 +585,6 @@
             switch(e.key) {
                 case 'Escape':
                     resetFilters();
-                    hideNodeInfo();
                     break;
                 case 'a':
                 case 'A':
