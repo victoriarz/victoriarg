@@ -42,7 +42,7 @@ class AIChronicleGraph {
         
         // Physics settings
         this.physics = {
-            repulsion: 5000,
+            repulsion: 7000,
             attraction: 0.01,
             damping: 0.85,
             centerGravity: 0.02
