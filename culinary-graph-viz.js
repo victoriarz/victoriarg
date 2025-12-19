@@ -27,6 +27,40 @@
     // Track which ingredients have been revealed through searches
     let revealedIngredients = new Set(mainIngredients);
 
+    // Simmering animation interval for hovered nodes
+    let simmerInterval = null;
+    let simmerPhase = 0;
+
+    // Sizzle sparkle colors (warm cooking tones)
+    const sizzleColors = ['#d4a574', '#e6b87a', '#d97642', '#c17f59', '#f0c674'];
+
+    // Create sizzle sparkle effect at given screen coordinates
+    function createSizzleEffect(screenX, screenY) {
+        const numSparkles = 8;
+        for (let i = 0; i < numSparkles; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sizzle-sparkle';
+
+            // Random angle and distance
+            const angle = (i / numSparkles) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+            const distance = 25 + Math.random() * 20;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+
+            // Set CSS variables for animation
+            sparkle.style.setProperty('--tx', tx + 'px');
+            sparkle.style.setProperty('--ty', ty + 'px');
+            sparkle.style.left = screenX + 'px';
+            sparkle.style.top = screenY + 'px';
+            sparkle.style.backgroundColor = sizzleColors[Math.floor(Math.random() * sizzleColors.length)];
+
+            document.body.appendChild(sparkle);
+
+            // Remove after animation completes
+            setTimeout(() => sparkle.remove(), 500);
+        }
+    }
+
     // Drag tracking for click-to-show-details vs drag-to-move
     let dragStartPos = null;
     let hasDragged = false;
@@ -298,6 +332,17 @@
             // Node click event
             cy.on('tap', 'node', function(evt) {
                 const node = evt.target;
+
+                // Create sizzle sparkle effect at click position
+                const container = document.getElementById('graphContainer');
+                if (container) {
+                    const containerRect = container.getBoundingClientRect();
+                    const renderedPos = node.renderedPosition();
+                    const screenX = containerRect.left + renderedPos.x;
+                    const screenY = containerRect.top + renderedPos.y;
+                    createSizzleEffect(screenX, screenY);
+                }
+
                 showEnhancedNodeInfo(node);
                 highlightConnections(node);
             });
@@ -1400,6 +1445,19 @@
 
             tooltip.style.left = tooltipX + 'px';
             tooltip.style.top = tooltipY + 'px';
+
+            // Start simmering animation (gentle pulse like bubbles in a pot)
+            if (simmerInterval) clearInterval(simmerInterval);
+            simmerPhase = 0;
+            simmerInterval = setInterval(() => {
+                simmerPhase += 0.15;
+                const pulse = 1 + 0.08 * Math.sin(simmerPhase);
+                const baseSize = getNodeSize();
+                node.style({
+                    'width': baseSize * pulse,
+                    'height': baseSize * pulse
+                });
+            }, 50);
         });
 
         cy.on('mouseout', 'node', function(evt) {
@@ -1407,6 +1465,18 @@
             tooltip.classList.remove('visible');
             // Remove edge dimming
             cy.edges().removeClass('dimmed');
+
+            // Stop simmering animation
+            if (simmerInterval) {
+                clearInterval(simmerInterval);
+                simmerInterval = null;
+            }
+            // Reset node size
+            const baseSize = getNodeSize();
+            evt.target.style({
+                'width': baseSize,
+                'height': baseSize
+            });
         });
 
         cy.on('drag', 'node', function() {
