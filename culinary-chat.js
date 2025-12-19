@@ -18,6 +18,34 @@ const restrictionsBanner = document.getElementById('restrictionsBanner');
 const restrictionsToggle = document.getElementById('restrictionsToggle');
 const restrictionsCount = document.getElementById('restrictionsCount');
 
+// Cooking-themed loading messages
+const cookingLoadingMessages = [
+    // Kitchen actions
+    'Chopping ingredients...',
+    'Whisking up a response...',
+    'Simmering ideas...',
+    'Marinating on that...',
+    'Stirring the pot...',
+    'Folding in the details...',
+    // Cooking progress
+    'Preheating...',
+    'Bringing to a boil...',
+    'Reducing the sauce...',
+    'Letting it rest...',
+    'Plating up...',
+    // Chef personality
+    'Chef is in the kitchen...',
+    'Tasting for seasoning...',
+    'Adding a pinch of wisdom...',
+    'Almost ready to serve...',
+    'Gathering fresh ideas...',
+];
+
+// Get random cooking loading message
+function getRandomLoadingMessage() {
+    return cookingLoadingMessages[Math.floor(Math.random() * cookingLoadingMessages.length)];
+}
+
 // Configure marked for better markdown rendering
 if (typeof marked !== 'undefined') {
     // Check if we're using marked v4+ or older version
@@ -229,18 +257,22 @@ function getCategoryLabel(category) {
     return labels[category] || 'Info';
 }
 
-// Show typing indicator
+// Typing indicator message cycling interval
+let typingMessageInterval = null;
+
+// Show typing indicator with cooking-themed message
 function showTypingIndicator() {
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message bot-message typing-indicator';
     typingDiv.id = 'typingIndicator';
 
+    const initialMessage = getRandomLoadingMessage();
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = `
         <span class="bot-icon">🥗</span>
         <div class="typing-container">
-            <span class="typing-text" id="typingText">Thinking...</span>
+            <span class="typing-text" id="typingText">${initialMessage}</span>
             <div class="typing-dots">
                 <span class="dot"></span>
                 <span class="dot"></span>
@@ -252,6 +284,14 @@ function showTypingIndicator() {
     typingDiv.appendChild(contentDiv);
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Cycle through messages every 2.5 seconds for longer waits
+    typingMessageInterval = setInterval(() => {
+        const typingText = document.getElementById('typingText');
+        if (typingText) {
+            typingText.textContent = getRandomLoadingMessage();
+        }
+    }, 2500);
 }
 
 // Update typing indicator message
@@ -264,6 +304,11 @@ function updateTypingIndicator(message) {
 
 // Remove typing indicator
 function removeTypingIndicator() {
+    // Clear the message cycling interval
+    if (typingMessageInterval) {
+        clearInterval(typingMessageInterval);
+        typingMessageInterval = null;
+    }
     const indicator = document.getElementById('typingIndicator');
     if (indicator) {
         indicator.remove();
