@@ -1590,7 +1590,7 @@
         html += `
             <div class="node-info-actions">
                 <button class="ask-chat-btn" onclick="window.populateChatWithIngredient('${nodeData.label.replace(/'/g, "\\'")}')">
-                    💬 Ask about ${nodeData.label}
+                    Ask about ${nodeData.label}
                 </button>
             </div>
         `;
