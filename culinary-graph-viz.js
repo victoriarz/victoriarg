@@ -1484,26 +1484,25 @@
         let html = `
             <div class="node-info-enhanced">
                 <div class="node-info-header-row">
-                    <span class="node-info-icon">${icon}</span>
-                    <div>
+                    <div class="node-info-title-group">
                         <h4 class="node-info-title">${nodeData.label}</h4>
                         <p class="node-info-category">${formatCategory(nodeData.category)}</p>
                     </div>
-                </div>
-                <div class="node-info-meta-row">
-                    <div><strong>Cuisines:</strong> ${cuisines}</div>
-                    <div><strong>Dietary:</strong> ${dietary}</div>
+                    <div class="node-info-meta-inline">
+                        <span><strong>Cuisines:</strong> ${cuisines}</span>
+                        <span><strong>Dietary:</strong> ${dietary}</span>
+                    </div>
                 </div>
         `;
 
         if (substitutes.length > 0) {
             html += `
                 <div class="node-info-section">
-                    <h5>🔄 Substitutions</h5>
+                    <h5>Substitutions</h5>
                     <ul>
                         ${substitutes.map(s => `
                             <li>
-                                ${s.icon} <strong>${s.label}</strong>
+                                <strong>${s.label}</strong>
                                 ${s.ratio ? `<span class="ratio">(${s.ratio})</span>` : ''}
                                 ${s.context ? `<span class="context">for ${s.context}</span>` : ''}
                             </li>
@@ -1515,26 +1514,18 @@
 
         if (pairsWith.length > 0) {
             html += `
-                <div class="node-info-section">
-                    <h5>💚 Pairs Well With</h5>
-                    <ul>
-                        ${pairsWith.map(p => `
-                            <li>${p.icon} ${p.label} ${p.strength ? `<span class="strength ${p.strength}">${p.strength}</span>` : ''}</li>
-                        `).join('')}
-                    </ul>
+                <div class="node-info-section-inline">
+                    <span class="section-label">Pairs Well With:</span>
+                    <span class="section-items">${pairsWith.map(p => `${p.label}${p.strength ? ` <span class="strength ${p.strength}">${p.strength}</span>` : ''}`).join(', ')}</span>
                 </div>
             `;
         }
 
         if (usedWith.length > 0) {
             html += `
-                <div class="node-info-section">
-                    <h5>🍳 Used Together</h5>
-                    <ul>
-                        ${usedWith.map(u => `
-                            <li>${u.icon} ${u.label} ${u.context ? `<span class="context">in ${u.context}</span>` : ''}</li>
-                        `).join('')}
-                    </ul>
+                <div class="node-info-section-inline">
+                    <span class="section-label">Used Together:</span>
+                    <span class="section-items">${usedWith.map(u => `${u.label}${u.context ? ` <span class="context">in ${u.context}</span>` : ''}`).join(', ')}</span>
                 </div>
             `;
         }

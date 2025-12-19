@@ -1792,37 +1792,62 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .node-info-icon {
             font-size: 48px;
         }
 
+        .node-info-title-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
         .node-info-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
-            margin: 0 0 6px 0;
+            margin: 0 0 4px 0;
             color: var(--dark-brown);
         }
 
         .node-info-category {
             font-family: 'VT323', monospace;
-            font-size: 22px;
+            font-size: 20px;
             margin: 0;
             color: var(--brown);
         }
 
-        .node-info-meta-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 15px 18px;
-            background: rgba(232, 165, 165, 0.1);
-            margin-bottom: 18px;
-            font-size: 16px;
+        .node-info-meta-inline {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 14px;
+            text-align: right;
+            color: var(--brown);
         }
 
-        .node-info-meta-row strong {
+        .node-info-meta-inline strong {
+            color: var(--dark-brown);
+        }
+
+        .node-info-section-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .node-info-section-inline .section-label {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--dark-brown);
+            font-weight: bold;
+        }
+
+        .node-info-section-inline .section-items {
             color: var(--brown);
         }
 
@@ -1862,8 +1887,7 @@
         .node-info-section .context {
             color: var(--brown);
             font-size: 14px;
-            display: block;
-            margin-top: 4px;
+            margin-left: 8px;
         }
 
         .node-info-section .strength {
