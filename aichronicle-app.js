@@ -296,7 +296,13 @@ class AIChronicleApp {
         
         html += '</div>';
         container.innerHTML = html;
-        
+
+        // Scroll to details panel
+        const panel = document.getElementById('nodeInfoCard');
+        if (panel) {
+            panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
         // Add click handlers for connection tags
         container.querySelectorAll('.connection-tag').forEach(tag => {
             tag.addEventListener('click', () => {
