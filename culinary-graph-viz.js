@@ -1604,6 +1604,7 @@
         }
 
         const dietary = renderDietaryBadges(nodeData.dietary);
+        const hasDietary = nodeData.dietary && nodeData.dietary.length > 0;
         const cuisines = nodeData.cuisine && nodeData.cuisine.length > 0
             ? nodeData.cuisine.join(', ')
             : 'All cuisines';
@@ -1639,7 +1640,7 @@
                     </div>
                     <div class="node-info-meta-inline">
                         <span><strong>Common in:</strong> ${cuisines}</span>
-                        <span><strong>Dietary:</strong> ${dietary}</span>
+                        ${hasDietary ? `<span><strong>Dietary:</strong> ${dietary}</span>` : ''}
                     </div>
                 </div>
         `;
