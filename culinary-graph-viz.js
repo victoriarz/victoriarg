@@ -888,6 +888,10 @@
             });
 
             if (exactMatch) {
+                // Show connected nodes and edges for the exact match
+                exactMatch.neighborhood('node').show();
+                exactMatch.connectedEdges().show();
+
                 // Center and zoom to the exact match
                 cy.nodes().unselect();
                 exactMatch.select();
