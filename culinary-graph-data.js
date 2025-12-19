@@ -412,6 +412,138 @@ const culinaryGraphData = {
         { source: 'coconut-milk', target: 'cream', type: 'similar-texture', note: 'creamy consistency', confidence: 0.9 },
         { source: 'tofu', target: 'chicken-breast', type: 'similar-texture', note: 'absorbs flavors', confidence: 0.75 },
         { source: 'almond-milk', target: 'milk', type: 'similar-use', note: 'plant-based alternative', confidence: 0.9 },
+
+        // === SWEETENER CONNECTIONS ===
+        // Liquid sweeteners can substitute for each other
+        { source: 'honey', target: 'maple-syrup', type: 'substitutes', ratio: '1:1', context: 'baking, beverages', confidence: 0.95 },
+        { source: 'honey', target: 'agave', type: 'substitutes', ratio: '1:1', context: 'beverages, raw recipes', confidence: 0.9 },
+        { source: 'honey', target: 'date-syrup', type: 'substitutes', ratio: '1:1', context: 'baking, drizzling', confidence: 0.85 },
+        { source: 'honey', target: 'molasses', type: 'substitutes', ratio: '1:0.75', context: 'baking (stronger flavor)', confidence: 0.7 },
+        { source: 'maple-syrup', target: 'agave', type: 'substitutes', ratio: '1:1', context: 'pancakes, beverages', confidence: 0.9 },
+        { source: 'maple-syrup', target: 'date-syrup', type: 'substitutes', ratio: '1:1', context: 'baking, breakfast', confidence: 0.85 },
+        { source: 'maple-syrup', target: 'molasses', type: 'substitutes', ratio: '1:0.5', context: 'baking (use less)', confidence: 0.65 },
+        { source: 'agave', target: 'date-syrup', type: 'substitutes', ratio: '1:1', context: 'vegan baking', confidence: 0.85 },
+        { source: 'date-syrup', target: 'molasses', type: 'substitutes', ratio: '1:0.75', context: 'baking, BBQ sauces', confidence: 0.75 },
+        { source: 'sugar', target: 'date-syrup', type: 'substitutes', ratio: '1:0.66', context: 'baking, reduce liquid', confidence: 0.8 },
+        { source: 'sugar', target: 'molasses', type: 'substitutes', ratio: '1:0.5', context: 'cookies, gingerbread', confidence: 0.75 },
+
+        // === OIL CONNECTIONS ===
+        // Cooking oils can often substitute for each other
+        { source: 'olive-oil', target: 'avocado-oil', type: 'substitutes', ratio: '1:1', context: 'cooking, dressings', confidence: 0.95 },
+        { source: 'olive-oil', target: 'vegetable-oil', type: 'substitutes', ratio: '1:1', context: 'cooking (not finishing)', confidence: 0.85 },
+        { source: 'avocado-oil', target: 'vegetable-oil', type: 'substitutes', ratio: '1:1', context: 'high-heat cooking', confidence: 0.9 },
+        { source: 'coconut-oil', target: 'vegetable-oil', type: 'substitutes', ratio: '1:1', context: 'baking, frying', confidence: 0.85 },
+        { source: 'coconut-oil', target: 'butter', type: 'substitutes', ratio: '1:1', context: 'vegan baking', confidence: 0.9 },
+        { source: 'sesame-oil', target: 'peanut-oil', type: 'substitutes', ratio: '1:1', context: 'asian cooking', confidence: 0.8 },
+        { source: 'butter', target: 'ghee', type: 'substitutes', ratio: '1:1', context: 'high-heat, lactose-free', confidence: 0.95 },
+
+        // === PROTEIN CONNECTIONS ===
+        // Poultry substitutions
+        { source: 'chicken-breast', target: 'turkey-breast', type: 'substitutes', ratio: '1:1', context: 'lean protein swap', confidence: 0.95 },
+        { source: 'chicken-thighs', target: 'turkey-thighs', type: 'substitutes', ratio: '1:1', context: 'dark meat swap', confidence: 0.9 },
+        { source: 'chicken-breast', target: 'chicken-thighs', type: 'substitutes', ratio: '1:1', context: 'more flavor, moisture', confidence: 0.85 },
+        // Ground meat substitutions
+        { source: 'ground-beef', target: 'ground-turkey', type: 'substitutes', ratio: '1:1', context: 'leaner option', confidence: 0.9 },
+        { source: 'ground-beef', target: 'ground-pork', type: 'substitutes', ratio: '1:1', context: 'meatballs, burgers', confidence: 0.85 },
+        { source: 'ground-turkey', target: 'ground-pork', type: 'substitutes', ratio: '1:1', context: 'lighter dishes', confidence: 0.8 },
+        // Fish substitutions
+        { source: 'salmon', target: 'trout', type: 'substitutes', ratio: '1:1', context: 'similar omega-3 fish', confidence: 0.9 },
+        { source: 'salmon', target: 'arctic-char', type: 'substitutes', ratio: '1:1', context: 'mild salmon alternative', confidence: 0.85 },
+        { source: 'cod', target: 'halibut', type: 'substitutes', ratio: '1:1', context: 'white fish', confidence: 0.9 },
+        { source: 'cod', target: 'tilapia', type: 'substitutes', ratio: '1:1', context: 'mild white fish', confidence: 0.85 },
+        { source: 'shrimp', target: 'prawns', type: 'substitutes', ratio: '1:1', context: 'nearly identical', confidence: 0.98 },
+        { source: 'shrimp', target: 'scallops', type: 'substitutes', ratio: '1:1', context: 'shellfish', confidence: 0.8 },
+        // Vegan protein substitutions
+        { source: 'tofu', target: 'tempeh', type: 'substitutes', ratio: '1:1', context: 'vegan protein, firmer texture', confidence: 0.9 },
+        { source: 'tofu', target: 'seitan', type: 'substitutes', ratio: '1:1', context: 'meat-like texture', confidence: 0.85 },
+        { source: 'tempeh', target: 'seitan', type: 'substitutes', ratio: '1:1', context: 'hearty vegan protein', confidence: 0.85 },
+        { source: 'lentils', target: 'black-beans', type: 'substitutes', ratio: '1:1', context: 'plant protein', confidence: 0.85 },
+        { source: 'lentils', target: 'chickpeas', type: 'substitutes', ratio: '1:1', context: 'soups, stews', confidence: 0.85 },
+        { source: 'black-beans', target: 'kidney-beans', type: 'substitutes', ratio: '1:1', context: 'chili, salads', confidence: 0.9 },
+
+        // === DAIRY & ALTERNATIVE CONNECTIONS ===
+        // Milk alternatives
+        { source: 'milk', target: 'oat-milk', type: 'substitutes', ratio: '1:1', context: 'baking, coffee', confidence: 0.9 },
+        { source: 'milk', target: 'soy-milk', type: 'substitutes', ratio: '1:1', context: 'baking, cooking', confidence: 0.9 },
+        { source: 'almond-milk', target: 'oat-milk', type: 'substitutes', ratio: '1:1', context: 'plant-based swaps', confidence: 0.95 },
+        { source: 'almond-milk', target: 'soy-milk', type: 'substitutes', ratio: '1:1', context: 'smoothies, cereal', confidence: 0.9 },
+        { source: 'oat-milk', target: 'soy-milk', type: 'substitutes', ratio: '1:1', context: 'coffee, baking', confidence: 0.9 },
+        { source: 'coconut-milk', target: 'cream', type: 'substitutes', ratio: '1:1', context: 'curries, vegan cream', confidence: 0.9 },
+        // Cream alternatives
+        { source: 'cream', target: 'half-and-half', type: 'substitutes', ratio: '1:1', context: 'sauces (less rich)', confidence: 0.85 },
+        { source: 'sour-cream', target: 'greek-yogurt', type: 'substitutes', ratio: '1:1', context: 'toppings, dips', confidence: 0.9 },
+        { source: 'yogurt', target: 'greek-yogurt', type: 'substitutes', ratio: '1:1', context: 'breakfast, baking', confidence: 0.95 },
+        // Cheese within types
+        { source: 'cheese-cheddar', target: 'cheese-gruyere', type: 'substitutes', ratio: '1:1', context: 'melting cheese', confidence: 0.85 },
+        { source: 'cheese-mozzarella', target: 'cheese-provolone', type: 'substitutes', ratio: '1:1', context: 'pizza, sandwiches', confidence: 0.85 },
+        { source: 'cheese-feta', target: 'cheese-goat', type: 'substitutes', ratio: '1:1', context: 'salads, crumbling', confidence: 0.85 },
+
+        // === CLASSIC FLAVOR PAIRINGS ===
+        // Italian flavors
+        { source: 'tomato', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'tomato', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'basil', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'oregano', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'oregano', target: 'olive-oil', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'cheese-parmesan', target: 'basil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'cheese-parmesan', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        // Asian flavors
+        { source: 'ginger', target: 'sesame-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'soy-sauce', target: 'sesame-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'soy-sauce', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'ginger', target: 'scallions', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'soy-sauce', target: 'rice', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'tofu', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        // Mexican flavors
+        { source: 'cilantro', target: 'lime', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'cilantro', target: 'jalapeno', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'cumin', target: 'cilantro', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'cumin', target: 'black-beans', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'lime', target: 'jalapeno', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'avocado', target: 'lime', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'avocado', target: 'cilantro', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        // Mediterranean flavors
+        { source: 'lemon', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'lemon', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'lemon', target: 'oregano', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'tahini', target: 'lemon', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'tahini', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'feta', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        // Other classic pairings
+        { source: 'chocolate', target: 'vanilla', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'chocolate', target: 'coffee', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'cinnamon', target: 'apple', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'cinnamon', target: 'honey', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'bacon', target: 'eggs', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'rosemary', target: 'lamb', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'thyme', target: 'chicken-breast', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'dill', target: 'salmon', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'mint', target: 'lamb', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+
+        // === COMMON USED-TOGETHER COMBINATIONS ===
+        // Mirepoix / Aromatics base
+        { source: 'onion', target: 'celery', type: 'used-with', context: 'mirepoix base', confidence: 0.95 },
+        { source: 'onion', target: 'carrot', type: 'used-with', context: 'mirepoix base', confidence: 0.95 },
+        { source: 'celery', target: 'carrot', type: 'used-with', context: 'mirepoix, stocks', confidence: 0.95 },
+        { source: 'garlic', target: 'ginger', type: 'used-with', context: 'asian aromatics', confidence: 0.95 },
+        { source: 'garlic', target: 'onion', type: 'used-with', context: 'sofrito, base', confidence: 0.95 },
+        // Baking combinations
+        { source: 'flour', target: 'sugar', type: 'used-with', context: 'baking', confidence: 0.95 },
+        { source: 'eggs', target: 'sugar', type: 'used-with', context: 'baking, custards', confidence: 0.95 },
+        { source: 'butter', target: 'sugar', type: 'used-with', context: 'creaming method', confidence: 0.95 },
+        { source: 'vanilla', target: 'sugar', type: 'used-with', context: 'baking, desserts', confidence: 0.9 },
+        { source: 'baking-powder', target: 'flour', type: 'used-with', context: 'leavening', confidence: 0.95 },
+        // Common cooking combinations
+        { source: 'rice', target: 'onion', type: 'used-with', context: 'pilaf, fried rice', confidence: 0.9 },
+        { source: 'pasta', target: 'garlic', type: 'used-with', context: 'pasta dishes', confidence: 0.95 },
+        { source: 'pasta', target: 'olive-oil', type: 'used-with', context: 'pasta dishes', confidence: 0.95 },
+        { source: 'pasta', target: 'cheese-parmesan', type: 'used-with', context: 'finishing pasta', confidence: 0.95 },
+        { source: 'potato', target: 'butter', type: 'used-with', context: 'mashed potatoes', confidence: 0.95 },
+        { source: 'potato', target: 'cream', type: 'used-with', context: 'mashed, gratin', confidence: 0.9 },
+        // Salad/fresh combinations
+        { source: 'lettuce', target: 'tomato', type: 'used-with', context: 'salads', confidence: 0.95 },
+        { source: 'cucumber', target: 'tomato', type: 'used-with', context: 'salads', confidence: 0.9 },
+        { source: 'avocado', target: 'tomato', type: 'used-with', context: 'guac, salads', confidence: 0.95 },
     ]
 };
 

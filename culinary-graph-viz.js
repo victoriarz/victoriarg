@@ -458,7 +458,7 @@
                 <strong>Category:</strong> ${formatCategory(nodeData.category)}
             </div>
             <div class="node-detail-item">
-                <strong>Cuisines:</strong> ${nodeData.cuisine.join(', ')}
+                <strong>Common in:</strong> ${nodeData.cuisine.join(', ')}
             </div>
         `;
 
@@ -1489,7 +1489,7 @@
                         <p class="node-info-category">${formatCategory(nodeData.category)}</p>
                     </div>
                     <div class="node-info-meta-inline">
-                        <span><strong>Cuisines:</strong> ${cuisines}</span>
+                        <span><strong>Common in:</strong> ${cuisines}</span>
                         <span><strong>Dietary:</strong> ${dietary}</span>
                     </div>
                 </div>
