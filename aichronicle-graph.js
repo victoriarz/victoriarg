@@ -310,10 +310,7 @@ class AIChronicleGraph {
     }
     
     onMouseUp(e) {
-        if (this.dragNode) {
-            delete this.dragNode.fx;
-            delete this.dragNode.fy;
-        }
+        // Node stays pinned at dropped position (fx/fy remain set)
         this.isDragging = false;
         this.dragNode = null;
         this.isPanning = false;
@@ -420,16 +417,33 @@ class AIChronicleGraph {
             // Repulsion from other nodes
             visibleNodesList.forEach(other => {
                 if (node === other) return;
-                
+
                 const dx = node.x - other.x;
                 const dy = node.y - other.y;
                 const dist = Math.sqrt(dx * dx + dy * dy) || 1;
                 const force = this.physics.repulsion / (dist * dist);
-                
+
                 node.vx += (dx / dist) * force * 0.01;
                 node.vy += (dy / dist) * force * 0.01;
             });
-            
+
+            // Collision detection - prevent visual overlap
+            visibleNodesList.forEach(other => {
+                if (node === other) return;
+
+                const dx = node.x - other.x;
+                const dy = node.y - other.y;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                const minDist = node.radius + other.radius + 5; // 5px padding
+
+                if (dist < minDist) {
+                    const overlap = minDist - dist;
+                    const pushForce = overlap * 0.5; // Strong push when overlapping
+                    node.vx += (dx / dist) * pushForce;
+                    node.vy += (dy / dist) * pushForce;
+                }
+            });
+
             // Attraction along edges
             this.edges.forEach(edge => {
                 if (!this.visibleNodes.has(edge.source.id) || !this.visibleNodes.has(edge.target.id)) return;
@@ -631,6 +645,13 @@ class AIChronicleGraph {
     resetView() {
         this.panOffset = { x: 0, y: 0 };
         this.zoom = 1;
+
+        // Unpin all nodes
+        this.nodes.forEach(node => {
+            delete node.fx;
+            delete node.fy;
+        });
+
         this.updateVisibleNodes();
     }
     
