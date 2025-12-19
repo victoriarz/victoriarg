@@ -544,6 +544,134 @@ const culinaryGraphData = {
         { source: 'lettuce', target: 'tomato', type: 'used-with', context: 'salads', confidence: 0.95 },
         { source: 'cucumber', target: 'tomato', type: 'used-with', context: 'salads', confidence: 0.9 },
         { source: 'avocado', target: 'tomato', type: 'used-with', context: 'guac, salads', confidence: 0.95 },
+
+        // === CHEESE CONNECTIONS ===
+        // Soft/creamy cheese substitutions
+        { source: 'cheese-brie', target: 'cheese-cream', type: 'substitutes', ratio: '1:1', context: 'spreading, appetizers', confidence: 0.8 },
+        { source: 'cheese-brie', target: 'cheese-goat', type: 'substitutes', ratio: '1:1', context: 'cheese boards', confidence: 0.75 },
+        { source: 'cheese-cream', target: 'cheese-ricotta', type: 'substitutes', ratio: '1:1', context: 'spreads, dips', confidence: 0.85 },
+        // Blue cheese connections
+        { source: 'cheese-blue', target: 'cheese-feta', type: 'substitutes', ratio: '1:1', context: 'salads, crumbling', confidence: 0.7 },
+        { source: 'cheese-blue', target: 'cheese-goat', type: 'substitutes', ratio: '1:1', context: 'strong flavor', confidence: 0.7 },
+        // Swiss/gruyere connections
+        { source: 'cheese-swiss', target: 'cheese-gruyere', type: 'substitutes', ratio: '1:1', context: 'melting, sandwiches', confidence: 0.9 },
+        { source: 'cheese-gruyere', target: 'cheese-cheddar', type: 'substitutes', ratio: '1:1', context: 'gratins, fondue', confidence: 0.8 },
+        // Cheese pairings
+        { source: 'cheese-brie', target: 'honey', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'cheese-blue', target: 'honey', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'cheese-blue', target: 'walnuts', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'cheese-goat', target: 'honey', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'cheese-cream', target: 'chives', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+
+        // === SEAFOOD CONNECTIONS ===
+        // Shellfish substitutions
+        { source: 'lobster', target: 'crab', type: 'substitutes', ratio: '1:1', context: 'luxury seafood', confidence: 0.85 },
+        { source: 'lobster', target: 'shrimp', type: 'substitutes', ratio: '1:1', context: 'shellfish dishes', confidence: 0.8 },
+        { source: 'crab', target: 'shrimp', type: 'substitutes', ratio: '1:1', context: 'crab cakes, salads', confidence: 0.85 },
+        { source: 'mussels', target: 'clams', type: 'substitutes', ratio: '1:1', context: 'steamed, pasta', confidence: 0.9 },
+        { source: 'scallops', target: 'shrimp', type: 'substitutes', ratio: '1:1', context: 'seared, pasta', confidence: 0.8 },
+        // Seafood pairings
+        { source: 'lobster', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'lobster', target: 'lemon-juice', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'crab', target: 'lemon-juice', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'scallops', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'scallops', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'mussels', target: 'wine-white', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'mussels', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'clams', target: 'wine-white', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'clams', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'anchovies', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'anchovies', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        // Duck and lamb
+        { source: 'duck', target: 'chicken-thigh', type: 'substitutes', ratio: '1:1', context: 'rich poultry', confidence: 0.75 },
+        { source: 'duck', target: 'honey', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'lamb', target: 'beef', type: 'substitutes', ratio: '1:1', context: 'red meat', confidence: 0.8 },
+
+        // === VEGETABLE CONNECTIONS ===
+        { source: 'brussels-sprouts', target: 'bacon', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'brussels-sprouts', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'brussels-sprouts', target: 'garlic', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'asparagus', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'asparagus', target: 'lemon-juice', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'asparagus', target: 'garlic', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'asparagus', target: 'cheese-parmesan', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'beets', target: 'cheese-goat', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'beets', target: 'olive-oil', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'beets', target: 'balsamic-vinegar', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'peas', target: 'mint', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'peas', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'squash', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'squash', target: 'sage', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'squash', target: 'maple-syrup', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'pumpkin', target: 'cinnamon', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'pumpkin', target: 'nutmeg', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'pumpkin', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'bok-choy', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'bok-choy', target: 'ginger', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'bok-choy', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'radish', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+
+        // === GRAIN CONNECTIONS ===
+        { source: 'farro', target: 'barley', type: 'substitutes', ratio: '1:1', context: 'ancient grains', confidence: 0.9 },
+        { source: 'farro', target: 'quinoa', type: 'substitutes', ratio: '1:1', context: 'grain bowls', confidence: 0.85 },
+        { source: 'barley', target: 'rice', type: 'substitutes', ratio: '1:1', context: 'soups, risotto-style', confidence: 0.8 },
+        { source: 'bulgur', target: 'couscous', type: 'substitutes', ratio: '1:1', context: 'mediterranean dishes', confidence: 0.9 },
+        { source: 'bulgur', target: 'quinoa', type: 'substitutes', ratio: '1:1', context: 'tabbouleh, salads', confidence: 0.85 },
+        { source: 'couscous', target: 'quinoa', type: 'substitutes', ratio: '1:1', context: 'side dishes', confidence: 0.85 },
+        { source: 'jasmine-rice', target: 'basmati-rice', type: 'substitutes', ratio: '1:1', context: 'aromatic rice', confidence: 0.95 },
+        { source: 'jasmine-rice', target: 'rice', type: 'substitutes', ratio: '1:1', context: 'asian dishes', confidence: 0.9 },
+        { source: 'basmati-rice', target: 'rice', type: 'substitutes', ratio: '1:1', context: 'indian dishes', confidence: 0.9 },
+        { source: 'arborio-rice', target: 'rice', type: 'substitutes', ratio: '1:1', context: 'risotto only', confidence: 0.7 },
+
+        // === SPICE CONNECTIONS ===
+        { source: 'cardamom', target: 'cinnamon', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'cardamom', target: 'ginger', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'cloves', target: 'cinnamon', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'cloves', target: 'nutmeg', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'nutmeg', target: 'cinnamon', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'five-spice', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'five-spice', target: 'ginger', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'white-pepper', target: 'black-pepper', type: 'substitutes', ratio: '1:1', context: 'asian cuisine', confidence: 0.9 },
+        { source: 'garam-masala', target: 'curry-powder', type: 'substitutes', ratio: '1:0.5', context: 'indian spice blend', confidence: 0.75 },
+
+        // === HERB CONNECTIONS ===
+        { source: 'sage', target: 'thyme', type: 'substitutes', ratio: '1:1', context: 'poultry, stuffing', confidence: 0.8 },
+        { source: 'sage', target: 'butter', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'sage', target: 'pork', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'tarragon', target: 'chicken-breast', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'tarragon', target: 'eggs', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'tarragon', target: 'cream', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'bay-leaves', target: 'thyme', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'bay-leaves', target: 'onion', type: 'used-with', context: 'stocks, soups', confidence: 0.95 },
+        { source: 'chives', target: 'sour-cream', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'chives', target: 'eggs', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'chives', target: 'potato', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+
+        // === DAIRY ALTERNATIVE CONNECTIONS ===
+        { source: 'cashew-milk', target: 'almond-milk', type: 'substitutes', ratio: '1:1', context: 'plant milk swap', confidence: 0.95 },
+        { source: 'cashew-milk', target: 'milk', type: 'substitutes', ratio: '1:1', context: 'creamy alternative', confidence: 0.9 },
+        { source: 'rice-milk', target: 'almond-milk', type: 'substitutes', ratio: '1:1', context: 'nut-free option', confidence: 0.9 },
+        { source: 'rice-milk', target: 'milk', type: 'substitutes', ratio: '1:1', context: 'mild flavor', confidence: 0.85 },
+        { source: 'coconut-cream', target: 'cream', type: 'substitutes', ratio: '1:1', context: 'vegan whipping', confidence: 0.9 },
+        { source: 'coconut-cream', target: 'coconut-milk', type: 'substitutes', ratio: '1:0.5', context: 'thicker consistency', confidence: 0.85 },
+
+        // === SAUCE CONNECTIONS ===
+        { source: 'hoisin-sauce', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'hoisin-sauce', target: 'ginger', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'hoisin-sauce', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'oyster-sauce', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'oyster-sauce', target: 'garlic', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'worcestershire', target: 'beef', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'worcestershire', target: 'garlic', type: 'pairs-with', strength: 'medium', confidence: 0.85 },
+        { source: 'dijon-mustard', target: 'honey', type: 'pairs-with', strength: 'strong', confidence: 0.95 },
+        { source: 'dijon-mustard', target: 'olive-oil', type: 'used-with', context: 'vinaigrettes', confidence: 0.95 },
+        { source: 'sriracha', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'sriracha', target: 'lime-juice', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'sriracha', target: 'mayonnaise', type: 'used-with', context: 'spicy mayo', confidence: 0.95 },
+        { source: 'miso-paste', target: 'soy-sauce', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'miso-paste', target: 'ginger', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'miso-paste', target: 'sesame-oil', type: 'pairs-with', strength: 'strong', confidence: 0.9 },
+        { source: 'tahini', target: 'lemon-juice', type: 'used-with', context: 'hummus, dressings', confidence: 0.95 },
     ]
 };
 
