@@ -438,7 +438,7 @@ class AIChronicleGraph {
 
                 if (dist < minDist) {
                     const overlap = minDist - dist;
-                    const pushForce = overlap * 0.5; // Strong push when overlapping
+                    const pushForce = overlap * 0.02; // Gentle push when overlapping
                     node.vx += (dx / dist) * pushForce;
                     node.vy += (dy / dist) * pushForce;
                 }
