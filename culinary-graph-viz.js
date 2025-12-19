@@ -1408,9 +1408,10 @@
         cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeData = node.data();
-            const dietary = nodeData.dietary && nodeData.dietary.length > 0
-                ? nodeData.dietary.join(', ')
-                : 'No restrictions';
+            const hasDietary = nodeData.dietary && nodeData.dietary.length > 0;
+            const dietaryHtml = hasDietary
+                ? `<div class="tooltip-dietary">${nodeData.dietary.join(', ')}</div>`
+                : '';
 
             // Add hover glow effect
             node.addClass('hovered');
@@ -1422,7 +1423,7 @@
             tooltip.innerHTML = `
                 <div class="tooltip-category">${formatCategory(nodeData.category)}</div>
                 <div class="tooltip-name">${nodeData.label}</div>
-                <div class="tooltip-dietary">${dietary}</div>
+                ${dietaryHtml}
             `;
 
             tooltip.classList.add('visible');
@@ -1452,10 +1453,10 @@
             simmerInterval = setInterval(() => {
                 simmerPhase += 0.15;
                 const pulse = 1 + 0.08 * Math.sin(simmerPhase);
-                const baseSize = getNodeSize();
+                const baseSizeNum = parseInt(getNodeSize(), 10);
                 node.style({
-                    'width': baseSize * pulse,
-                    'height': baseSize * pulse
+                    'width': baseSizeNum * pulse,
+                    'height': baseSizeNum * pulse
                 });
             }, 50);
         });
@@ -1586,7 +1587,7 @@
     // Helper function to render dietary badges with data attributes
     function renderDietaryBadges(dietary) {
         if (!dietary || dietary.length === 0) {
-            return '<span class="dietary-badge" data-dietary="none">No restrictions</span>';
+            return '';
         }
         return dietary.map(d => `<span class="dietary-badge" data-dietary="${d}">${d}</span>`).join(' ');
     }
