@@ -414,18 +414,14 @@ class AIChronicleGraph {
                 return;
             }
             
-            // Repulsion from other nodes (accounts for node radii to prevent overlap)
+            // Repulsion from other nodes
             visibleNodesList.forEach(other => {
                 if (node === other) return;
 
                 const dx = node.x - other.x;
                 const dy = node.y - other.y;
                 const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-
-                // Use minimum distance based on node radii to prevent visual overlap
-                const minDist = node.radius + other.radius + 10;
-                const effectiveDist = Math.max(dist, minDist);
-                const force = this.physics.repulsion / (effectiveDist * effectiveDist);
+                const force = this.physics.repulsion / (dist * dist);
 
                 node.vx += (dx / dist) * force * 0.01;
                 node.vy += (dy / dist) * force * 0.01;
