@@ -310,7 +310,10 @@ class AIChronicleGraph {
     }
     
     onMouseUp(e) {
-        // Node stays pinned at dropped position (fx/fy remain set)
+        if (this.dragNode) {
+            delete this.dragNode.fx;
+            delete this.dragNode.fy;
+        }
         this.isDragging = false;
         this.dragNode = null;
         this.isPanning = false;
@@ -417,16 +420,16 @@ class AIChronicleGraph {
             // Repulsion from other nodes
             visibleNodesList.forEach(other => {
                 if (node === other) return;
-
+                
                 const dx = node.x - other.x;
                 const dy = node.y - other.y;
                 const dist = Math.sqrt(dx * dx + dy * dy) || 1;
                 const force = this.physics.repulsion / (dist * dist);
-
+                
                 node.vx += (dx / dist) * force * 0.01;
                 node.vy += (dy / dist) * force * 0.01;
             });
-
+            
             // Attraction along edges
             this.edges.forEach(edge => {
                 if (!this.visibleNodes.has(edge.source.id) || !this.visibleNodes.has(edge.target.id)) return;
@@ -628,13 +631,6 @@ class AIChronicleGraph {
     resetView() {
         this.panOffset = { x: 0, y: 0 };
         this.zoom = 1;
-
-        // Unpin all nodes
-        this.nodes.forEach(node => {
-            delete node.fx;
-            delete node.fy;
-        });
-
         this.updateVisibleNodes();
     }
     
