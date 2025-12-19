@@ -309,7 +309,7 @@
                     // Reset details panel
                     const detailsContent = document.getElementById('ingredientDetailsContent');
                     if (detailsContent) {
-                        detailsContent.innerHTML = '<p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
+                        detailsContent.innerHTML = '<p class="placeholder-text">Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
                     }
                 }
             });
@@ -582,7 +582,7 @@
             // Reset details panel
             const detailsContent = document.getElementById('ingredientDetailsContent');
             if (detailsContent) {
-                detailsContent.innerHTML = '<p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
+                detailsContent.innerHTML = '<p class="placeholder-text">Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
             }
         });
 
@@ -883,6 +883,23 @@
                 fit: { eles: collection, padding: 50 },
                 duration: 300
             });
+
+            // If there's an exact match, select it and show details
+            const exactMatch = matchingNodes.find(node => {
+                const label = (node.data('label') || '').toLowerCase();
+                const id = (node.data('id') || '').toLowerCase();
+                return label === lowerQuery || id === lowerQuery;
+            });
+
+            if (exactMatch) {
+                // Select the node
+                cy.nodes().unselect();
+                exactMatch.select();
+
+                // Show its details and highlight connections
+                showEnhancedNodeInfo(exactMatch);
+                highlightConnections(exactMatch);
+            }
         }
     }
 
