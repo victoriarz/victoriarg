@@ -607,21 +607,6 @@
                 max-width: 85%;
             }
 
-            /* Dietary restrictions mobile */
-            .restrictions-toggle {
-                font-size: 10px;
-                padding: 10px 12px;
-            }
-
-            .restrictions-input-area {
-                flex-direction: column;
-            }
-
-            .add-restriction-btn {
-                font-size: 10px;
-                padding: 8px 12px;
-            }
-
             /* Substitution finder mobile */
             .search-container {
                 flex-direction: column;
@@ -741,126 +726,6 @@
             box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         }
 
-        /* Dietary restrictions banner */
-        .dietary-restrictions-banner {
-            background: var(--tan);
-            margin-bottom: 15px;
-            border: 3px solid var(--dark-brown);
-        }
-
-        .restrictions-toggle {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            color: var(--dark-brown);
-            text-align: left;
-        }
-
-        .restrictions-toggle:hover {
-            background: rgba(0,0,0,0.05);
-        }
-
-        .restrictions-icon {
-            font-size: 18px;
-        }
-
-        .restrictions-label {
-            flex-grow: 1;
-        }
-
-        .restrictions-count {
-            font-family: 'VT323', monospace;
-            font-size: 18px;
-            color: var(--accent);
-        }
-
-        .toggle-arrow {
-            font-size: 10px;
-            transition: transform 0.2s;
-        }
-
-        .dietary-restrictions-banner.collapsed .toggle-arrow {
-            transform: rotate(-90deg);
-        }
-
-        .restrictions-content {
-            padding: 0 15px 15px;
-            overflow: hidden;
-            max-height: 200px;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-        }
-
-        .dietary-restrictions-banner.collapsed .restrictions-content {
-            max-height: 0;
-            padding: 0 15px;
-        }
-
-        .restrictions-input-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .restrictions-input {
-            flex-grow: 1;
-            padding: 8px 12px;
-            font-size: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            border: 2px solid var(--dark-brown);
-            background: var(--cream);
-        }
-
-        .add-restriction-btn {
-            background: var(--accent);
-            color: var(--cream);
-            padding: 8px 16px;
-            border: none;
-            font-size: 12px;
-            font-family: 'Press Start 2P', monospace;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-
-        .add-restriction-btn:hover {
-            background: #d68f8f;
-        }
-
-        .restrictions-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .restriction-chip {
-            background: var(--dark-brown);
-            color: var(--cream);
-            padding: 4px 10px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .restriction-chip button {
-            background: none;
-            border: none;
-            color: var(--cream);
-            font-size: 14px;
-            padding: 0 3px;
-            cursor: pointer;
-        }
-
-        .restriction-chip button:hover {
-            color: var(--accent);
-        }
-
         /* Chat container */
         .chat-container {
             background: var(--cream);
@@ -976,6 +841,43 @@
             font-size: 16px;
             line-height: 1.5;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+            align-self: flex-start;
+            margin-left: 4px;
+        }
+
+        .copy-btn:hover {
+            opacity: 1;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark-brown);
+            color: var(--cream);
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         .chat-input-container {
@@ -2212,34 +2114,11 @@
                     <div class="chat-header-controls">
                         <div>
                             <h2>Ask the Culinary Assistant</h2>
-                            <p class="chat-intro">Your AI-powered culinary companion with a built-in knowledge graph of 236+ ingredients. Get complete recipes, find ingredient substitutions with exact ratios, discover flavor pairings, and filter by dietary needs. Just ask - I'll cook up an answer.</p>
+                            <p class="chat-intro">Your AI-powered culinary companion with a built-in knowledge graph of 240+ ingredients. Get complete recipes, find ingredient substitutions with exact ratios, and discover flavor pairings. Just ask - I'll cook up an answer.</p>
                             <div class="ai-controls">
                                 <span id="culinaryAIStatusBadge" class="ai-status-badge">AI: Gemini (Active)</span>
                                 <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">Start Over</button>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Dietary Restrictions Banner -->
-                    <div class="dietary-restrictions-banner collapsed" id="restrictionsBanner">
-                        <button class="restrictions-toggle" id="restrictionsToggle">
-                            <span class="restrictions-icon"></span>
-                            <span class="restrictions-label">Dietary Restrictions</span>
-                            <span class="restrictions-count" id="restrictionsCount"></span>
-                            <span class="toggle-arrow">▼</span>
-                        </button>
-                        <div class="restrictions-content">
-                            <div class="restrictions-input-area">
-                                <input
-                                    type="text"
-                                    id="restrictionsInput"
-                                    class="restrictions-input"
-                                    placeholder="e.g., nuts, dairy, gluten..."
-                                    autocomplete="off"
-                                />
-                                <button id="addRestrictionBtn" class="add-restriction-btn">Add</button>
-                            </div>
-                            <div id="restrictionsChips" class="restrictions-chips"></div>
                         </div>
                     </div>
 
@@ -2296,6 +2175,7 @@
                                 <button class="control-btn" id="resetGraph" title="Reset View">🔄</button>
                                 <button class="control-btn" id="zoomIn" title="Zoom In">+</button>
                                 <button class="control-btn" id="zoomOut" title="Zoom Out">−</button>
+                                <button class="control-btn" id="showAllBtn" title="Show All Ingredients">ALL</button>
                             </div>
                         </div>
                         <div id="graphContainer" class="graph-container">
@@ -2378,12 +2258,12 @@
                             <p>Ask for any recipe and get full ingredients, measurements, and step-by-step instructions - the AI generates complete, cookable recipes on demand.</p>
                         </div>
                         <div class="feature-card">
-                            <h3>Dietary Filtering</h3>
-                            <p>Set your dietary restrictions once and every response respects them - no more manually checking if recipes work for you.</p>
+                            <h3>Smart Search</h3>
+                            <p>Search ingredients by name, dietary tag (vegan, gluten-free), cuisine (Italian, Asian), or category (protein, herb) - all filters work in natural language.</p>
                         </div>
                         <div class="feature-card">
                             <h3>Interactive Graph Explorer</h3>
-                            <p>Browse all 236 ingredients with instant search, clickable category legend, hover tooltips on nodes and edges, and keyboard shortcuts. Click any ingredient to ask the AI about it.</p>
+                            <p>Browse all 240+ ingredients with instant search, clickable category legend, hover tooltips on nodes and edges, and keyboard shortcuts. Click any ingredient to ask the AI about it.</p>
                         </div>
                     </div>
                 </div>
@@ -2394,9 +2274,9 @@
                     <h2>Technology Stack</h2>
                     <ul class="tech-stack-list">
                         <li><strong>AI Model:</strong> Gemini 2.5 Flash with RAG (Retrieval-Augmented Generation)</li>
-                        <li><strong>Knowledge Graph:</strong> Custom ontology with 236+ ingredients, substitution rules, and flavor pairings</li>
+                        <li><strong>Knowledge Graph:</strong> Custom ontology with 240+ ingredients, substitution rules, and flavor pairings</li>
                         <li><strong>Architecture:</strong> Focused context extraction - queries retrieve only relevant graph data</li>
-                        <li><strong>Features:</strong> Dietary filtering, cuisine exploration, substitution ratios with confidence scores</li>
+                        <li><strong>Features:</strong> Cuisine exploration, substitution ratios with confidence scores, dietary-aware search</li>
                         <li><strong>Frontend:</strong> Cytoscape.js visualization, instant search, clickable legend filtering, edge tooltips with relationship details, keyboard navigation, vanilla JavaScript</li>
                     </ul>
                 </div>

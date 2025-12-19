@@ -896,11 +896,21 @@
         const lowerQuery = query.toLowerCase();
         const matchingNodes = [];
 
-        // Find matching nodes
+        // Find matching nodes - search by label, id, dietary, cuisine, and category
         cy.nodes().forEach(node => {
             const label = (node.data('label') || '').toLowerCase();
             const id = (node.data('id') || '').toLowerCase();
-            if (label.includes(lowerQuery) || id.includes(lowerQuery)) {
+            const dietary = (node.data('dietary') || []).map(d => d.toLowerCase());
+            const cuisine = (node.data('cuisine') || []).map(c => c.toLowerCase());
+            const category = (node.data('category') || '').toLowerCase();
+
+            // Check all searchable fields
+            const matchesLabel = label.includes(lowerQuery) || id.includes(lowerQuery);
+            const matchesDietary = dietary.some(d => d === lowerQuery);
+            const matchesCuisine = cuisine.some(c => c === lowerQuery);
+            const matchesCategory = category === lowerQuery || category.includes(lowerQuery);
+
+            if (matchesLabel || matchesDietary || matchesCuisine || matchesCategory) {
                 node.show();
                 node.addClass('highlighted');
                 matchingNodes.push(node);

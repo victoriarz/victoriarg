@@ -123,6 +123,7 @@ const culinaryGraphData = {
         { id: 'cheese-blue', label: 'Blue Cheese', category: 'dairy', cuisine: ['all'], dietary: ['vegetarian'] },
         { id: 'cheese-swiss', label: 'Swiss Cheese', category: 'dairy', cuisine: ['all'], dietary: ['vegetarian'] },
         { id: 'cheese-gruyere', label: 'Gruyere', category: 'dairy', cuisine: ['all'], dietary: ['vegetarian'] },
+        { id: 'cheese-provolone', label: 'Provolone', category: 'dairy', cuisine: ['italian'], dietary: ['vegetarian'] },
 
         // ===== DAIRY ALTERNATIVES =====
         { id: 'almond-milk', label: 'Almond Milk', category: 'dairy-alt', cuisine: ['all'], dietary: ['vegan', 'vegetarian'] },
@@ -150,6 +151,10 @@ const culinaryGraphData = {
         { id: 'sausage', label: 'Sausage', category: 'protein', cuisine: ['all'], dietary: [] },
         { id: 'lamb', label: 'Lamb', category: 'protein', cuisine: ['mediterranean'], dietary: [] },
         { id: 'duck', label: 'Duck', category: 'protein', cuisine: ['asian'], dietary: [] },
+        { id: 'turkey-breast', label: 'Turkey Breast', category: 'protein', cuisine: ['all'], dietary: [] },
+        { id: 'turkey-thighs', label: 'Turkey Thighs', category: 'protein', cuisine: ['all'], dietary: [] },
+        { id: 'chicken-thighs', label: 'Chicken Thighs', category: 'protein', cuisine: ['all'], dietary: [] },
+        { id: 'ground-pork', label: 'Ground Pork', category: 'protein', cuisine: ['all'], dietary: [] },
 
         // ===== PROTEINS - SEAFOOD =====
         { id: 'salmon', label: 'Salmon', category: 'protein', cuisine: ['all'], dietary: [] },
@@ -163,6 +168,10 @@ const culinaryGraphData = {
         { id: 'mussels', label: 'Mussels', category: 'protein', cuisine: ['mediterranean'], dietary: [] },
         { id: 'clams', label: 'Clams', category: 'protein', cuisine: ['mediterranean'], dietary: [] },
         { id: 'anchovies', label: 'Anchovies', category: 'protein', cuisine: ['mediterranean', 'italian'], dietary: [] },
+        { id: 'trout', label: 'Trout', category: 'protein', cuisine: ['all'], dietary: [] },
+        { id: 'arctic-char', label: 'Arctic Char', category: 'protein', cuisine: ['all'], dietary: [] },
+        { id: 'halibut', label: 'Halibut', category: 'protein', cuisine: ['all'], dietary: [] },
+        { id: 'prawns', label: 'Prawns', category: 'protein', cuisine: ['all'], dietary: [] },
 
         // ===== PROTEINS - PLANT-BASED =====
         { id: 'eggs', label: 'Eggs', category: 'protein', cuisine: ['all'], dietary: ['vegetarian'] },

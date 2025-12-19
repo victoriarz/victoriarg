@@ -4,19 +4,12 @@
 // Initialize AI configuration and conversation history
 let culinaryAiConfig;
 let conversationHistory = [];
-let dietaryRestrictions = []; // User's dietary restrictions and allergies
 
 // DOM elements
 const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const sendButton = document.getElementById('sendButton');
 const suggestionButtons = document.querySelectorAll('.suggestion-btn');
-const restrictionsInput = document.getElementById('restrictionsInput');
-const addRestrictionBtn = document.getElementById('addRestrictionBtn');
-const restrictionsChips = document.getElementById('restrictionsChips');
-const restrictionsBanner = document.getElementById('restrictionsBanner');
-const restrictionsToggle = document.getElementById('restrictionsToggle');
-const restrictionsCount = document.getElementById('restrictionsCount');
 
 // Cooking-themed loading messages
 const cookingLoadingMessages = [
@@ -101,110 +94,6 @@ function fallbackMarkdown(text) {
         .replace(/\n/g, '<br>');
 }
 
-// ============================================
-// DIETARY RESTRICTIONS MANAGEMENT
-// ============================================
-
-// Add a dietary restriction
-function addRestriction() {
-    const restriction = restrictionsInput.value.trim().toLowerCase();
-
-    if (restriction === '') return;
-
-    // Check if already exists
-    if (dietaryRestrictions.includes(restriction)) {
-        restrictionsInput.value = '';
-        return;
-    }
-
-    // Add to array
-    dietaryRestrictions.push(restriction);
-
-    // Save to localStorage
-    saveDietaryRestrictions();
-
-    // Update UI
-    renderRestrictionChips();
-
-    // Clear input
-    restrictionsInput.value = '';
-
-    // Show confirmation message in chat
-    addMessage(`Added restriction: **${restriction}**. I'll exclude this from all recommendations.`, true);
-}
-
-// Remove a dietary restriction
-function removeRestriction(restriction) {
-    dietaryRestrictions = dietaryRestrictions.filter(r => r !== restriction);
-    saveDietaryRestrictions();
-    renderRestrictionChips();
-
-    addMessage(`Removed restriction: **${restriction}**. I can now include this in recommendations.`, true);
-}
-
-// Render restriction chips and update count
-function renderRestrictionChips() {
-    // Update count display
-    if (restrictionsCount) {
-        if (dietaryRestrictions.length > 0) {
-            restrictionsCount.textContent = `(${dietaryRestrictions.length})`;
-        } else {
-            restrictionsCount.textContent = '';
-        }
-    }
-
-    if (dietaryRestrictions.length === 0) {
-        restrictionsChips.innerHTML = '';
-        return;
-    }
-
-    const chipsHTML = dietaryRestrictions.map(restriction => `
-        <div class="restriction-chip">
-            <span class="chip-text">${restriction}</span>
-            <button class="chip-remove" onclick="removeRestriction('${restriction}')" title="Remove restriction">×</button>
-        </div>
-    `).join('');
-
-    restrictionsChips.innerHTML = chipsHTML;
-}
-
-// Save restrictions to localStorage
-function saveDietaryRestrictions() {
-    try {
-        localStorage.setItem('culinaryRestrictions', JSON.stringify(dietaryRestrictions));
-    } catch (error) {
-        console.error('Failed to save dietary restrictions:', error);
-    }
-}
-
-// Load restrictions from localStorage
-function loadDietaryRestrictions() {
-    try {
-        const saved = localStorage.getItem('culinaryRestrictions');
-        if (saved) {
-            dietaryRestrictions = JSON.parse(saved);
-            renderRestrictionChips();
-        } else {
-            renderRestrictionChips();
-        }
-    } catch (error) {
-        console.error('Failed to load dietary restrictions:', error);
-        renderRestrictionChips();
-    }
-}
-
-// Get restrictions as a formatted string for AI prompts
-function getRestrictionsPrompt() {
-    if (dietaryRestrictions.length === 0) {
-        return '';
-    }
-
-    return `\n\n**IMPORTANT DIETARY RESTRICTIONS**: The user has the following allergies/restrictions - DO NOT recommend any ingredients containing: ${dietaryRestrictions.join(', ')}. Always exclude these from all suggestions and warn if a recipe contains them.`;
-}
-
-// Make removeRestriction available globally for onclick handlers
-window.removeRestriction = removeRestriction;
-
 // Add message to chat with animation
 function addMessage(message, isBot = false, category = null) {
     const messageDiv = document.createElement('div');
@@ -217,13 +106,15 @@ function addMessage(message, isBot = false, category = null) {
 
     if (isBot) {
         const icon = '<span class="bot-icon">🥗</span>';
+        const messageId = 'msg-' + Date.now();
         let categoryBadge = '';
         if (category) {
             categoryBadge = `<span class="topic-badge ${category}">${getCategoryLabel(category)}</span>`;
         }
         // Render markdown for bot messages
         const renderedMessage = renderMarkdown(message);
-        contentDiv.innerHTML = `${icon}<div class="bot-text markdown-content">${categoryBadge}${renderedMessage}</div>`;
+        const copyButton = `<button class="copy-btn" onclick="copyMessage('${messageId}')" title="Copy to clipboard">📋</button>`;
+        contentDiv.innerHTML = `${icon}<div class="bot-text markdown-content" id="${messageId}">${categoryBadge}${renderedMessage}</div>${copyButton}`;
     } else {
         // User messages don't need markdown, but need user-text wrapper for styling
         const escapedMessage = message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -241,6 +132,55 @@ function addMessage(message, isBot = false, category = null) {
     }, 10);
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Copy message to clipboard
+async function copyMessage(messageId) {
+    const element = document.getElementById(messageId);
+    if (!element) return;
+
+    // Get text content (excluding any badges)
+    const clone = element.cloneNode(true);
+    const badges = clone.querySelectorAll('.topic-badge');
+    badges.forEach(badge => badge.remove());
+    const text = clone.textContent.trim();
+
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard!');
+    } catch (err) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Copied!');
+    }
+}
+
+// Make copyMessage available globally
+window.copyMessage = copyMessage;
+
+// Show toast notification
+function showToast(message) {
+    // Remove existing toast if any
+    const existing = document.querySelector('.toast-notification');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2000);
 }
 
 // Get category label for badge
@@ -791,9 +731,6 @@ async function getLLMResponse(userMessage) {
         }
     }
 
-    // Add dietary restrictions to user message
-    const userMessageWithRestrictions = userMessage + getRestrictionsPrompt();
-
     // Build system prompt with RAG context injected
     const systemPrompt = culinaryAiConfig.getContextualSystemPrompt(ragContext);
 
@@ -801,7 +738,7 @@ async function getLLMResponse(userMessage) {
     const messages = [
         { role: 'system', content: systemPrompt },
         ...conversationHistory,
-        { role: 'user', content: userMessageWithRestrictions }
+        { role: 'user', content: userMessage }
     ];
 
     // Call backend proxy with retry logic for rate limits
@@ -819,7 +756,7 @@ async function getLLMResponse(userMessage) {
         const continuationMessages = [
             { role: 'system', content: systemPrompt },
             ...conversationHistory,
-            { role: 'user', content: userMessageWithRestrictions },
+            { role: 'user', content: userMessage },
             { role: 'assistant', content: fullResponse },
             { role: 'user', content: 'Please continue from where you left off.' }
         ];
@@ -911,26 +848,6 @@ suggestionButtons.forEach(button => {
     });
 });
 
-// Handle restriction input
-if (addRestrictionBtn) {
-    addRestrictionBtn.addEventListener('click', addRestriction);
-}
-
-if (restrictionsInput) {
-    restrictionsInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            addRestriction();
-        }
-    });
-}
-
-// Handle restrictions toggle
-if (restrictionsToggle && restrictionsBanner) {
-    restrictionsToggle.addEventListener('click', () => {
-        restrictionsBanner.classList.toggle('collapsed');
-    });
-}
-
 // Update AI status badge
 function updateAIStatus(isBackendHealthy) {
     const statusBadge = document.getElementById('culinaryAIStatusBadge');
@@ -948,9 +865,6 @@ function updateAIStatus(isBackendHealthy) {
 // Initialize chat on page load
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Culinary Chat Assistant initialized - RAG-Enhanced Architecture');
-
-    // Load dietary restrictions from localStorage
-    loadDietaryRestrictions();
 
     // Check if knowledge graph data is available
     if (typeof culinaryGraphData !== 'undefined') {
