@@ -513,9 +513,12 @@ class AIChronicleGraph {
     }
     
     renderNodes() {
-        this.nodes.forEach(node => {
-            if (!this.visibleNodes.has(node.id)) return;
-            
+        // Sort visible nodes: draw larger nodes first, smaller nodes on top
+        const sortedNodes = this.nodes
+            .filter(node => this.visibleNodes.has(node.id))
+            .sort((a, b) => b.radius - a.radius);
+
+        sortedNodes.forEach(node => {
             const isSelected = node === this.selectedNode;
             const isHovered = node === this.hoveredNode;
             const isConnected = this.selectedNode && this.edges.some(
