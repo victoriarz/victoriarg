@@ -879,12 +879,8 @@
         // Zoom to matching nodes
         if (matchingNodes.length > 0) {
             const collection = cy.collection(matchingNodes);
-            cy.animate({
-                fit: { eles: collection, padding: 50 },
-                duration: 300
-            });
 
-            // If there's an exact match, select it and show details
+            // Check for exact match first
             const exactMatch = matchingNodes.find(node => {
                 const label = (node.data('label') || '').toLowerCase();
                 const id = (node.data('id') || '').toLowerCase();
@@ -892,13 +888,18 @@
             });
 
             if (exactMatch) {
-                // Select the node
+                // Center and zoom to the exact match
                 cy.nodes().unselect();
                 exactMatch.select();
+                cy.center(exactMatch);
+                cy.zoom({ level: 1.5, position: exactMatch.position() });
 
                 // Show its details and highlight connections
                 showEnhancedNodeInfo(exactMatch);
                 highlightConnections(exactMatch);
+            } else {
+                // Fit to all matching nodes
+                cy.fit(collection, 50);
             }
         }
     }
