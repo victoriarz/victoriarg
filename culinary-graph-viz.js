@@ -1439,6 +1439,24 @@
     // ENHANCED NODE INFO DISPLAY
     // ============================================
 
+    // Helper function to render strength dots
+    function renderStrengthDots(strength) {
+        const level = strength || 'medium';
+        return `<span class="strength-dots" data-strength="${level}" title="${level} pairing">
+            <span class="strength-dot"></span>
+            <span class="strength-dot"></span>
+            <span class="strength-dot"></span>
+        </span>`;
+    }
+
+    // Helper function to render dietary badges with data attributes
+    function renderDietaryBadges(dietary) {
+        if (!dietary || dietary.length === 0) {
+            return '<span class="dietary-badge" data-dietary="none">No restrictions</span>';
+        }
+        return dietary.map(d => `<span class="dietary-badge" data-dietary="${d}">${d}</span>`).join(' ');
+    }
+
     function showEnhancedNodeInfo(node) {
         const nodeData = node.data();
         const detailsPanel = document.getElementById('ingredientDetailsPanel');
@@ -1451,9 +1469,7 @@
         }
 
         const icon = categoryIcons[nodeData.category] || '🍽️';
-        const dietary = nodeData.dietary && nodeData.dietary.length > 0
-            ? nodeData.dietary.map(d => `<span class="dietary-badge">${d}</span>`).join(' ')
-            : '<span class="dietary-badge">No restrictions</span>';
+        const dietary = renderDietaryBadges(nodeData.dietary);
         const cuisines = nodeData.cuisine && nodeData.cuisine.length > 0
             ? nodeData.cuisine.join(', ')
             : 'All cuisines';
@@ -1516,7 +1532,7 @@
             html += `
                 <div class="node-info-section-inline">
                     <span class="section-label">Pairs Well With:</span>
-                    <span class="section-items">${pairsWith.map(p => `${p.label}${p.strength ? ` <span class="strength ${p.strength}">${p.strength}</span>` : ''}`).join(', ')}</span>
+                    <span class="section-items">${pairsWith.map(p => `${p.label}${renderStrengthDots(p.strength)}`).join(', ')}</span>
                 </div>
             `;
         }
