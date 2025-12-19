@@ -56,17 +56,17 @@
         const isMobileDevice = isMobile();
         return {
             name: 'cose',
-            idealEdgeLength: isMobileDevice ? 80 : 100,
-            nodeOverlap: isMobileDevice ? 15 : 20,
+            idealEdgeLength: isMobileDevice ? 100 : 120,      // More space between nodes
+            nodeOverlap: isMobileDevice ? 25 : 30,            // Better overlap handling
             refresh: 20,
             fit: true,
-            padding: isMobileDevice ? 20 : 30,
+            padding: isMobileDevice ? 30 : 50,                // More padding around edges
             randomize: false,
-            componentSpacing: isMobileDevice ? 80 : 100,
-            nodeRepulsion: isMobileDevice ? 300000 : 400000,
-            edgeElasticity: 100,
+            componentSpacing: isMobileDevice ? 120 : 150,     // More space between disconnected groups
+            nodeRepulsion: isMobileDevice ? 450000 : 600000,  // Stronger repulsion to reduce crowding
+            edgeElasticity: 80,                               // Slightly more elastic edges
             nestingFactor: 5,
-            gravity: 80,
+            gravity: 60,                                      // Less gravity = looser, more spread layout
             numIter: 1000,
             initialTemp: 200,
             coolingFactor: 0.95,
@@ -148,8 +148,8 @@
                         'text-max-width': '80px',
                         'overlay-padding': '6px',
                         'overlay-opacity': 0,
-                        'transition-property': 'background-opacity, border-width, overlay-opacity, width, height',
-                        'transition-duration': '0.2s'
+                        'transition-property': 'background-opacity, border-width, overlay-opacity, width, height, opacity',
+                        'transition-duration': '0.15s'
                     }
                 },
                 {
@@ -223,6 +223,14 @@
                     }
                 },
                 {
+                    selector: 'edge.dimmed',
+                    style: {
+                        'opacity': 0.1,
+                        'transition-property': 'opacity',
+                        'transition-duration': '0.15s'
+                    }
+                },
+                {
                     selector: 'edge[type="substitutes"]',
                     style: {
                         'line-style': 'dashed',
@@ -259,6 +267,30 @@
             layout.on('layoutstop', function() {
                 // Focus view on connected ingredients after layout completes
                 showConnectedIngredients();
+
+                // Staggered entry animation - nodes fade in sequentially
+                const visibleNodes = cy.nodes().filter(n => n.visible());
+                visibleNodes.forEach((node, i) => {
+                    node.style('opacity', 0);
+                    setTimeout(() => {
+                        node.animate({
+                            style: { opacity: 1 },
+                            duration: 200,
+                            easing: 'ease-out'
+                        });
+                    }, i * 12); // 12ms stagger
+                });
+
+                // Edges fade in after nodes
+                const visibleEdges = cy.edges().filter(e => e.visible());
+                visibleEdges.style('opacity', 0);
+                setTimeout(() => {
+                    visibleEdges.animate({
+                        style: { opacity: 0.6 },
+                        duration: 300,
+                        easing: 'ease-out'
+                    });
+                }, visibleNodes.length * 12 + 100);
             });
 
             layout.run();
@@ -884,22 +916,49 @@
     function showConnectedIngredients() {
         if (!cy) return;
 
-        // Find all nodes that have at least one edge
-        const connectedNodeIds = new Set();
+        // Calculate connection counts for each node
+        const connectionCounts = {};
         cy.edges().forEach(edge => {
-            connectedNodeIds.add(edge.source().id());
-            connectedNodeIds.add(edge.target().id());
+            const sourceId = edge.source().id();
+            const targetId = edge.target().id();
+            connectionCounts[sourceId] = (connectionCounts[sourceId] || 0) + 1;
+            connectionCounts[targetId] = (connectionCounts[targetId] || 0) + 1;
         });
 
-        // Get connected nodes to fit view to them (don't hide anything)
-        const connectedNodes = cy.nodes().filter(node => connectedNodeIds.has(node.id()));
+        // Get nodes sorted by connection count
+        const sortedNodes = cy.nodes().toArray()
+            .map(node => ({ node, count: connectionCounts[node.id()] || 0 }))
+            .filter(item => item.count >= 2) // Only nodes with 2+ connections
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 50); // Top 50 most connected
 
-        // Fit view to connected nodes only
-        if (connectedNodes.length > 0) {
-            cy.fit(connectedNodes, 40);
+        const highlightedIds = new Set(sortedNodes.map(item => item.node.id()));
+
+        // Hide nodes that aren't highly connected
+        cy.nodes().forEach(node => {
+            if (highlightedIds.has(node.id())) {
+                node.show();
+            } else {
+                node.hide();
+            }
+        });
+
+        // Show only edges between visible nodes
+        cy.edges().forEach(edge => {
+            if (edge.source().visible() && edge.target().visible()) {
+                edge.show();
+            } else {
+                edge.hide();
+            }
+        });
+
+        // Fit view to visible nodes
+        const visibleNodes = cy.nodes().filter(node => node.visible());
+        if (visibleNodes.length > 0) {
+            cy.fit(visibleNodes, 40);
         }
 
-        console.log('Focused on', connectedNodeIds.size, 'connected ingredients');
+        console.log('Showing top', highlightedIds.size, 'most-connected ingredients');
     }
 
     function revealIngredientInGraph(ingredientId) {
@@ -1289,6 +1348,10 @@
             // Add hover glow effect
             node.addClass('hovered');
 
+            // Dim unconnected edges for focus effect
+            const connectedEdges = node.connectedEdges();
+            cy.edges().not(connectedEdges).addClass('dimmed');
+
             tooltip.innerHTML = `
                 <div class="tooltip-category">${formatCategory(nodeData.category)}</div>
                 <div class="tooltip-name">${nodeData.label}</div>
@@ -1320,6 +1383,8 @@
         cy.on('mouseout', 'node', function(evt) {
             evt.target.removeClass('hovered');
             tooltip.classList.remove('visible');
+            // Remove edge dimming
+            cy.edges().removeClass('dimmed');
         });
 
         cy.on('drag', 'node', function() {
