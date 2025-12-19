@@ -46,6 +46,11 @@
     // Track which ingredients have been revealed through searches
     let revealedIngredients = new Set(mainIngredients);
 
+    // Drag tracking for click-to-show-details vs drag-to-move
+    let dragStartPos = null;
+    let hasDragged = false;
+    const DRAG_THRESHOLD = 5; // pixels - movement below this triggers details panel
+
     // Detect if user is on mobile device
     function isMobile() {
         return window.innerWidth <= 768;
@@ -260,8 +265,6 @@
                 }
             ],
 
-            layout: getLayoutParams(),
-
             minZoom: 0.5,
             maxZoom: 3,
             wheelSensitivity: 0.2
@@ -269,8 +272,15 @@
 
             console.log('Graph initialized successfully with', cy.nodes().length, 'nodes');
 
-            // Focus view on connected ingredients by default
-            showConnectedIngredients();
+            // Run layout and wait for completion before focusing on connected nodes
+            const layout = cy.layout(getLayoutParams());
+
+            layout.on('layoutstop', function() {
+                // Focus view on connected ingredients after layout completes
+                showConnectedIngredients();
+            });
+
+            layout.run();
 
             // Node click event
             cy.on('tap', 'node', function(evt) {
@@ -289,6 +299,35 @@
                         detailsContent.innerHTML = '<p class="placeholder-text">👆 Click any ingredient to explore its substitutions, pairings, and dietary info</p>';
                     }
                 }
+            });
+
+            // Drag tracking events for click-to-show-details while allowing repositioning
+            cy.on('grabon', 'node', function(evt) {
+                const node = evt.target;
+                dragStartPos = { ...node.position() };
+                hasDragged = false;
+            });
+
+            cy.on('drag', 'node', function(evt) {
+                if (!dragStartPos) return;
+                const node = evt.target;
+                const pos = node.position();
+                const dx = Math.abs(pos.x - dragStartPos.x);
+                const dy = Math.abs(pos.y - dragStartPos.y);
+                if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
+                    hasDragged = true;
+                }
+            });
+
+            cy.on('free', 'node', function(evt) {
+                // Show details only if node wasn't dragged significantly
+                if (!hasDragged) {
+                    const node = evt.target;
+                    showEnhancedNodeInfo(node);
+                    highlightConnections(node);
+                }
+                dragStartPos = null;
+                hasDragged = false;
             });
 
             // Setup hover tooltips
@@ -876,7 +915,7 @@
 
         // Fit view to connected nodes only
         if (connectedNodes.length > 0) {
-            cy.fit(connectedNodes, 30);
+            cy.fit(connectedNodes, 40);
         }
 
         console.log('Focused on', connectedNodeIds.size, 'connected ingredients');
