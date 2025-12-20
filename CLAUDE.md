@@ -18,7 +18,7 @@ victoriarg/
 ├── aichronicle.html        # AI Chronicles - interactive AI history knowledge graph
 ├── saponifyai.html         # Saponify AI - soap calculator with AI chat
 ├── pantryatlas.html        # Pantry Atlas - ingredient/cooking knowledge graph with AI chat
-├── style.css               # Global styles (3800+ lines, organized by sections)
+├── style.css               # Shared base styles (variables, reset, animations, patterns)
 ├── *-app.js, *-data.js     # App logic and data for each project
 ├── *-graph.js, *-viz.js    # D3.js visualization code
 ├── *-chat.js               # Chat functionality
@@ -40,8 +40,8 @@ victoriarg/
 
 ## Code Conventions
 
-- **CSS**: Organized with section headers (`/* --- 1. Section Name --- */`). See `style.css:1-50` for structure.
-- **Colors**: Earthy tones - reference existing CSS rather than hardcoding. Primary browns/beiges throughout.
+- **CSS**: Shared base styles in `style.css` (variables, reset, animations). Page-specific styles are inline in each HTML file.
+- **Colors**: Mexican Talavera-inspired theme using CSS variables (blues, terracotta, yellows, greens). Always use variables like `var(--azul-cobalto)` instead of hardcoding hex values.
 - **HTML**: Semantic HTML5, 4-space indentation
 - **JS**: Each project has separate files for app logic, data, visualization, and chat
 
@@ -68,7 +68,7 @@ cd server && npm install && npm start
 ### Adding New Pages
 
 1. Copy structure from an existing project page (e.g., aichronicle.html)
-2. Add page-specific styles as a new section in style.css
+2. Link to `style.css` for base styles, add page-specific styles inline in `<style>` tag
 3. Update navigation in index.html
 
 ## Deployment
@@ -81,14 +81,14 @@ GitHub Pages auto-deploys from main branch. See [DEPLOYMENT-GUIDE.md](DEPLOYMENT
 
 - IMPORTANT: Always read files before modifying them
 - IMPORTANT: Increment JS version strings when changing any JavaScript file
-- IMPORTANT: Maintain CSS section organization - don't break the commented structure
+- IMPORTANT: Increment `style.css` version string when modifying shared styles
 - Prefer simple solutions; avoid over-engineering for this portfolio site
 - Ask before making significant architectural changes
 
 ### Avoid
 
 - Adding frameworks/libraries unless explicitly requested
-- Hardcoding colors - reference existing CSS patterns instead
+- Hardcoding colors - use CSS variables from `style.css` (e.g., `var(--terracotta)`)
 - Creating new files when editing existing ones works
 
 ---

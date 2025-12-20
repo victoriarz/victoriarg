@@ -110,7 +110,7 @@ victoriarg/
 ├── aichronicle.html           # AI Chronicles project
 ├── saponifyai.html            # Saponify AI project
 ├── pantryatlas.html           # Pantry Atlas project
-├── style.css                  # Global styles (3800+ lines)
+├── style.css                  # Shared base styles (variables, reset, patterns)
 │
 ├── aichronicle-*.js           # AI Chronicles app, graph, data
 ├── soap-*.js                  # Saponify calculator, chat, knowledge
