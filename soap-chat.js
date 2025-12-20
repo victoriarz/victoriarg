@@ -625,7 +625,7 @@ function retrieveRAGContext(userInput) {
     // If knowledge bank not loaded, return empty
     if (typeof SOAP_KNOWLEDGE_BANK === 'undefined') {
         console.log('📚 Knowledge bank not loaded');
-        return { context: '' };
+        return { context: '', topics: [] };
     }
 
     const input = userInput.toLowerCase();
@@ -706,7 +706,7 @@ function retrieveRAGContext(userInput) {
 
     if (topMatches.length === 0) {
         console.log('📚 No relevant knowledge bank sections found');
-        return { context: '' };
+        return { context: '', topics: [] };
     }
 
     // Build context string with relevant data
@@ -725,7 +725,7 @@ function retrieveRAGContext(userInput) {
 
     console.log(`📚 RAG context: ${contextParts.length} sections, ${context.length} chars`);
 
-    return { context };
+    return { context, topics: topMatches.map(m => m.section) };
 }
 
 /**
@@ -1769,7 +1769,8 @@ async function getLLMResponse(userMessage, ragContext = null) {
     let augmentedMessage = userMessage;
     if (ragContext && ragContext.context) {
         augmentedMessage = userMessage + ragContext.context;
-        console.log(`🧠 RAG-augmented prompt (topics: ${ragContext.topics.join(', ')})`);
+        const topicList = ragContext.topics?.length ? ragContext.topics.join(', ') : 'general';
+        console.log(`🧠 RAG-augmented prompt (topics: ${topicList})`);
     }
 
     // OPTION 1: Try direct Gemini API if user has configured their own key
