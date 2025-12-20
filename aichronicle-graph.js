@@ -40,12 +40,12 @@ class AIChronicleGraph {
             showModels: true
         };
         
-        // Physics settings (tuned for better spread and less clumping)
+        // Physics settings
         this.physics = {
-            repulsion: 12000,      // Increased from 7000 - pushes nodes apart more
-            attraction: 0.008,     // Reduced from 0.01 - less pull along edges
-            damping: 0.88,         // Slightly increased for stability
-            centerGravity: 0.008   // Reduced from 0.02 - less center pull
+            repulsion: 7000,
+            attraction: 0.01,
+            damping: 0.85,
+            centerGravity: 0.02
         };
         
         // Colors
@@ -98,7 +98,7 @@ class AIChronicleGraph {
         
         this.data.nodes.forEach((node, index) => {
             const angle = (index / this.data.nodes.length) * Math.PI * 2;
-            const radius = 200 + Math.random() * 150;  // Increased from 150+100 for better initial spread
+            const radius = 150 + Math.random() * 100;
             
             const graphNode = {
                 ...node,
