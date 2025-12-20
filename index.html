@@ -150,6 +150,8 @@
         .hero {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
             padding: 5rem 2rem 2rem;
             max-width: 1100px;
             margin: 0 auto;
@@ -181,6 +183,20 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(25px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-decoration {
+            display: grid;
+            grid-template-columns: repeat(2, 80px);
+            gap: 8px;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-decoration .deco-tile {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(2px 2px 4px rgba(26, 75, 140, 0.12));
         }
 
         .location {
@@ -842,6 +858,7 @@
             header { padding: 0.6rem 1rem; }
             nav { display: none; }
             .hero { padding: 4.5rem 1rem 1.5rem; }
+            .hero-decoration { display: none; }
             section { padding: 1.25rem 1rem; }
             .projects-grid { grid-template-columns: 1fr; }
             .skills-grid { grid-template-columns: 1fr; }
@@ -921,6 +938,58 @@
                         Former financial analyst turned AI engineer. I build production systems with knowledge graphs, RAG architectures, and interactive visualizations that process real data at scale. My projects ingest 100+ articles daily, handle safety-critical chemistry calculations, and model 275+ ingredient relationships.
                     </p>
                 </div>
+            </div>
+            <div class="hero-decoration">
+                <!-- Tile 1: Blue concentric circles with corner dots -->
+                <svg class="deco-tile" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="60" height="60" fill="#faf6ef" stroke="#1a4b8c" stroke-width="2"/>
+                    <circle cx="30" cy="30" r="22" fill="none" stroke="#1a4b8c" stroke-width="1.5"/>
+                    <circle cx="30" cy="30" r="14" fill="none" stroke="#1a4b8c" stroke-width="1"/>
+                    <circle cx="30" cy="30" r="8" fill="#f4b942"/>
+                    <circle cx="30" cy="30" r="4" fill="#1a4b8c"/>
+                    <circle cx="10" cy="10" r="4" fill="#c45c3e"/>
+                    <circle cx="50" cy="10" r="4" fill="#c45c3e"/>
+                    <circle cx="10" cy="50" r="4" fill="#c45c3e"/>
+                    <circle cx="50" cy="50" r="4" fill="#c45c3e"/>
+                </svg>
+                <!-- Tile 2: Terracotta diamond with green center -->
+                <svg class="deco-tile" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="60" height="60" fill="#faf6ef" stroke="#c45c3e" stroke-width="2"/>
+                    <path d="M30 8 L52 30 L30 52 L8 30 Z" fill="none" stroke="#c45c3e" stroke-width="1.5"/>
+                    <path d="M30 16 L44 30 L30 44 L16 30 Z" fill="none" stroke="#c45c3e" stroke-width="1"/>
+                    <circle cx="30" cy="30" r="8" fill="#2d7a4f"/>
+                    <circle cx="30" cy="30" r="4" fill="#f4b942"/>
+                    <circle cx="10" cy="30" r="3" fill="#1a4b8c"/>
+                    <circle cx="50" cy="30" r="3" fill="#1a4b8c"/>
+                    <circle cx="30" cy="10" r="3" fill="#1a4b8c"/>
+                    <circle cx="30" cy="50" r="3" fill="#1a4b8c"/>
+                </svg>
+                <!-- Tile 3: Green four-petal flower -->
+                <svg class="deco-tile" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="60" height="60" fill="#faf6ef" stroke="#2d7a4f" stroke-width="2"/>
+                    <circle cx="30" cy="30" r="18" fill="none" stroke="#2d7a4f" stroke-width="1"/>
+                    <path d="M30 12 Q38 21 30 30 Q22 21 30 12" fill="#2d7a4f"/>
+                    <path d="M30 48 Q38 39 30 30 Q22 39 30 48" fill="#2d7a4f"/>
+                    <path d="M12 30 Q21 38 30 30 Q21 22 12 30" fill="#1a4b8c"/>
+                    <path d="M48 30 Q39 38 30 30 Q39 22 48 30" fill="#1a4b8c"/>
+                    <circle cx="30" cy="30" r="6" fill="#c45c3e"/>
+                    <circle cx="30" cy="30" r="3" fill="#f4b942"/>
+                </svg>
+                <!-- Tile 4: Yellow sunburst -->
+                <svg class="deco-tile" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="60" height="60" fill="#faf6ef" stroke="#f4b942" stroke-width="2"/>
+                    <circle cx="30" cy="30" r="20" fill="none" stroke="#f4b942" stroke-width="1.5"/>
+                    <circle cx="30" cy="30" r="10" fill="#f4b942"/>
+                    <circle cx="30" cy="30" r="5" fill="#c45c3e"/>
+                    <line x1="30" y1="6" x2="30" y2="14" stroke="#1a4b8c" stroke-width="2"/>
+                    <line x1="30" y1="46" x2="30" y2="54" stroke="#1a4b8c" stroke-width="2"/>
+                    <line x1="6" y1="30" x2="14" y2="30" stroke="#1a4b8c" stroke-width="2"/>
+                    <line x1="46" y1="30" x2="54" y2="30" stroke="#1a4b8c" stroke-width="2"/>
+                    <line x1="13" y1="13" x2="19" y2="19" stroke="#2d7a4f" stroke-width="1.5"/>
+                    <line x1="41" y1="41" x2="47" y2="47" stroke="#2d7a4f" stroke-width="1.5"/>
+                    <line x1="47" y1="13" x2="41" y2="19" stroke="#2d7a4f" stroke-width="1.5"/>
+                    <line x1="19" y1="41" x2="13" y2="47" stroke="#2d7a4f" stroke-width="1.5"/>
+                </svg>
             </div>
         </section>
 
