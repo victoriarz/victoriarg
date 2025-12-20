@@ -1,14 +1,14 @@
-# Culinary Graph - Knowledge Graph Enhancements
+# Pantry Atlas - Knowledge Graph Enhancements
 
 **Version 2.0** | December 11, 2025
 
-This document outlines the comprehensive improvements made to The Culinary Graph project, transforming it from a basic ingredient database into a sophisticated knowledge graph system following industry best practices.
+This document outlines the comprehensive improvements made to the Pantry Atlas project, transforming it from a basic ingredient database into a sophisticated knowledge graph system following industry best practices.
 
 ---
 
 ## 📊 Overview of Improvements
 
-The Culinary Graph has been enhanced with modern knowledge graph technologies and methodologies based on the latest research in graph databases, AI integration, and semantic web technologies.
+Pantry Atlas has been enhanced with modern knowledge graph technologies and methodologies based on the latest research in graph databases, AI integration, and semantic web technologies.
 
 ### Key Enhancements
 
@@ -27,7 +27,7 @@ The Culinary Graph has been enhanced with modern knowledge graph technologies an
 
 ### 1. Ontology Layer (`culinaryOntology`)
 
-**File**: `culinary-graph-data.js`
+**File**: `pantry-atlas-data.js`
 
 A formal ontology now defines the structure and semantics of the knowledge graph:
 
@@ -98,7 +98,7 @@ const culinaryOntology = {
 
 ### 3. Graph Analytics Engine
 
-**File**: `culinary-graph-engine.js`
+**File**: `pantry-atlas-engine.js`
 
 **Class**: `GraphAnalytics`
 
@@ -530,13 +530,13 @@ Response with Graph-Grounded Facts
 ### File Structure
 
 ```
-culinary-graph-data.js          # Ontology + data (enhanced)
-culinary-graph-engine.js        # NEW: Core engine
-culinary-graph-viz.js           # Visualization (enhanced)
-culinary-ai-config.js           # AI config (GraphRAG)
-culinary-chat.js                # Chat interface (GraphRAG)
-culinary-substitution.js        # Substitution finder
-culinarygraph.html              # Main page (updated)
+pantry-atlas-data.js            # Ontology + data (enhanced)
+pantry-atlas-engine.js          # Core engine
+pantry-atlas-viz.js             # Visualization (enhanced)
+pantry-atlas-ai-config.js       # AI config (GraphRAG)
+pantry-atlas-chat.js            # Chat interface (GraphRAG)
+pantry-atlas-substitution.js    # Substitution finder
+pantryatlas.html                # Main page (updated)
 ```
 
 ---
@@ -690,7 +690,7 @@ optimizePantry(['butter', 'eggs', 'flour']) // ✅ Should suggest additions
 
 ## 🎉 Summary
 
-The Culinary Graph has been transformed from a simple ingredient database into a sophisticated knowledge graph system that:
+Pantry Atlas has been transformed from a simple ingredient database into a sophisticated knowledge graph system that:
 
 ✅ **Follows industry best practices** from knowledge graph research
 ✅ **Includes formal ontology** for semantic clarity
@@ -701,7 +701,7 @@ The Culinary Graph has been transformed from a simple ingredient database into a
 ✅ **Enhances AI responses** with GraphRAG technology
 ✅ **Scales efficiently** for future growth
 
-These improvements position The Culinary Graph as a showcase project demonstrating expertise in:
+These improvements position Pantry Atlas as a showcase project demonstrating expertise in:
 - Knowledge graph engineering
 - AI/LLM integration
 - Data modeling
@@ -713,7 +713,7 @@ These improvements position The Culinary Graph as a showcase project demonstrati
 **Version**: 2.0
 **Date**: December 11, 2025
 **Author**: Victoria Ruiz Griffith
-**Project**: The Culinary Graph - Knowledge Graph-Powered Recipe Discovery
+**Project**: Pantry Atlas - Knowledge Graph-Powered Recipe Discovery
 
 ---
 

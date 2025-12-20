@@ -1,4 +1,4 @@
-// AI Configuration for Culinary Graph Assistant
+// AI Configuration for Pantry Atlas Assistant
 // RAG-Enhanced Architecture - Local knowledge graph data enhances LLM responses
 // This file manages backend API configuration and focused context extraction
 
@@ -12,7 +12,7 @@ class CulinaryAIConfig {
 
         // System prompt - enables full recipe generation while keeping other responses focused
         // Context comes dynamically from RAG retrieval
-        this.systemPrompt = `You are a knowledgeable and enthusiastic culinary assistant for Culinary Graph.
+        this.systemPrompt = `You are a knowledgeable and enthusiastic culinary assistant for Pantry Atlas.
 
 **YOUR CAPABILITIES**:
 - **Providing complete recipes** with ingredients and step-by-step instructions

@@ -1,4 +1,4 @@
-// Culinary Graph Engine - Advanced Knowledge Graph Operations
+// Pantry Atlas Engine - Advanced Knowledge Graph Operations
 // Implements path-finding, inference, analytics, and recipe generation
 
 (function() {
@@ -651,6 +651,6 @@
         createPantryOptimizer: (graphData) => new PantryOptimizer(graphData)
     };
 
-    console.log('Culinary Graph Engine loaded successfully');
+    console.log('Pantry Atlas Engine loaded successfully');
 
 })();

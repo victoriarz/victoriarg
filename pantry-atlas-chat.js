@@ -1,4 +1,4 @@
-// Culinary Graph - Recipe & Ingredient Search Chat Assistant
+// Pantry Atlas - Recipe & Ingredient Search Chat Assistant
 // RAG-Enhanced Architecture: Local knowledge graph data enhances LLM responses
 
 // Initialize AI configuration and conversation history
@@ -864,7 +864,7 @@ function updateAIStatus(isBackendHealthy) {
 
 // Initialize chat on page load
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Culinary Chat Assistant initialized - RAG-Enhanced Architecture');
+    console.log('Pantry Atlas Chat Assistant initialized - RAG-Enhanced Architecture');
 
     // Check if knowledge graph data is available
     if (typeof culinaryGraphData !== 'undefined') {

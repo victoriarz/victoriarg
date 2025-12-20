@@ -1,4 +1,4 @@
-// Culinary Graph Visualization using Cytoscape.js
+// Pantry Atlas Visualization using Cytoscape.js
 // Renders the interactive knowledge graph
 // Enhanced with tooltips, stats, sidebar panels, and loading screen
 
@@ -117,7 +117,7 @@
         }
 
         if (typeof culinaryGraphData === 'undefined') {
-            console.error('Culinary graph data not loaded');
+            console.error('Pantry Atlas data not loaded');
             showError('Failed to load graph data. Please refresh the page.');
             return;
         }
@@ -1124,7 +1124,7 @@
 
         const stats = graphEngine.analytics.getStatistics();
 
-        console.log('=== CULINARY GRAPH STATISTICS ===');
+        console.log('=== PANTRY ATLAS STATISTICS ===');
         console.log('Total Nodes:', stats.nodes.total);
         console.log('Total Edges:', stats.edges.total);
         console.log('Avg Connections per Node:', stats.edges.avgConnectionsPerNode);

@@ -1,4 +1,4 @@
-# Culinary Graph - Architecture Overview
+# Pantry Atlas - Architecture Overview
 
 ## What It Is
 An AI-powered ingredient substitution assistant with an interactive knowledge graph. Users can find ingredient swaps, explore flavor pairings, and get cooking advice while respecting dietary restrictions.
@@ -7,14 +7,14 @@ An AI-powered ingredient substitution assistant with an interactive knowledge gr
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                   culinarygraph.html                     │
+│                   pantryatlas.html                       │
 │              (Main UI + Pixel-Art Styles)                │
 └─────────────────────────────────────────────────────────┘
                            │
      ┌─────────────────────┼─────────────────────┐
      ▼                     ▼                     ▼
 ┌──────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│culinary-     │  │culinary-graph-  │  │culinary-graph-  │
+│pantry-atlas- │  │pantry-atlas-    │  │pantry-atlas-    │
 │  chat.js     │  │  data.js        │  │  engine.js      │
 │(Chat + RAG)  │  │(Ontology + Data)│  │(Query Engine)   │
 └──────────────┘  └─────────────────┘  └─────────────────┘
@@ -22,15 +22,17 @@ An AI-powered ingredient substitution assistant with an interactive knowledge gr
      └─────────────────────┼─────────────────────┘
                            ▼
               ┌─────────────────────────┐
-              │ culinary-graph-viz.js   │
+              │ pantry-atlas-viz.js     │
               │ (Graph Visualization)   │
               └─────────────────────────┘
               ┌─────────────────────────┐
-              │culinary-substitution.js │
+              │pantry-atlas-            │
+              │ substitution.js         │
               │ (Swap Logic)            │
               └─────────────────────────┘
               ┌─────────────────────────┐
-              │ culinary-ai-config.js   │
+              │ pantry-atlas-ai-        │
+              │ config.js               │
               │ (Gemini Config)         │
               └─────────────────────────┘
 ```
@@ -39,17 +41,17 @@ An AI-powered ingredient substitution assistant with an interactive knowledge gr
 
 | File | Purpose |
 |------|---------|
-| `culinarygraph.html` | Main page with chat interface, graph canvas, dietary restrictions UI |
-| `culinary-chat.js` | Chat controller: message handling, LLM calls, RAG context injection |
-| `culinary-graph-data.js` | Ontology definition + ingredient nodes + relationship edges |
-| `culinary-graph-engine.js` | Query engine: finds substitutes, pairings, paths between ingredients |
-| `culinary-graph-viz.js` | Canvas rendering for ingredient graph visualization |
-| `culinary-substitution.js` | Substitution logic with ratios and context rules |
-| `culinary-ai-config.js` | Gemini 2.5 Flash config and system prompt |
+| `pantryatlas.html` | Main page with chat interface, graph canvas, dietary restrictions UI |
+| `pantry-atlas-chat.js` | Chat controller: message handling, LLM calls, RAG context injection |
+| `pantry-atlas-data.js` | Ontology definition + ingredient nodes + relationship edges |
+| `pantry-atlas-engine.js` | Query engine: finds substitutes, pairings, paths between ingredients |
+| `pantry-atlas-viz.js` | Canvas rendering for ingredient graph visualization |
+| `pantry-atlas-substitution.js` | Substitution logic with ratios and context rules |
+| `pantry-atlas-ai-config.js` | Gemini 2.5 Flash config and system prompt |
 
 ## Key Data Structures
 
-### Ontology (culinary-graph-data.js)
+### Ontology (pantry-atlas-data.js)
 ```javascript
 culinaryOntology = {
     classes: { 'Ingredient', 'Protein', 'Recipe', 'Technique' },
