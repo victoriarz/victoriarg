@@ -3844,10 +3844,10 @@ function updateAIStatus(isBackendHealthy) {
     const statusBadge = document.getElementById('aiStatusBadge');
     if (statusBadge) {
         if (isBackendHealthy) {
-            statusBadge.textContent = '🤖 AI: Gemini (Active)';
+            statusBadge.textContent = 'AI: Gemini (Active)';
             statusBadge.className = 'ai-status-badge active';
         } else {
-            statusBadge.textContent = '🤖 AI';
+            statusBadge.textContent = 'AI: Fallback Mode';
             statusBadge.className = 'ai-status-badge';
         }
     }
