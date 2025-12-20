@@ -1229,6 +1229,28 @@
                 0 0 0 2px #6b8a54;
         }
 
+        /* Copy feedback toast notification */
+        .copy-feedback {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark-brown);
+            color: var(--cream);
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+        }
+
+        .copy-feedback.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
         /* Recipe scaling buttons - pixel-art style */
         .recipe-scaling {
             display: flex;
