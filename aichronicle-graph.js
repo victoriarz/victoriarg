@@ -45,7 +45,7 @@ class AIChronicleGraph {
             repulsion: 7000,
             attraction: 0.01,
             damping: 0.85,
-            centerGravity: 0.02
+            centerGravity: 0.01
         };
         
         // Colors
@@ -98,7 +98,7 @@ class AIChronicleGraph {
         
         this.data.nodes.forEach((node, index) => {
             const angle = (index / this.data.nodes.length) * Math.PI * 2;
-            const radius = 150 + Math.random() * 100;
+            const radius = 250 + Math.random() * 150;
             
             const graphNode = {
                 ...node,
