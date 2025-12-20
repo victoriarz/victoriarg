@@ -51,50 +51,10 @@ KNOWN_ORGS = [
 ]
 
 KNOWN_MODELS = [
-    "GPT-4", "GPT-4o", "GPT-5", "ChatGPT", "o1", "o3",
-    "Claude", "Claude 3", "Claude 3.5", "Opus", "Sonnet", "Haiku",
-    "Gemini", "Gemini 2", "Gemini 3", "Gemini Pro", "Gemini Ultra", "Gemini Flash",
-    "Llama", "Llama 2", "Llama 3", "Llama 3.3", "Llama 4",
-    "Mistral", "Mixtral", "DALL-E", "Midjourney",
-    "Stable Diffusion", "Sora", "Copilot", "Grok", "Grok 3", "PaLM", "Bard",
-    "Nemotron", "Phi", "Phi-4", "Qwen", "DeepSeek", "Command R"
-]
-
-# Model-to-Organization mappings (which company made which model)
-MODEL_TO_ORG = {
-    "GPT-4": "OpenAI", "GPT-4o": "OpenAI", "GPT-5": "OpenAI", "ChatGPT": "OpenAI",
-    "o1": "OpenAI", "o3": "OpenAI", "DALL-E": "OpenAI", "Sora": "OpenAI",
-    "Claude": "Anthropic", "Claude 3": "Anthropic", "Claude 3.5": "Anthropic",
-    "Opus": "Anthropic", "Sonnet": "Anthropic", "Haiku": "Anthropic",
-    "Gemini": "Google", "Gemini 2": "Google", "Gemini 3": "Google",
-    "Gemini Pro": "Google", "Gemini Ultra": "Google", "Gemini Flash": "Google",
-    "PaLM": "Google", "Bard": "Google",
-    "Llama": "Meta", "Llama 2": "Meta", "Llama 3": "Meta", "Llama 3.3": "Meta", "Llama 4": "Meta",
-    "Mistral": "Mistral", "Mixtral": "Mistral",
-    "Grok": "xAI", "Grok 3": "xAI",
-    "Copilot": "Microsoft", "Phi": "Microsoft", "Phi-4": "Microsoft",
-    "Nemotron": "NVIDIA",
-    "Stable Diffusion": "Stability AI",
-    "Qwen": "Alibaba",
-    "Command R": "Cohere",
-    "DeepSeek": "DeepSeek",
-}
-
-# Competing models (for COMPETES_WITH edges)
-MODEL_COMPETITORS = [
-    ("Claude", "GPT-4"), ("Claude", "Gemini"), ("GPT-4", "Gemini"),
-    ("Claude 3.5", "GPT-4o"), ("Claude 3.5", "Gemini Flash"),
-    ("Llama 3", "Mistral"), ("Llama 3", "Claude"),
-    ("Grok", "Claude"), ("Grok", "GPT-4"),
-    ("o1", "Claude 3.5"), ("o3", "Opus"),
-]
-
-# Competing organizations (for COMPETES_WITH edges)
-ORG_COMPETITORS = [
-    ("OpenAI", "Anthropic"), ("OpenAI", "Google"), ("Anthropic", "Google"),
-    ("OpenAI", "Meta"), ("Anthropic", "Meta"), ("Google", "Meta"),
-    ("OpenAI", "xAI"), ("Microsoft", "Google"),
-    ("NVIDIA", "Google"), ("NVIDIA", "AMD"),
+    "GPT-4", "GPT-4o", "GPT-5", "ChatGPT", "Claude", "Claude 3", "Claude 3.5",
+    "Gemini", "Gemini 2", "Gemini Pro", "Gemini Ultra", "Llama", "Llama 2", 
+    "Llama 3", "Llama 3.3", "Mistral", "Mixtral", "DALL-E", "Midjourney",
+    "Stable Diffusion", "Sora", "Copilot", "Grok", "PaLM", "Bard"
 ]
 
 KNOWN_TOPICS = [
@@ -311,46 +271,28 @@ Summary:"""
 def extract_entities(article: Dict) -> Dict:
     """Extract organizations, models, and topics from article."""
     text = f"{article['title']} {article.get('summary', '')}".lower()
-
+    
     entities = {
         "organizations": [],
         "models": [],
         "topics": []
     }
-
+    
     # Extract organizations
     for org in KNOWN_ORGS:
         if org.lower() in text:
             entities["organizations"].append(org)
-
+    
     # Extract models
     for model in KNOWN_MODELS:
         if model.lower() in text:
             entities["models"].append(model)
-            # Also add the organization that created this model
-            if model in MODEL_TO_ORG:
-                org = MODEL_TO_ORG[model]
-                if org not in entities["organizations"]:
-                    entities["organizations"].append(org)
-
+    
     # Extract topics
     for topic_name, keywords in KNOWN_TOPICS:
         if any(kw.lower() in text for kw in keywords):
             entities["topics"].append(topic_name)
-
-    # If no topics found but article is AI-related, assign default topic
-    if not entities["topics"]:
-        title_lower = article['title'].lower()
-        # Fallback topic detection for HN articles with sparse content
-        if any(kw in title_lower for kw in ["llm", "gpt", "claude", "gemini", "chatgpt"]):
-            entities["topics"].append("Large Language Models")
-        elif any(kw in title_lower for kw in ["agent", "agentic", "autonomous"]):
-            entities["topics"].append("AI Agents")
-        elif any(kw in title_lower for kw in ["vision", "image", "video", "diffusion"]):
-            entities["topics"].append("Computer Vision")
-        elif "ai" in title_lower or "ml" in title_lower:
-            entities["topics"].append("NLP")  # Default fallback
-
+    
     return entities
 
 # ============================================
@@ -455,62 +397,20 @@ def build_knowledge_graph(articles: List[Dict]) -> Dict:
     nodes.extend(orgs_seen.values())
     nodes.extend(models_seen.values())
     
-    # Add topic relationships (expanded for better connectivity)
+    # Add topic relationships
     topic_relations = [
-        # LLM connections
         ("topic-large-language-models", "topic-ai-reasoning"),
         ("topic-large-language-models", "topic-ai-agents"),
         ("topic-large-language-models", "topic-rag"),
-        ("topic-large-language-models", "topic-nlp"),
-        ("topic-large-language-models", "topic-fine-tuning"),
-        ("topic-large-language-models", "topic-prompt-engineering"),
-        ("topic-large-language-models", "topic-model-efficiency"),
-        # Safety connections
-        ("topic-ai-safety", "topic-large-language-models"),
-        ("topic-ai-safety", "topic-ai-agents"),
-        ("topic-ai-safety", "topic-ai-reasoning"),
-        # Vision connections
         ("topic-multimodal-ai", "topic-computer-vision"),
-        ("topic-multimodal-ai", "topic-large-language-models"),
-        ("topic-diffusion-models", "topic-computer-vision"),
-        ("topic-diffusion-models", "topic-multimodal-ai"),
-        # Agent connections
         ("topic-ai-agents", "topic-prompt-engineering"),
-        ("topic-ai-agents", "topic-rag"),
-        ("topic-ai-agents", "topic-ai-reasoning"),
-        # Efficiency connections
-        ("topic-model-efficiency", "topic-fine-tuning"),
-        # RL connections
-        ("topic-reinforcement-learning", "topic-ai-agents"),
-        ("topic-reinforcement-learning", "topic-ai-reasoning"),
+        ("topic-model-efficiency", "topic-large-language-models"),
+        ("topic-ai-safety", "topic-large-language-models"),
     ]
-
+    
     for source, target in topic_relations:
         if source in topics_seen and target in topics_seen:
             edges.append({"source": source, "target": target, "relationship": "RELATED_TO"})
-
-    # Add Model-to-Organization edges (CREATED_BY)
-    for model_id, model_data in models_seen.items():
-        model_name = model_data["title"]
-        if model_name in MODEL_TO_ORG:
-            org_name = MODEL_TO_ORG[model_name]
-            org_id = f"org-{org_name.lower().replace(' ', '-')}"
-            if org_id in orgs_seen:
-                edges.append({"source": model_id, "target": org_id, "relationship": "CREATED_BY"})
-
-    # Add Model competitor edges (COMPETES_WITH)
-    for model1, model2 in MODEL_COMPETITORS:
-        id1 = f"model-{model1.lower().replace(' ', '-')}"
-        id2 = f"model-{model2.lower().replace(' ', '-')}"
-        if id1 in models_seen and id2 in models_seen:
-            edges.append({"source": id1, "target": id2, "relationship": "COMPETES_WITH"})
-
-    # Add Org competitor edges (COMPETES_WITH)
-    for org1, org2 in ORG_COMPETITORS:
-        id1 = f"org-{org1.lower().replace(' ', '-')}"
-        id2 = f"org-{org2.lower().replace(' ', '-')}"
-        if id1 in orgs_seen and id2 in orgs_seen:
-            edges.append({"source": id1, "target": id2, "relationship": "COMPETES_WITH"})
     
     return {
         "metadata": {
