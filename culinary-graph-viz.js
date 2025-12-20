@@ -516,14 +516,14 @@
                 <strong>Category:</strong> ${formatCategory(nodeData.category)}
             </div>
             <div class="node-detail-item">
-                <strong>Common in:</strong> ${nodeData.cuisine.join(', ')}
+                <strong>Common in:</strong> ${nodeData.cuisine.map(c => c.charAt(0).toUpperCase() + c.slice(1)).join(', ')}
             </div>
         `;
 
         if (nodeData.dietary && nodeData.dietary.length > 0) {
             detailsHTML += `
                 <div class="node-detail-item">
-                    <strong>Dietary:</strong> ${nodeData.dietary.map(d => `<span class="dietary-badge">${d}</span>`).join(' ')}
+                    <strong>Dietary:</strong> ${nodeData.dietary.map(d => `<span class="dietary-badge">${d.charAt(0).toUpperCase() + d.slice(1)}</span>`).join(' ')}
                 </div>
             `;
         }
@@ -1594,12 +1594,19 @@
         </span>`;
     }
 
+    // Helper function to capitalize first letter of each word
+    function capitalizeWords(str) {
+        return str.split('-').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join('-');
+    }
+
     // Helper function to render dietary badges with data attributes
     function renderDietaryBadges(dietary) {
         if (!dietary || dietary.length === 0) {
             return '';
         }
-        return dietary.map(d => `<span class="dietary-badge" data-dietary="${d}">${d}</span>`).join(' ');
+        return dietary.map(d => `<span class="dietary-badge" data-dietary="${d}">${capitalizeWords(d)}</span>`).join(' ');
     }
 
     function showEnhancedNodeInfo(node) {
@@ -1616,7 +1623,7 @@
         const dietary = renderDietaryBadges(nodeData.dietary);
         const hasDietary = nodeData.dietary && nodeData.dietary.length > 0;
         const cuisines = nodeData.cuisine && nodeData.cuisine.length > 0
-            ? nodeData.cuisine.join(', ')
+            ? nodeData.cuisine.map(c => capitalizeWords(c)).join(', ')
             : 'All cuisines';
 
         // Get connected nodes
