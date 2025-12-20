@@ -88,7 +88,7 @@ Your backend is currently running **locally** (localhost). To make it work on yo
      - **Start Command:** `npm start`
 
 4. **Add environment variables in Render:**
-   - `GEMINI_API_KEY` = `AIzaSyCwOqh0cqvUXzcJxbnvFNyLNJD3kI39_0k`
+   - `GEMINI_API_KEY` = `YOUR_GEMINI_API_KEY`
    - `GEMINI_MODEL` = `gemini-2.5-flash`
 
 5. **Get your deployed URL** (e.g., `https://saponify-ai-backend.onrender.com`)

@@ -50,7 +50,7 @@ Click "Add Environment Variable" and add these:
 
 1. **First variable:**
    - Key: `GEMINI_API_KEY`
-   - Value: `AIzaSyCwOqh0cqvUXzcJxbnvFNyLNJD3kI39_0k`
+   - Value: `YOUR_GEMINI_API_KEY`
 
 2. **Second variable:**
    - Key: `GEMINI_MODEL`

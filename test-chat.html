@@ -88,7 +88,7 @@
 
                 <div class="form-group">
                     <label for="geminiApiKey">Google Gemini API Key</label>
-                    <input type="password" id="geminiApiKey" placeholder="AIza..." class="api-key-input" value="AIzaSyC9Ry9EC_bCd9GXmdF3N_acg_uGBVEsN8o">
+                    <input type="password" id="geminiApiKey" placeholder="AIza..." class="api-key-input" value="">
                     <small>Key is already configured and ready to use!</small>
                 </div>
 
@@ -120,7 +120,7 @@
             // Wait a moment for aiConfig to initialize
             setTimeout(function() {
                 // Set the API key
-                const apiKey = 'AIzaSyC9Ry9EC_bCd9GXmdF3N_acg_uGBVEsN8o';
+                const apiKey = ''; // Add your Gemini API key here for testing
                 aiConfig.saveKey(apiKey);
 
                 // Update the status badge

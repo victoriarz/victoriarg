@@ -87,7 +87,7 @@ Scroll down to the **"Environment Variables"** section:
 1. Click **"Add Environment Variable"** button
 2. Add the first variable:
    - **Key:** `GEMINI_API_KEY`
-   - **Value:** `AIzaSyCwOqh0cqvUXzcJxbnvFNyLNJD3kI39_0k`
+   - **Value:** `YOUR_GEMINI_API_KEY`
 
 3. Click **"Add Environment Variable"** again
 4. Add the second variable:
@@ -246,7 +246,7 @@ Railway is similar to Render but with a different interface.
 2. Click **"Variables"** tab
 3. Click **"+ New Variable"**
 4. Add:
-   - `GEMINI_API_KEY` = `AIzaSyCwOqh0cqvUXzcJxbnvFNyLNJD3kI39_0k`
+   - `GEMINI_API_KEY` = `YOUR_GEMINI_API_KEY`
    - `GEMINI_MODEL` = `gemini-2.5-flash`
    - `ROOT` = `server` (tells Railway where the app is)
 
