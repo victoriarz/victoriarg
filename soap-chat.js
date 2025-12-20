@@ -9,6 +9,36 @@ let soapCalculator = null;  // Will be initialized when SoapCalculator loads
 let recipeValidator = null;  // Will be initialized when RecipeValidator loads
 let knowledgeBank = null;    // Will be loaded from soap-knowledge-bank.js
 
+// Soap-themed loading messages
+const soapLoadingMessages = [
+    // Lathering up
+    'Lathering up a response...',
+    'Sudsing through the data...',
+    'Bubbling up ideas...',
+    'Whipping up some wisdom...',
+    'Saponifying your question...',
+    // Process-themed
+    'Mixing the lye solution...',
+    'Reaching trace...',
+    'Curing a response...',
+    'Blending the oils...',
+    'Measuring out an answer...',
+    // Playful
+    'Getting into a lather...',
+    'Stirring the soap pot...',
+    'Adding essential oils...',
+    'Unmolding fresh ideas...',
+    'Swirling in some color...',
+];
+
+// Get random soap loading message
+function getRandomLoadingMessage() {
+    return soapLoadingMessages[Math.floor(Math.random() * soapLoadingMessages.length)];
+}
+
+// Typing indicator message cycling interval
+let typingMessageInterval = null;
+
 // NOTE: SAP values are now managed by SoapCalculator class in soap-calculator.js
 // This duplicate data structure has been removed to avoid inconsistencies
 
@@ -1869,18 +1899,19 @@ function getCategoryLabel(category) {
     return labels[category] || 'Info';
 }
 
-// Show typing indicator
-function showTypingIndicator(message = 'AI is thinking') {
+// Show typing indicator with soap-themed message
+function showTypingIndicator() {
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message bot-message typing-indicator';
     typingDiv.id = 'typingIndicator';
 
+    const initialMessage = getRandomLoadingMessage();
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = `
         <span class="bot-icon">🧼</span>
         <div class="typing-container">
-            <span class="typing-text" id="typingText">${message}</span>
+            <span class="typing-text" id="typingText">${initialMessage}</span>
             <div class="typing-dots">
                 <span class="dot"></span>
                 <span class="dot"></span>
@@ -1892,6 +1923,14 @@ function showTypingIndicator(message = 'AI is thinking') {
     typingDiv.appendChild(contentDiv);
     chatMessages.appendChild(typingDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Cycle through messages every 2.5 seconds for longer waits
+    typingMessageInterval = setInterval(() => {
+        const typingText = document.getElementById('typingText');
+        if (typingText) {
+            typingText.textContent = getRandomLoadingMessage();
+        }
+    }, 2500);
 }
 
 // Update typing indicator message
@@ -1904,6 +1943,11 @@ function updateTypingIndicator(message) {
 
 // Remove typing indicator
 function removeTypingIndicator() {
+    // Clear the message cycling interval
+    if (typingMessageInterval) {
+        clearInterval(typingMessageInterval);
+        typingMessageInterval = null;
+    }
     const indicator = document.getElementById('typingIndicator');
     if (indicator) {
         indicator.remove();
