@@ -275,7 +275,7 @@ class AIChronicleApp {
             `;
             
             if (node.url) {
-                html += `<a href="${node.url}" target="_blank" class="node-info-link">Read Article →</a>`;
+                html += `<a href="${node.url}" target="_blank" class="node-info-link">${this.getLinkText(node.url)}</a>`;
             }
         }
         
@@ -335,6 +335,14 @@ class AIChronicleApp {
         if (!text) return '';
         if (text.length <= maxLen) return text;
         return text.substring(0, maxLen - 3) + '...';
+    }
+
+    getLinkText(url) {
+        if (!url) return 'View →';
+        if (url.includes('youtube.com') || url.includes('youtu.be')) return 'Watch Video →';
+        if (url.includes('github.com')) return 'View on GitHub →';
+        if (url.includes('arxiv.org')) return 'Read Paper →';
+        return 'Read Article →';
     }
 }
 
