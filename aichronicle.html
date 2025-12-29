@@ -1199,7 +1199,7 @@
 
             <section class="section-frame">
                 <h2>Overview</h2>
-                <p>AI Chronicles is a living knowledge graph that maps the AI landscape in real-time. Every day, it automatically scrapes 100+ articles from arXiv research papers, Hacker News discussions, and leading AI company blogs. Using Gemini AI, it extracts entities (organizations, models, topics) and builds a force-directed graph showing how ideas, companies, and technologies connect. Explore trending topics, discover relationships between research papers, and stay current on AI developments—all updated automatically via GitHub Actions.</p>
+                <p>AI Chronicles is a living knowledge graph that maps the AI landscape in real-time. Every day, it automatically aggregates 100+ pieces of content—research papers, articles, videos, and code repositories—from arXiv, Hacker News, YouTube, GitHub, and leading AI company blogs. Using Gemini AI, it extracts entities (organizations, models, topics) and builds a force-directed graph showing how ideas, companies, and technologies connect. Explore trending topics, discover relationships between research, and stay current on AI developments—all updated automatically via GitHub Actions.</p>
             </section>
 
             <section class="section-frame">
@@ -1207,11 +1207,11 @@
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>Automated Aggregation</h3>
-                        <p>Scrapes 8+ RSS feeds daily: arXiv (cs.AI, cs.LG, cs.CL), OpenAI, Google AI, Hugging Face, Anthropic, and MIT Tech Review. Also queries Hacker News API for trending AI discussions.</p>
+                        <p>Aggregates from 8+ sources daily: arXiv papers, AI company blogs (OpenAI, Google AI, Anthropic), Hacker News discussions, YouTube videos, and GitHub repositories.</p>
                     </div>
                     <div class="feature-card">
                         <h3>AI Summarization</h3>
-                        <p>Gemini 2.5 Flash generates concise summaries for articles. Entity extraction identifies 20+ AI organizations, 20+ models, and 13 topic categories from article text.</p>
+                        <p>Gemini 3 generates concise summaries for content. Entity extraction identifies 20+ AI organizations, 20+ models, and 13 topic categories from each piece.</p>
                     </div>
                     <div class="feature-card">
                         <h3>Knowledge Graph</h3>
@@ -1228,17 +1228,17 @@
                 <h2>Technology Stack</h2>
                 <ul class="tech-stack-list">
                     <li><strong>Data Pipeline:</strong> Python scraper with feedparser for RSS, requests for APIs, and intelligent entity extraction</li>
-                    <li><strong>AI Integration:</strong> Gemini 2.5 Flash API for article summarization (optional, works without it)</li>
+                    <li><strong>AI Integration:</strong> Gemini 3 API for content summarization (optional, works without it)</li>
                     <li><strong>Visualization:</strong> HTML5 Canvas with custom force-directed physics (repulsion, attraction, damping, gravity)</li>
                     <li><strong>Automation:</strong> GitHub Actions runs daily at 6 AM UTC, auto-commits updates to the knowledge graph</li>
-                    <li><strong>Data Sources:</strong> arXiv RSS (3 feeds), Hacker News Algolia API, 5 AI company blog feeds</li>
+                    <li><strong>Data Sources:</strong> arXiv RSS (3 feeds), Hacker News Algolia API, YouTube, GitHub, and AI company blog feeds</li>
                     <li><strong>Frontend:</strong> Vanilla JavaScript with responsive grid layout and real-time stats</li>
                 </ul>
             </section>
 
             <section class="cta-section">
-                <h2>Plot Twist: It Updates Itself</h2>
-                <p>Somewhere, a GitHub Action just finished scraping Hacker News. The graph grows whether you're watching or not. Want something this relentless working on your data?</p>
+                <h2>From Data to Insight, Automatically</h2>
+                <p>This graph started with a handful of nodes. Now it tracks hundreds of connections—entities extracted, relationships mapped, trends surfaced—without manual effort. Ready to build something that scales?</p>
                 <div class="cta-buttons">
                     <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
                     <a href="index.html#projects" class="cta-button-secondary">View All Projects</a>
