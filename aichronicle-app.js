@@ -180,8 +180,9 @@ class AIChronicleApp {
         const trendingBtn = document.getElementById('filterTrending');
         if (trendingBtn) {
             trendingBtn.addEventListener('click', () => {
-                trendingBtn.classList.toggle('active');
-                // TODO: Implement trending filter
+                const isActive = trendingBtn.classList.toggle('active');
+                this.graph.filterTrending = isActive;
+                this.graph.updateVisibleNodes();
             });
         }
     }
@@ -320,13 +321,14 @@ class AIChronicleApp {
     }
     
     getNodeIcon(type) {
-        const icons = {
-            article: '•',
-            topic: '★',
-            organization: '◆',
-            model: '◎'
+        const colors = {
+            article: '#e07b53',
+            topic: '#5b8a72',
+            organization: '#6b8cae',
+            model: '#9b7bb8'
         };
-        return icons[type] || '•';
+        const color = colors[type] || '#888';
+        return `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:4px;vertical-align:middle;"></span>`;
     }
     
     truncate(text, maxLen) {

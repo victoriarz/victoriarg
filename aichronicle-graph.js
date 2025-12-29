@@ -160,6 +160,9 @@ class AIChronicleGraph {
             if (node.type === 'organization' && !this.filters.showOrgs) return false;
             if (node.type === 'model' && !this.filters.showModels) return false;
 
+            // Trending filter - only show nodes with trending score
+            if (this.filterTrending && !node.trendingScore) return false;
+
             // Time range filter (articles only)
             if (node.type === 'article' && this.filters.timeRange !== 'all') {
                 const days = parseInt(this.filters.timeRange);
@@ -564,7 +567,7 @@ class AIChronicleGraph {
         // For topic nodes, display the title text instead of emoji
         if (node.type === 'topic') {
             const fontSize = Math.max(10, node.radius * 0.5);
-            this.ctx.font = `bold ${fontSize}px "VT323", monospace`;
+            this.ctx.font = `600 ${fontSize}px "Josefin Sans", sans-serif`;
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillStyle = 'white';
@@ -579,22 +582,7 @@ class AIChronicleGraph {
             return;
         }
 
-        // Article nodes are just plain circles, no icon
-        if (node.type === 'article') {
-            return;
-        }
-
-        const icons = {
-            organization: '🏢',
-            model: '🤖'
-        };
-
-        const icon = icons[node.type] || '●';
-
-        this.ctx.font = `${node.radius * 0.8}px sans-serif`;
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.fillText(icon, node.x, node.y);
+        // All other nodes (article, organization, model) are plain circles
     }
     
     renderLabels() {
@@ -703,16 +691,10 @@ class AIChronicleGraph {
         const tooltip = document.getElementById('graphTooltip');
         if (!tooltip) return;
 
-        const icons = {
-            article: '•',
-            topic: '★',
-            organization: '◆',
-            model: '◎'
-        };
-
-        const icon = icons[node.type] || '•';
+        const color = this.colors[node.type] || '#888';
+        const dot = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:4px;vertical-align:middle;"></span>`;
         const title = node.title.length > 40 ? node.title.substring(0, 40) + '...' : node.title;
-        tooltip.innerHTML = `<div class="tooltip-type">${icon} ${node.type}</div><div>${title}</div>`;
+        tooltip.innerHTML = `<div class="tooltip-type">${dot}${node.type}</div><div>${title}</div>`;
 
         // Position tooltip near cursor
         const rect = this.container.getBoundingClientRect();

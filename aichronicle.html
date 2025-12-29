@@ -13,11 +13,11 @@
         /* Page-specific styles - base styles are in style.css */
 
         :root {
-            /* Graph Colors (page-specific) */
-            --node-article: #c45c3e;
-            --node-topic: #2d7a4f;
-            --node-org: #1a4b8c;
-            --node-model: #f4b942;
+            /* Graph Colors (must match aichronicle-graph.js) */
+            --node-article: #e07b53;
+            --node-topic: #5b8a72;
+            --node-org: #6b8cae;
+            --node-model: #9b7bb8;
         }
 
         body {
@@ -317,8 +317,9 @@
             border: 1px solid var(--crema-calida);
             border-radius: 6px;
             cursor: pointer;
+            font-family: 'Playfair Display', serif;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             transition: all 0.2s ease;
@@ -1254,8 +1255,8 @@
 
     <!-- Scripts -->
     <script src="aichronicle-data.js?v=2"></script>
-    <script src="aichronicle-graph.js?v=10"></script>
-    <script src="aichronicle-app.js?v=5"></script>
+    <script src="aichronicle-graph.js?v=14"></script>
+    <script src="aichronicle-app.js?v=7"></script>
 
     <script>
         // Update time display
