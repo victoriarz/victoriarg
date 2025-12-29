@@ -564,10 +564,10 @@ class AIChronicleGraph {
     }
     
     renderNodeIcon(node) {
-        // For topic nodes, display the title text instead of emoji
-        if (node.type === 'topic') {
+        // For topic, model, and organization nodes, display the title text
+        if (node.type === 'topic' || node.type === 'model' || node.type === 'organization') {
             const fontSize = Math.max(10, node.radius * 0.5);
-            this.ctx.font = `600 ${fontSize}px "Josefin Sans", sans-serif`;
+            this.ctx.font = `600 ${fontSize}px "Playfair Display", serif`;
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
             this.ctx.fillStyle = 'white';
@@ -582,7 +582,7 @@ class AIChronicleGraph {
             return;
         }
 
-        // All other nodes (article, organization, model) are plain circles
+        // Article nodes are plain circles
     }
     
     renderLabels() {
