@@ -42,10 +42,10 @@ class AIChronicleGraph {
         
         // Physics settings
         this.physics = {
-            repulsion: 7000,
+            repulsion: 25000,
             attraction: 0.01,
             damping: 0.85,
-            centerGravity: 0.02
+            centerGravity: 0.015
         };
         
         // Colors
@@ -98,8 +98,10 @@ class AIChronicleGraph {
         
         this.data.nodes.forEach((node, index) => {
             const angle = (index / this.data.nodes.length) * Math.PI * 2;
-            const radius = 150 + Math.random() * 100;
-            
+            // Spawn near edges of canvas
+            const maxRadius = Math.min(this.width, this.height) * 0.55;
+            const radius = maxRadius * (0.9 + Math.random() * 0.1);
+
             const graphNode = {
                 ...node,
                 x: this.centerX + Math.cos(angle) * radius,
@@ -395,6 +397,11 @@ class AIChronicleGraph {
     }
     
     startSimulation() {
+        // Pre-settle: run physics iterations before first render
+        for (let i = 0; i < 75; i++) {
+            this.updatePhysics();
+        }
+
         const simulate = () => {
             this.updatePhysics();
             this.render();
