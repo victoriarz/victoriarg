@@ -268,8 +268,8 @@ class AIChronicleApp {
             
             html += `
                 <p class="node-info-meta">
-                    📅 ${formattedDate} • 📰 ${node.source}
-                    ${node.trendingScore ? ` • 🔥 ${node.trendingScore}` : ''}
+                    ${formattedDate} • ${node.source}
+                    ${node.trendingScore ? ` • Trending: ${node.trendingScore}` : ''}
                 </p>
             `;
             
@@ -321,12 +321,12 @@ class AIChronicleApp {
     
     getNodeIcon(type) {
         const icons = {
-            article: '📰',
-            topic: '🏷️',
-            organization: '🏢',
-            model: '🤖'
+            article: '•',
+            topic: '★',
+            organization: '◆',
+            model: '◎'
         };
-        return icons[type] || '●';
+        return icons[type] || '•';
     }
     
     truncate(text, maxLen) {

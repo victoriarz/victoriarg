@@ -254,7 +254,7 @@
 
         .stat-label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             color: var(--ink-light);
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -312,13 +312,15 @@
         }
 
         .control-btn {
-            width: 36px;
-            height: 36px;
+            padding: 0.4rem 0.75rem;
             background: white;
             border: 1px solid var(--crema-calida);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
@@ -1104,22 +1106,18 @@
             <!-- Stats Bar -->
             <section class="stats-bar">
                 <div class="stat-item">
-                    <span class="stat-icon">📊</span>
                     <span class="stat-label">Nodes</span>
                     <span class="stat-value" id="nodeCount">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-icon">🔗</span>
                     <span class="stat-label">Connections</span>
                     <span class="stat-value" id="edgeCount">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-icon">📰</span>
                     <span class="stat-label">Articles</span>
                     <span class="stat-value" id="articleCount">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-icon">🔄</span>
                     <span class="stat-label">Last Updated</span>
                     <span class="stat-value" id="lastUpdated">--</span>
                 </div>
@@ -1132,9 +1130,9 @@
                     <div class="panel-header">
                         <h2>Knowledge Graph</h2>
                         <div class="graph-controls">
-                            <button class="control-btn" id="resetView" title="Reset View">🔄</button>
-                            <button class="control-btn" id="toggleLabels" title="Toggle Labels">🏷️</button>
-                            <button class="control-btn" id="filterTrending" title="Show Trending">🔥</button>
+                            <button class="control-btn" id="resetView" title="Reset View">Start Over</button>
+                            <button class="control-btn" id="toggleLabels" title="Toggle Labels">Labels</button>
+                            <button class="control-btn" id="filterTrending" title="Show Trending">Trending</button>
                         </div>
                     </div>
                     <div class="graph-container" id="graphContainer">
@@ -1175,7 +1173,7 @@
                     <!-- Trending Topics -->
                     <section class="info-card">
                         <div class="card-header">
-                            <h3>🔥 Trending</h3>
+                            <h3>Trending</h3>
                         </div>
                         <div class="card-content" id="trendingTopics">
                             <div class="trending-list">
@@ -1187,7 +1185,7 @@
                     <!-- Recent Articles -->
                     <section class="info-card">
                         <div class="card-header">
-                            <h3>📰 Recent</h3>
+                            <h3>Recent</h3>
                         </div>
                         <div class="card-content" id="recentArticles">
                             <div class="article-list">
@@ -1256,8 +1254,8 @@
 
     <!-- Scripts -->
     <script src="aichronicle-data.js?v=2"></script>
-    <script src="aichronicle-graph.js?v=7"></script>
-    <script src="aichronicle-app.js?v=4"></script>
+    <script src="aichronicle-graph.js?v=10"></script>
+    <script src="aichronicle-app.js?v=5"></script>
 
     <script>
         // Update time display

@@ -561,15 +561,36 @@ class AIChronicleGraph {
     }
     
     renderNodeIcon(node) {
+        // For topic nodes, display the title text instead of emoji
+        if (node.type === 'topic') {
+            const fontSize = Math.max(10, node.radius * 0.5);
+            this.ctx.font = `bold ${fontSize}px "VT323", monospace`;
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillStyle = 'white';
+
+            // Truncate text to fit in node
+            const maxChars = Math.floor(node.radius / 4);
+            const label = node.title.length > maxChars
+                ? node.title.substring(0, maxChars - 1) + '…'
+                : node.title;
+
+            this.ctx.fillText(label, node.x, node.y);
+            return;
+        }
+
+        // Article nodes are just plain circles, no icon
+        if (node.type === 'article') {
+            return;
+        }
+
         const icons = {
-            article: '📰',
-            topic: '🏷️',
             organization: '🏢',
             model: '🤖'
         };
-        
+
         const icon = icons[node.type] || '●';
-        
+
         this.ctx.font = `${node.radius * 0.8}px sans-serif`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
@@ -683,13 +704,13 @@ class AIChronicleGraph {
         if (!tooltip) return;
 
         const icons = {
-            article: '📰',
-            topic: '🏷️',
-            organization: '🏢',
-            model: '🤖'
+            article: '•',
+            topic: '★',
+            organization: '◆',
+            model: '◎'
         };
 
-        const icon = icons[node.type] || '●';
+        const icon = icons[node.type] || '•';
         const title = node.title.length > 40 ? node.title.substring(0, 40) + '...' : node.title;
         tooltip.innerHTML = `<div class="tooltip-type">${icon} ${node.type}</div><div>${title}</div>`;
 
