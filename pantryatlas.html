@@ -45,68 +45,54 @@
             z-index: 1;
         }
 
-        /* Fixed Header */
+        /* Header */
         header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-bottom: 1px solid #e8dfd2;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin: 15px 0;
         }
 
         .header-frame {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 24px;
+            padding: 0;
+            animation: slideDown 0.5s ease-out;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: slideDown 0.5s ease-out;
         }
 
         @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
+            background: white;
             color: var(--azul-cobalto);
+            padding: 0.6rem 1.25rem;
             text-decoration: none;
-            font-family: 'Josefin Sans', sans-serif;
+            font-size: 0.75rem;
             font-weight: 500;
-            font-size: 15px;
-            transition: color 0.2s;
+            border: 2px solid var(--azul-cobalto);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .back-btn:hover {
-            color: var(--terracotta);
+            background: var(--azul-cobalto);
+            color: white;
         }
 
         .time-display {
             display: inline-block;
             background: var(--crema-calida);
-            padding: 6px 14px;
-            font-size: 14px;
-            font-family: 'Josefin Sans', sans-serif;
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
             color: var(--ink-light);
-            border-radius: 20px;
-        }
-
-        /* Main content spacing for fixed header */
-        main {
-            padding-top: 90px;
+            border-radius: 4px;
         }
 
         /* Typography */
@@ -143,21 +129,30 @@
             margin-bottom: 10px;
         }
 
-        /* Section frames */
-        .section-frame {
+        /* Hero Section */
+        .hero-section {
             background: white;
             border-radius: 12px;
-            padding: 2rem;
-            margin: 1.5rem 0;
+            padding: 2.5rem;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
             box-shadow: 0 4px 20px rgba(26, 75, 140, 0.08);
             border: 1px solid var(--crema-calida);
         }
 
-        #project-detail-hero .section-frame {
-            text-align: center;
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--azul-cobalto), var(--terracotta), var(--amarillo-sol));
         }
 
-        #project-detail-hero h1 {
+        .hero-section h1 {
             color: var(--azul-profundo);
         }
 
@@ -165,15 +160,16 @@
             font-family: 'Libre Baskerville', serif;
             font-size: 1.1rem;
             color: var(--ink-light);
-            margin: 15px 0;
+            margin: 0.75rem 0 1.5rem;
+            font-style: italic;
         }
 
         .project-tech {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
-            margin-top: 25px;
+            gap: 0.5rem;
+            margin-top: 1rem;
         }
 
         .tech-tag {
@@ -185,6 +181,16 @@
             border-radius: 4px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+        }
+
+        /* Section frames */
+        .section-frame {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(26, 75, 140, 0.08);
+            border: 1px solid var(--crema-calida);
         }
 
         /* Footer */
@@ -1606,7 +1612,7 @@
     </style>
 </head>
 <body>
-    <!-- Fixed Header -->
+    <!-- Header -->
     <header>
         <div class="header-frame">
             <a href="index.html" class="back-btn">← Back to Portfolio</a>
@@ -1616,17 +1622,15 @@
 
     <div class="container">
         <main>
-            <section id="project-detail-hero">
-                <div class="section-frame">
-                    <h1>Pantry Atlas</h1>
-                    <p class="project-tagline">Knowledge Graph-Powered Recipe Discovery</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Knowledge Graphs</span>
-                        <span class="tech-tag">Gemini AI</span>
-                        <span class="tech-tag">RAG Architecture</span>
-                        <span class="tech-tag">Graph Visualization</span>
-                        <span class="tech-tag">Recipe Intelligence</span>
-                    </div>
+            <section class="hero-section">
+                <h1>Pantry Atlas</h1>
+                <p class="project-tagline">Knowledge Graph-Powered Recipe Discovery</p>
+                <div class="project-tech">
+                    <span class="tech-tag">Knowledge Graphs</span>
+                    <span class="tech-tag">Gemini AI</span>
+                    <span class="tech-tag">RAG Architecture</span>
+                    <span class="tech-tag">Graph Visualization</span>
+                    <span class="tech-tag">Recipe Intelligence</span>
                 </div>
             </section>
 
