@@ -17,25 +17,25 @@
         /* Page-specific styles - base styles are in style.css */
 
         body {
-            font-family: 'Libre Baskerville', Georgia, serif;
+            font-family: 'Josefin Sans', sans-serif;
             background: var(--crema);
             color: var(--ink);
-            line-height: 1.7;
-            position: relative;
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Subtle tile pattern background */
-        body::before {
-            content: '';
+        /* Talavera tile background pattern */
+        .tile-pattern {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a4b8c' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%231a4b8c' stroke-width='1'%3E%3Ccircle cx='60' cy='60' r='30'/%3E%3Ccircle cx='60' cy='60' r='20'/%3E%3Ccircle cx='60' cy='60' r='10'/%3E%3Cpath d='M60 30 Q75 45 60 60 Q45 45 60 30'/%3E%3Cpath d='M60 90 Q75 75 60 60 Q45 75 60 90'/%3E%3Cpath d='M30 60 Q45 75 60 60 Q45 45 30 60'/%3E%3Cpath d='M90 60 Q75 75 60 60 Q75 45 90 60'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 120px 120px;
         }
 
         .container {
@@ -43,7 +43,7 @@
             margin: 0 auto;
             padding: 20px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         /* Header */
@@ -98,26 +98,30 @@
 
         /* Typography */
         h1 {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--ink);
-            margin: 20px 0;
-            letter-spacing: -0.5px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: var(--azul-profundo);
+            margin-bottom: 0.5rem;
         }
 
         h2 {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 28px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: var(--ink);
-            margin-bottom: 20px;
+            color: var(--azul-profundo);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--amarillo-sol);
+            display: inline-block;
         }
 
-        .subtitle {
-            font-size: 18px;
-            color: var(--ink-light);
-            margin: 15px 0;
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--azul-profundo);
+            margin-bottom: 0.75rem;
         }
 
         /* Hero Section */
@@ -141,10 +145,6 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--azul-cobalto), var(--terracotta), var(--amarillo-sol));
-        }
-
-        .hero-section h1 {
-            color: var(--azul-profundo);
         }
 
         .project-tagline {
@@ -184,34 +184,6 @@
             border: 1px solid var(--crema-calida);
         }
 
-        /* Section divider */
-        .section-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 50px 0;
-            gap: 20px;
-        }
-
-        .divider-line {
-            height: 1px;
-            width: 80px;
-            background: linear-gradient(90deg, transparent, #d4c4b0, transparent);
-        }
-
-        .divider-icon {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .divider-icon svg {
-            width: 32px;
-            height: 32px;
-        }
-
         /* Footer */
         footer {
             text-align: center;
@@ -230,82 +202,92 @@
         /* CTA Buttons */
         .cta-buttons {
             display: flex;
-            gap: 16px;
+            gap: 1rem;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 30px;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, var(--azul-cobalto), var(--azul-brillante));
-            color: white;
-            padding: 14px 32px;
+            background: var(--amarillo-sol);
+            color: var(--azul-profundo);
+            padding: 0.75rem 1.75rem;
             text-decoration: none;
-            font-size: 15px;
             font-family: 'Josefin Sans', sans-serif;
-            font-weight: 500;
-            border-radius: 6px;
-            box-shadow: 0 4px 15px rgba(26, 75, 140, 0.3);
-            transition: all 0.3s;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
         .cta-button:hover {
+            background: white;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 75, 140, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .cta-button-secondary {
             display: inline-block;
             background: transparent;
-            color: var(--terracotta);
-            padding: 14px 32px;
+            color: white;
+            padding: 0.75rem 1.75rem;
             text-decoration: none;
-            font-size: 15px;
             font-family: 'Josefin Sans', sans-serif;
-            font-weight: 500;
-            border: 2px solid var(--terracotta);
-            border-radius: 6px;
-            transition: all 0.3s;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
         .cta-button-secondary:hover {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        /* Project CTA Section */
-        #project-cta .section-frame {
-            background: linear-gradient(135deg, var(--azul-cobalto) 0%, var(--azul-profundo) 100%);
-            border: none;
-            text-align: center;
-        }
-
-        #project-cta h2 {
-            color: white;
-        }
-
-        #project-cta p {
-            color: rgba(255,255,255,0.85);
-            font-size: 18px;
-        }
-
-        #project-cta .cta-button {
-            background: white;
-            color: var(--azul-cobalto);
-        }
-
-        #project-cta .cta-button:hover {
-            background: var(--crema);
-        }
-
-        #project-cta .cta-button-secondary {
+            background: rgba(255,255,255,0.1);
             border-color: white;
-            color: white;
         }
 
-        #project-cta .cta-button-secondary:hover {
-            background: rgba(255,255,255,0.15);
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--azul-profundo) 0%, var(--azul-cobalto) 100%);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='30' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.05'/%3E%3Ccircle cx='40' cy='40' r='20' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+            background-size: 80px 80px;
+        }
+
+        .cta-section h2 {
+            color: white;
+            border-bottom: none;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            font-family: 'Libre Baskerville', serif;
+            color: rgba(255,255,255,0.85);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section .cta-buttons {
+            position: relative;
+            z-index: 1;
         }
 
         /* Lists */
@@ -315,34 +297,33 @@
         }
 
         .tech-stack-list li {
-            font-size: 17px;
-            color: var(--ink);
-            padding: 12px 0;
-            padding-left: 30px;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.9rem;
+            color: var(--ink-light);
+            padding: 0.6rem 0;
+            padding-left: 1.5rem;
             position: relative;
-            border-bottom: 1px solid #f0e8df;
-        }
-
-        .tech-stack-list li:last-child {
-            border-bottom: none;
+            line-height: 1.6;
         }
 
         .tech-stack-list li::before {
-            content: '';
+            content: '\2726';
             position: absolute;
             left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
-            background: var(--terracotta);
-            border-radius: 50%;
+            color: var(--amarillo-sol);
+            font-size: 0.7rem;
+        }
+
+        .tech-stack-list li strong {
+            color: var(--ink);
         }
 
         p {
-            font-size: 17px;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.95rem;
             line-height: 1.8;
-            margin-bottom: 15px;
+            color: var(--ink-light);
+            margin-bottom: 1rem;
         }
 
         /* Chat-specific styles */
@@ -1111,10 +1092,17 @@
                 text-align: center;
             }
         }
+
+        ::selection {
+            background: var(--amarillo-sol);
+            color: var(--azul-profundo);
+        }
     </style>
 </head>
 
 <body>
+    <div class="tile-pattern"></div>
+
     <div class="container">
         <!-- Header -->
         <header>
@@ -1135,21 +1123,6 @@
                     <span class="tech-tag">Prompt Engineering</span>
                 </div>
             </section>
-
-            <div class="section-divider">
-                <div class="divider-line"></div>
-                <div class="divider-icon">
-                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="20" r="18" stroke="#1a4b8c" stroke-width="2" fill="none"/>
-                        <circle cx="20" cy="20" r="8" fill="#c45c3e"/>
-                        <circle cx="20" cy="8" r="3" fill="#1a4b8c"/>
-                        <circle cx="20" cy="32" r="3" fill="#1a4b8c"/>
-                        <circle cx="8" cy="20" r="3" fill="#2d7a4f"/>
-                        <circle cx="32" cy="20" r="3" fill="#2d7a4f"/>
-                    </svg>
-                </div>
-                <div class="divider-line"></div>
-            </div>
 
             <section id="soap-chat-demo">
                 <div class="section-frame">
@@ -1242,16 +1215,12 @@
                 </div>
             </section>
 
-            <section id="project-cta">
-                <div class="section-frame">
-                    <div class="project-cta-content">
-                        <h2>Ready to See Some Serious Suds?</h2>
-                        <p>Your workflows are due for a deep clean. Let's discuss how AI solutions can cut through the grime and generate powerful, lasting efficiency.</p>
-                        <div class="cta-buttons">
-                            <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
-                            <a href="index.html#projects" class="cta-button-secondary">View All Projects</a>
-                        </div>
-                    </div>
+            <section class="cta-section">
+                <h2>Ready to See Some Serious Suds?</h2>
+                <p>Your workflows are due for a deep clean. Let's discuss how AI solutions can cut through the grime and generate powerful, lasting efficiency.</p>
+                <div class="cta-buttons">
+                    <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
+                    <a href="index.html#projects" class="cta-button-secondary">View All Projects</a>
                 </div>
             </section>
         </main>
