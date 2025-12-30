@@ -31,6 +31,19 @@ const soapLoadingMessages = [
     'Swirling in some color...',
 ];
 
+// Soap-themed cold start messages
+const soapColdStartMessages = [
+    'Heating up the soap pot...',
+    'Warming up the oils...',
+    'Preheating the double boiler...',
+    'Getting the lye water ready...',
+];
+
+// Get random cold start message
+function getRandomColdStartMessage() {
+    return soapColdStartMessages[Math.floor(Math.random() * soapColdStartMessages.length)];
+}
+
 // Get random soap loading message
 function getRandomLoadingMessage() {
     return soapLoadingMessages[Math.floor(Math.random() * soapLoadingMessages.length)];
@@ -3345,23 +3358,23 @@ async function sendMessage() {
         }
 
         // STEP 2: Retrieve RAG context from knowledge bank
-        updateTypingIndicator('Gathering context');
+        updateTypingIndicator(getRandomLoadingMessage());
         const ragContext = retrieveRAGContext(userMessage);
         console.log(`📚 RAG context retrieved: ${ragContext.context.length} chars`);
 
         // STEP 3: Call Gemini API with RAG-augmented prompt (ALWAYS for soap questions)
         console.log('🤖 Calling Gemini API with RAG context...');
-        updateTypingIndicator('AI is thinking');
+        updateTypingIndicator(getRandomLoadingMessage());
         lastResponseSource = 'api';
 
         // Show "waking up" message if backend takes > 3 seconds (cold start)
         const wakeUpTimer = setTimeout(() => {
-            updateTypingIndicator('Waking up AI... (cold start)');
+            updateTypingIndicator(getRandomColdStartMessage());
         }, 3000);
 
         // Show longer wait message after 10 seconds
         const longWaitTimer = setTimeout(() => {
-            updateTypingIndicator('Still waking up... almost ready!');
+            updateTypingIndicator('Almost at trace... hang tight!');
         }, 10000);
 
         let aiResult;

@@ -328,15 +328,13 @@
 
         /* Chat-specific styles */
         .chat-header-controls {
-            margin-bottom: 25px;
-            text-align: center;
+            margin-bottom: 15px;
         }
 
-        .chat-intro {
-            margin: 20px 0;
-            font-size: 17px;
-            line-height: 1.7;
-            color: var(--ink-light);
+        .chat-header-controls .ai-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .ai-controls {
@@ -1115,7 +1113,7 @@
         <main>
             <section class="hero-section">
                 <h1>Saponify AI</h1>
-                <p class="project-tagline">AI-Powered Workflow Automation</p>
+                <p class="project-tagline">Soap Making AI & Recipe Calculator</p>
                 <div class="project-tech">
                     <span class="tech-tag">Claude Code</span>
                     <span class="tech-tag">Gemini Flash 2.5</span>
@@ -1127,16 +1125,9 @@
             <section id="soap-chat-demo">
                 <div class="section-frame">
                     <div class="chat-header-controls">
-                        <div>
-                            <h2>Try the Soap Making Assistant</h2>
-                            <p class="chat-intro">Your personal soap making expert with a built-in SoapCalc-style calculator.
-                                Get safe, precise recipes with exact lye and water amounts calculated from verified SAP values
-                                for 19+ oils. See detailed soap properties like hardness, lather, and conditioning - or just
-                                ask about techniques, troubleshooting, and ingredients.</p>
-                            <div class="ai-controls">
-                                <span id="aiStatusBadge" class="ai-status-badge">AI: Gemini (Active)</span>
-                                <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">Start Over</button>
-                            </div>
+                        <div class="ai-controls">
+                            <span id="aiStatusBadge" class="ai-status-badge">AI: Gemini (Active)</span>
+                            <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">Start Over</button>
                         </div>
                     </div>
 
@@ -1146,7 +1137,7 @@
                                 <div class="message-content">
                                     <span class="bot-icon" aria-hidden="true">🧼</span>
                                     <div class="bot-text markdown-content">
-                                        Hello! I'm your soap making assistant with a built-in SoapCalc-style calculator. I can
+                                        Hello! I'm your soap making assistant with a built-in soap calculator. I can
                                         create <strong>accurate, safe recipes</strong> with exact lye calculations and detailed
                                         soap properties. Just tell me what oils you want to use or ask for a recipe
                                         recommendation. I also answer questions about saponification, techniques, and
@@ -1246,7 +1237,7 @@
 
     <!-- AI Configuration and Chat -->
     <script src="ai-config.js?v=2.1.0"></script>
-    <script src="soap-chat.js?v=2.5.1"></script>
+    <script src="soap-chat.js?v=2.5.2"></script>
 
     <script>
         // Update time display
