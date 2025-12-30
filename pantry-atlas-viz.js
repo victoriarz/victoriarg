@@ -477,7 +477,11 @@
             'sauce': '#d98a78',        // Terracotta mid-tone
             'oil': '#e8c862',          // Amarillo-dorado based
             'vegetable': '#8cc99c',    // Verde-esmeralda light
-            'spice': '#e89078'         // Terracotta-brillante based
+            'spice': '#e89078',        // Terracotta-brillante based
+            'nuts': '#d4a574',         // Warm brown (almonds/walnuts)
+            'baking': '#e8d4c4',       // Light cream (flour/sugar)
+            'acid': '#f0e068',         // Bright yellow (lemon/vinegar)
+            'liquid': '#a0d4e8'        // Light cyan (stocks/water)
         };
         return colors[category] || '#d4c4b0'; // Neutral crema-calida fallback
     }

@@ -1226,6 +1226,7 @@
 
         /* Talavera-inspired legend colors matching graph nodes */
         .legend-dot.dairy { background: #a8c4e0; }
+        .legend-dot.dairy-alt { background: #b5d4e8; }
         .legend-dot.protein { background: #e8a090; }
         .legend-dot.grain { background: #f4c96a; }
         .legend-dot.vegetable { background: #8cc99c; }
@@ -1234,6 +1235,11 @@
         .legend-dot.spice { background: #e89078; }
         .legend-dot.oil { background: #e8c862; }
         .legend-dot.sauce { background: #d98a78; }
+        .legend-dot.nuts { background: #d4a574; }
+        .legend-dot.sweetener { background: #f4d89a; }
+        .legend-dot.baking { background: #e8d4c4; }
+        .legend-dot.acid { background: #f0e068; }
+        .legend-dot.liquid { background: #a0d4e8; }
 
         /* Enhanced Node Info Styles */
         .node-info-enhanced {
@@ -1724,6 +1730,10 @@
                                 <span class="legend-dot dairy"></span>
                                 <span>Dairy</span>
                             </div>
+                            <div class="legend-item-compact" data-category="dairy-alt" title="Click to filter">
+                                <span class="legend-dot dairy-alt"></span>
+                                <span>Dairy-Alt</span>
+                            </div>
                             <div class="legend-item-compact" data-category="protein" title="Click to filter">
                                 <span class="legend-dot protein"></span>
                                 <span>Protein</span>
@@ -1755,6 +1765,26 @@
                             <div class="legend-item-compact" data-category="sauce" title="Click to filter">
                                 <span class="legend-dot sauce"></span>
                                 <span>Sauces</span>
+                            </div>
+                            <div class="legend-item-compact" data-category="nuts" title="Click to filter">
+                                <span class="legend-dot nuts"></span>
+                                <span>Nuts</span>
+                            </div>
+                            <div class="legend-item-compact" data-category="sweetener" title="Click to filter">
+                                <span class="legend-dot sweetener"></span>
+                                <span>Sweeteners</span>
+                            </div>
+                            <div class="legend-item-compact" data-category="baking" title="Click to filter">
+                                <span class="legend-dot baking"></span>
+                                <span>Baking</span>
+                            </div>
+                            <div class="legend-item-compact" data-category="acid" title="Click to filter">
+                                <span class="legend-dot acid"></span>
+                                <span>Acids</span>
+                            </div>
+                            <div class="legend-item-compact" data-category="liquid" title="Click to filter">
+                                <span class="legend-dot liquid"></span>
+                                <span>Liquids</span>
                             </div>
                         </div>
                         <!-- Details Panel (below graph) -->
@@ -1855,7 +1885,7 @@
     <script src="pantry-atlas-engine.js?v=1.2.0"></script>
 
     <!-- Graph Visualization Engine -->
-    <script src="pantry-atlas-viz.js?v=2.0.5"></script>
+    <script src="pantry-atlas-viz.js?v=2.0.6"></script>
 
     <!-- Substitution Finder Engine (with AI) -->
     <script src="pantry-atlas-substitution.js?v=1.2.1"></script>
