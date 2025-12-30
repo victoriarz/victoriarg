@@ -379,6 +379,10 @@
             text-align: center;
         }
 
+        .chat-header-controls h2 {
+            font-size: 1.4rem;
+        }
+
         .chat-intro {
             margin: 20px 0;
             font-size: 17px;
@@ -1065,6 +1069,13 @@
             color: white;
         }
 
+        .control-btn.reset-btn {
+            width: auto;
+            padding: 0 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+        }
+
         /* Graph Search Box */
         .graph-search-container {
             display: flex;
@@ -1637,7 +1648,6 @@
                     <div class="chat-header-controls">
                         <div>
                             <h2>Ask the Culinary Assistant</h2>
-                            <p class="chat-intro">Your AI-powered culinary companion with a built-in knowledge graph of 240+ ingredients. Get complete recipes, find ingredient substitutions with exact ratios, and discover flavor pairings. Just ask - I'll cook up an answer.</p>
                             <div class="ai-controls">
                                 <span id="culinaryAIStatusBadge" class="ai-status-badge">AI: Gemini (Active)</span>
                                 <button onclick="startOver()" class="start-over-btn" aria-label="Start new conversation">Start Over</button>
@@ -1695,7 +1705,7 @@
                                 <input type="text" id="graphSearch" class="graph-search-input" placeholder="Search ingredients..." aria-label="Search ingredients">
                             </div>
                             <div class="graph-controls">
-                                <button class="control-btn" id="resetGraph" title="Reset View">🔄</button>
+                                <button class="control-btn reset-btn" id="resetGraph" title="Reset View">Reset</button>
                                 <button class="control-btn" id="zoomIn" title="Zoom In">+</button>
                                 <button class="control-btn" id="zoomOut" title="Zoom Out">−</button>
                             </div>
