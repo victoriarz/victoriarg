@@ -465,19 +465,21 @@
     }
 
     function getCategoryColor(category) {
+        // Mexican Talavera-inspired color palette matching site theme
         const colors = {
-            'dairy': '#e8f0e3',
-            'dairy-alt': '#dcfce7',
-            'protein': '#fce7f3',
-            'grain': '#fef3c7',
-            'sweetener': '#fee2e2',
-            'aromatic': '#dbeafe',
-            'herb': '#d4f5d4',
-            'sauce': '#ffe4e1',
-            'oil': '#fff8dc',
-            'vegetable': '#98fb98'
+            'dairy': '#a8c4e0',        // Light azul-cobalto
+            'dairy-alt': '#b5d4e8',    // Lighter azul variant
+            'protein': '#e8a090',      // Light terracotta
+            'grain': '#f4c96a',        // Amarillo-sol based
+            'sweetener': '#f4d89a',    // Soft amarillo-dorado
+            'aromatic': '#7eb3d8',     // Azul-brillante based
+            'herb': '#6db085',         // Verde-hoja based
+            'sauce': '#d98a78',        // Terracotta mid-tone
+            'oil': '#e8c862',          // Amarillo-dorado based
+            'vegetable': '#8cc99c',    // Verde-esmeralda light
+            'spice': '#e89078'         // Terracotta-brillante based
         };
-        return colors[category] || '#f5ede3';
+        return colors[category] || '#d4c4b0'; // Neutral crema-calida fallback
     }
 
     // Darken a hex color by a percentage

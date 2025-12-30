@@ -16,25 +16,11 @@
         /* Page-specific styles - base styles are in style.css */
 
         body {
-            font-family: 'Libre Baskerville', Georgia, serif;
+            font-family: 'Josefin Sans', sans-serif;
             background: var(--crema);
             color: var(--ink);
-            line-height: 1.7;
-            position: relative;
+            line-height: 1.6;
             overflow-x: hidden;
-        }
-
-        /* Subtle tile pattern background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a4b8c' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
         }
 
         .container {
@@ -42,7 +28,7 @@
             margin: 0 auto;
             padding: 20px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         /* Header */
@@ -97,36 +83,38 @@
 
         /* Typography */
         h1 {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--ink);
-            margin: 20px 0;
-            letter-spacing: -0.5px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: var(--azul-profundo);
+            margin-bottom: 0.5rem;
         }
 
         h2 {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 28px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: var(--ink);
-            margin-bottom: 20px;
+            color: var(--azul-profundo);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--amarillo-sol);
+            display: inline-block;
         }
 
         h3 {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: var(--ink);
-            margin-bottom: 15px;
+            color: var(--azul-profundo);
+            margin-bottom: 0.75rem;
         }
 
         h4 {
             font-family: 'Josefin Sans', sans-serif;
-            font-size: 16px;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--ink);
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
         }
 
         /* Hero Section */
@@ -150,10 +138,6 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--azul-cobalto), var(--terracotta), var(--amarillo-sol));
-        }
-
-        .hero-section h1 {
-            color: var(--azul-profundo);
         }
 
         .project-tagline {
@@ -211,82 +195,112 @@
         /* CTA Buttons */
         .cta-buttons {
             display: flex;
-            gap: 16px;
+            gap: 1rem;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 30px;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, var(--azul-cobalto), var(--azul-brillante));
-            color: white;
-            padding: 14px 32px;
+            background: var(--amarillo-sol);
+            color: var(--azul-profundo);
+            padding: 0.75rem 1.75rem;
             text-decoration: none;
-            font-size: 15px;
             font-family: 'Josefin Sans', sans-serif;
-            font-weight: 500;
-            border-radius: 6px;
-            box-shadow: 0 4px 15px rgba(26, 75, 140, 0.3);
-            transition: all 0.3s;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
         .cta-button:hover {
+            background: white;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(26, 75, 140, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .cta-button-secondary {
             display: inline-block;
             background: transparent;
-            color: var(--terracotta);
-            padding: 14px 32px;
+            color: white;
+            padding: 0.75rem 1.75rem;
             text-decoration: none;
-            font-size: 15px;
             font-family: 'Josefin Sans', sans-serif;
-            font-weight: 500;
-            border: 2px solid var(--terracotta);
-            border-radius: 6px;
-            transition: all 0.3s;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
         .cta-button-secondary:hover {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        /* Project CTA Section */
-        #project-cta .section-frame {
-            background: linear-gradient(135deg, var(--azul-cobalto) 0%, var(--azul-profundo) 100%);
-            border: none;
-            text-align: center;
-        }
-
-        #project-cta h2 {
-            color: white;
-        }
-
-        #project-cta p {
-            color: rgba(255,255,255,0.85);
-            font-size: 18px;
-        }
-
-        #project-cta .cta-button {
-            background: white;
-            color: var(--azul-cobalto);
-        }
-
-        #project-cta .cta-button:hover {
-            background: var(--crema);
-        }
-
-        #project-cta .cta-button-secondary {
+            background: rgba(255,255,255,0.1);
             border-color: white;
-            color: white;
         }
 
-        #project-cta .cta-button-secondary:hover {
-            background: rgba(255,255,255,0.15);
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--azul-profundo) 0%, var(--azul-cobalto) 100%);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='30' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.05'/%3E%3Ccircle cx='40' cy='40' r='20' fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.05'/%3E%3C/svg%3E");
+            background-size: 80px 80px;
+        }
+
+        .cta-section h2 {
+            color: white;
+            border-bottom: none;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            font-family: 'Libre Baskerville', serif;
+            color: rgba(255,255,255,0.85);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section .cta-buttons {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section .cta-button {
+            background: var(--amarillo-sol);
+            color: var(--azul-profundo);
+        }
+
+        .cta-section .cta-button:hover {
+            background: white;
+        }
+
+        .cta-section .cta-button-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .cta-section .cta-button-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
         }
 
         /* Lists */
@@ -296,66 +310,66 @@
         }
 
         .tech-stack-list li {
-            font-size: 17px;
-            color: var(--ink);
-            padding: 12px 0;
-            padding-left: 30px;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.9rem;
+            color: var(--ink-light);
+            padding: 0.6rem 0;
+            padding-left: 1.5rem;
             position: relative;
-            border-bottom: 1px solid #f0e8df;
-        }
-
-        .tech-stack-list li:last-child {
-            border-bottom: none;
+            line-height: 1.6;
         }
 
         .tech-stack-list li::before {
-            content: '';
+            content: '\2726';
             position: absolute;
             left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 8px;
-            background: var(--terracotta);
-            border-radius: 50%;
+            color: var(--amarillo-sol);
+            font-size: 0.7rem;
+        }
+
+        .tech-stack-list li strong {
+            color: var(--ink);
         }
 
         p {
-            font-size: 17px;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.95rem;
             line-height: 1.8;
-            margin-bottom: 15px;
+            color: var(--ink-light);
+            margin-bottom: 1rem;
         }
 
         /* Features grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.25rem;
         }
 
         .feature-card {
-            background: var(--crema-calida);
-            padding: 28px;
+            background: var(--crema);
+            padding: 1.25rem;
             border-radius: 8px;
-            border: 1px solid #e8dfd2;
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid var(--azul-cobalto);
+            transition: all 0.3s ease;
         }
 
+        .feature-card:nth-child(2) { border-left-color: var(--terracotta); }
+        .feature-card:nth-child(3) { border-left-color: var(--amarillo-sol); }
+        .feature-card:nth-child(4) { border-left-color: var(--verde-hoja); }
+
         .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(26, 75, 140, 0.08);
         }
 
         .feature-card h3 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            color: var(--azul-cobalto);
+            margin-bottom: 0.5rem;
         }
 
         .feature-card p {
-            font-size: 15px;
-            line-height: 1.6;
+            font-size: 0.85rem;
             margin-bottom: 0;
         }
 
@@ -1199,14 +1213,15 @@
             border: 2px solid rgba(0,0,0,0.2);
         }
 
-        .legend-dot.dairy { background: #e8f0e3; }
-        .legend-dot.protein { background: #fce7f3; }
-        .legend-dot.grain { background: #fef3c7; }
-        .legend-dot.vegetable { background: #98fb98; }
-        .legend-dot.herb { background: #d4f5d4; }
-        .legend-dot.spice { background: #ffe4e1; }
-        .legend-dot.oil { background: #fff8dc; }
-        .legend-dot.sauce { background: #ffe4e1; }
+        /* Talavera-inspired legend colors matching graph nodes */
+        .legend-dot.dairy { background: #a8c4e0; }
+        .legend-dot.protein { background: #e8a090; }
+        .legend-dot.grain { background: #f4c96a; }
+        .legend-dot.vegetable { background: #8cc99c; }
+        .legend-dot.herb { background: #6db085; }
+        .legend-dot.spice { background: #e89078; }
+        .legend-dot.oil { background: #e8c862; }
+        .legend-dot.sauce { background: #d98a78; }
 
         /* Enhanced Node Info Styles */
         .node-info-enhanced {
@@ -1376,20 +1391,16 @@
 
         /* Responsive - Tablet */
         @media (max-width: 768px) {
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1rem; }
+
             .header-frame {
-                padding: 12px 16px;
-            }
-
-            h1 {
-                font-size: 32px;
-            }
-
-            h2 {
-                font-size: 24px;
+                flex-wrap: wrap;
+                gap: 0.75rem;
             }
 
             .section-frame {
-                padding: 24px;
+                padding: 1.5rem;
             }
 
             .cta-buttons {
@@ -1435,45 +1446,25 @@
         /* Responsive - Small Mobile */
         @media (max-width: 480px) {
             .container {
-                padding: 10px;
+                padding: 0.75rem;
             }
 
-            main {
-                padding-top: 70px;
-            }
+            h1 { font-size: 1.25rem; }
 
-            h1 {
-                font-size: 26px;
-            }
-
-            h2 {
-                font-size: 20px;
-            }
-
-            h3 {
-                font-size: 18px;
+            .hero-section {
+                padding: 1.5rem;
             }
 
             .section-frame {
-                padding: 20px;
-                margin: 20px 0;
+                padding: 1.25rem;
             }
 
             .project-tagline {
-                font-size: 16px;
+                font-size: 0.95rem;
             }
 
-            .tech-tag {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-
-            p {
-                font-size: 16px;
-            }
-
-            .tech-stack-list li {
-                font-size: 15px;
+            .cta-section {
+                padding: 1.5rem;
             }
 
             /* Chat-specific mobile styles */
@@ -1609,9 +1600,16 @@
                 opacity: 0;
             }
         }
+
+        ::selection {
+            background: var(--amarillo-sol);
+            color: var(--azul-profundo);
+        }
     </style>
 </head>
 <body>
+    <div class="tile-pattern"></div>
+
     <div class="container">
         <!-- Header -->
         <header>
@@ -1806,16 +1804,12 @@
                 </div>
             </section>
 
-            <section id="project-cta">
-                <div class="section-frame">
-                    <div class="project-cta-content">
-                        <h2 style="text-align: center;">No Substitutions for Good Architecture</h2>
-                        <p style="text-align: center;">(Well, actually there are 200+ substitutions in this graph alone.) Need someone who obsesses over data relationships? Let's connect.</p>
-                        <div class="cta-buttons">
-                            <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
-                            <a href="index.html#projects" class="cta-button-secondary">View All Projects</a>
-                        </div>
-                    </div>
+            <section class="cta-section">
+                <h2>No Substitutions for Good Architecture</h2>
+                <p>(Well, actually there are 200+ substitutions in this graph alone.) Need someone who obsesses over data relationships? Let's connect.</p>
+                <div class="cta-buttons">
+                    <a href="mailto:v-ruiz@outlook.com" class="cta-button">Get In Touch</a>
+                    <a href="index.html#projects" class="cta-button-secondary">View All Projects</a>
                 </div>
             </section>
         </main>
@@ -1846,7 +1840,7 @@
     <script src="pantry-atlas-engine.js?v=1.2.0"></script>
 
     <!-- Graph Visualization Engine -->
-    <script src="pantry-atlas-viz.js?v=2.0.4"></script>
+    <script src="pantry-atlas-viz.js?v=2.0.5"></script>
 
     <!-- Substitution Finder Engine (with AI) -->
     <script src="pantry-atlas-substitution.js?v=1.2.1"></script>
