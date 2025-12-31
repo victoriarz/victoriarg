@@ -1,619 +1,219 @@
 // ================================================
 // THE AI CHRONICLE - Knowledge Graph Data
 // Auto-generated and updated daily via GitHub Actions
-// Last updated: 2025-12-30
+// Last updated: 2025-12-31
 // ================================================
 
 const AIChronicleData = {
     "metadata": {
-        "lastUpdated": "2025-12-30T06:31:18.155633Z",
-        "totalArticles": 128,
-        "totalNodes": 156,
-        "totalEdges": 233,
+        "lastUpdated": "2025-12-31T06:31:28.301044Z",
+        "totalArticles": 92,
+        "totalNodes": 111,
+        "totalEdges": 124,
         "dateRange": {
-            "start": "2025-12-23",
-            "end": "2025-12-30"
+            "start": "2025-12-25",
+            "end": "2025-12-31"
         }
     },
     "nodes": [
         {
-            "id": "article-e984b0a8",
+            "id": "article-6102cd3c",
             "type": "article",
-            "title": "From Visual Perception to Deep Empathy: An Automated Assessment Framework for House-Tree-Person Drawings Using Multimodal LLMs and Multi-Agent Collaboration",
-            "summary": "arXiv:2512.21360v1 Announce Type: new Abstract: Background: The House-Tree-Person (HTP) drawing test, introduced by John Buck in 1948, remains a widely used projective technique in clinical psychology. However, it has long faced challenges such as heterogeneous scoring standards, reliance on examiners subjective experience, and a lack of a unified quantitative coding system. Results: Quantitative experiments showed that the mean semantic similarity between Multimodal Large Language Model (MLLM) ",
-            "url": "https://arxiv.org/abs/2512.21360",
+            "title": "Bidirectional RAG: Safe Self-Improving Retrieval-Augmented Generation Through Multi-Stage Validation",
+            "summary": "arXiv:2512.22199v1 Announce Type: new Abstract: Retrieval-Augmented Generation RAG systems enhance large language models by grounding responses in external knowledge bases, but conventional RAG architectures operate with static corpora that cannot evolve from user interactions. We introduce Bidirectional RAG, a novel RAG architecture that enables safe corpus expansion through validated write back of high quality generated responses. Our system employs a multi stage acceptance layer combining gro",
+            "url": "https://arxiv.org/abs/2512.22199",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-3ca17483",
+            "id": "article-e986e33e",
             "type": "article",
-            "title": "A Study of Solving Life-and-Death Problems in Go Using Relevance-Zone Based Solvers",
-            "summary": "arXiv:2512.21365v1 Announce Type: new Abstract: This paper analyzes the behavior of solving Life-and-Death (L&amp;D) problems in the game of Go using current state-of-the-art computer Go solvers with two techniques: the Relevance-Zone Based Search (RZS) and the relevance-zone pattern table. We examined the solutions derived by relevance-zone based solvers on seven L&amp;D problems from the renowned book \"Life and Death Dictionary\" written by Cho Chikun, a Go grandmaster, and found several intere",
-            "url": "https://arxiv.org/abs/2512.21365",
+            "title": "Emergent Persuasion: Will LLMs Persuade Without Being Prompted?",
+            "summary": "arXiv:2512.22201v1 Announce Type: new Abstract: With the wide-scale adoption of conversational AI systems, AI are now able to exert unprecedented influence on human opinion and beliefs. Recent work has shown that many Large Language Models (LLMs) comply with requests to persuade users into harmful beliefs or actions when prompted and that model persuasiveness increases with model scale. However, this prior work looked at persuasion from the threat model of $\\textit{misuse}$ (i.e., a bad actor as",
+            "url": "https://arxiv.org/abs/2512.22201",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-93ed60f7",
+            "id": "article-7ec27f4b",
             "type": "article",
-            "title": "Three-way conflict analysis based on alliance and conflict functions",
-            "summary": "arXiv:2512.21419v1 Announce Type: new Abstract: Trisecting agents, issues, and agent pairs are essential topics of three-way conflict analysis. They have been commonly studied based on either a rating or an auxiliary function. A rating function defines the positive, negative, or neutral ratings of agents on issues. An auxiliary function defines the alliance, conflict, and neutrality relations between agents. These functions measure two opposite aspects in a single function, leading to challenges",
-            "url": "https://arxiv.org/abs/2512.21419",
+            "title": "GamiBench: Evaluating Spatial Reasoning and 2D-to-3D Planning Capabilities of MLLMs with Origami Folding Tasks",
+            "summary": "arXiv:2512.22207v1 Announce Type: new Abstract: Multimodal large language models (MLLMs) are proficient in perception and instruction-following, but they still struggle with spatial reasoning: the ability to mentally track and manipulate objects across multiple views and over time. Spatial reasoning is a key component of human intelligence, but most existing benchmarks focus on static images or final outputs, failing to account for the sequential and viewpoint-dependent nature of this skill. To ",
+            "url": "https://arxiv.org/abs/2512.22207",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-23e9a3ac",
+            "id": "article-f62b7bb9",
             "type": "article",
-            "title": "Feasible strategies in three-way conflict analysis with three-valued ratings",
-            "summary": "arXiv:2512.21420v2 Announce Type: new Abstract: Most existing work on three-way conflict analysis has focused on trisecting agent pairs, agents, or issues, which contributes to understanding the nature of conflicts but falls short in addressing their resolution. Specifically, the formulation of feasible strategies, as an essential component of conflict resolution and mitigation, has received insufficient scholarly attention. Therefore, this paper aims to investigate feasible strategies from two ",
-            "url": "https://arxiv.org/abs/2512.21420",
+            "title": "Toward Equitable Recovery: A Fairness-Aware AI Framework for Prioritizing Post-Flood Aid in Bangladesh",
+            "summary": "arXiv:2512.22210v1 Announce Type: new Abstract: Post-disaster aid allocation in developing nations often suffers from systematic biases that disadvantage vulnerable regions, perpetuating historical inequities. This paper presents a fairness-aware artificial intelligence framework for prioritizing post-flood aid distribution in Bangladesh, a country highly susceptible to recurring flood disasters. Using real data from the 2022 Bangladesh floods that affected 7.2 million people and caused 405.5 mi",
+            "url": "https://arxiv.org/abs/2512.22210",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-d58f7f5a",
+            "id": "article-2dd51200",
             "type": "article",
-            "title": "Three-way decision with incomplete information based on similarity and satisfiability",
-            "summary": "arXiv:2512.21421v1 Announce Type: new Abstract: Three-way decision is widely applied with rough set theory to learn classification or decision rules. The approaches dealing with complete information are well established in the literature, including the two complementary computational and conceptual formulations. The computational formulation uses equivalence relations, and the conceptual formulation uses satisfiability of logic formulas. In this paper, based on a briefly review of these two form",
-            "url": "https://arxiv.org/abs/2512.21421",
+            "title": "With Great Capabilities Come Great Responsibilities: Introducing the Agentic Risk & Capability Framework for Governing Agentic AI Systems",
+            "summary": "arXiv:2512.22211v1 Announce Type: new Abstract: Agentic AI systems present both significant opportunities and novel risks due to their capacity for autonomous action, encompassing tasks such as code execution, internet interaction, and file modification. This poses considerable challenges for effective organizational governance, particularly in comprehensively identifying, assessing, and mitigating diverse and evolving risks. To tackle this, we introduce the Agentic Risk \\& Capability (ARC) Fram",
+            "url": "https://arxiv.org/abs/2512.22211",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-5ea44042",
+            "id": "article-527dfe41",
             "type": "article",
-            "title": "LogicLens: Visual-Logical Co-Reasoning for Text-Centric Forgery Analysis",
-            "summary": "arXiv:2512.21482v1 Announce Type: new Abstract: Sophisticated text-centric forgeries, fueled by rapid AIGC advancements, pose a significant threat to societal security and information authenticity. Current methods for text-centric forgery analysis are often limited to coarse-grained visual analysis and lack the capacity for sophisticated reasoning. Moreover, they typically treat detection, grounding, and explanation as discrete sub-tasks, overlooking their intrinsic relationships for holistic pe",
-            "url": "https://arxiv.org/abs/2512.21482",
+            "title": "We are not able to identify AI-generated images",
+            "summary": "arXiv:2512.22236v1 Announce Type: new Abstract: AI-generated images are now pervasive online, yet many people believe they can easily tell them apart from real photographs. We test this assumption through an interactive web experiment where participants classify 20 images as real or AI-generated. Our dataset contains 120 difficult cases: real images sampled from CC12M, and carefully curated AI-generated counterparts produced with MidJourney. In total, 165 users completed 233 sessions. Their aver",
+            "url": "https://arxiv.org/abs/2512.22236",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-4563197f",
+            "id": "article-4000b47b",
             "type": "article",
-            "title": "Leash: Adaptive Length Penalty and Reward Shaping for Efficient Large Reasoning Model",
-            "summary": "arXiv:2512.21540v1 Announce Type: new Abstract: Existing approaches typically rely on fixed length penalties, but such penalties are hard to tune and fail to adapt to the evolving reasoning abilities of LLMs, leading to suboptimal trade-offs between accuracy and conciseness. To address this challenge, we propose Leash (adaptive LEngth penAlty and reward SHaping), a reinforcement learning framework for efficient reasoning in LLMs. We formulate length control as a constrained optimization problem ",
-            "url": "https://arxiv.org/abs/2512.21540",
+            "title": "Shape of Thought: When Distribution Matters More than Correctness in Reasoning Tasks",
+            "summary": "arXiv:2512.22255v1 Announce Type: new Abstract: We present the surprising finding that a language model's reasoning capabilities can be improved by training on synthetic datasets of chain-of-thought (CoT) traces from more capable models, even when all of those traces lead to an incorrect final answer. Our experiments show this approach can yield better performance on reasoning tasks than training on human-annotated datasets. We hypothesize that two key factors explain this phenomenon: first, the",
+            "url": "https://arxiv.org/abs/2512.22255",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-f7af5835",
+            "id": "article-14740ebd",
             "type": "article",
-            "title": "NEMO-4-PAYPAL: Leveraging NVIDIA's Nemo Framework for empowering PayPal's Commerce Agent",
-            "summary": "arXiv:2512.21578v1 Announce Type: new Abstract: We present the development and optimization of PayPal's Commerce Agent, powered by NEMO-4-PAYPAL, a multi-agent system designed to revolutionize agentic commerce on the PayPal platform. Through our strategic partnership with NVIDIA, we leveraged the NeMo Framework for LLM model fine-tuning to enhance agent performance. Specifically, we optimized the Search and Discovery agent by replacing our base model with a fine-tuned Nemotron small language mod",
-            "url": "https://arxiv.org/abs/2512.21578",
+            "title": "Logic Sketch Prompting (LSP): A Deterministic and Interpretable Prompting Method",
+            "summary": "arXiv:2512.22258v1 Announce Type: new Abstract: Large language models (LLMs) excel at natural language reasoning but remain unreliable on tasks requiring strict rule adherence, determinism, and auditability. Logic Sketch Prompting (LSP) is a lightweight prompting framework that introduces typed variables, deterministic condition evaluators, and a rule based validator that produces traceable and repeatable outputs. Using two pharmacologic logic compliance tasks, we benchmark LSP against zero shot",
+            "url": "https://arxiv.org/abs/2512.22258",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-5b4d73e5",
+            "id": "article-40433063",
             "type": "article",
-            "title": "A Medical Multimodal Diagnostic Framework Integrating Vision-Language Models and Logic Tree Reasoning",
-            "summary": "arXiv:2512.21583v1 Announce Type: new Abstract: With the rapid growth of large language models (LLMs) and vision-language models (VLMs) in medicine, simply integrating clinical text and medical imaging does not guarantee reliable reasoning. Existing multimodal models often produce hallucinations or inconsistent chains of thought, limiting clinical trust. We propose a diagnostic framework built upon LLaVA that combines vision-language alignment with logic-regularized reasoning. The system include",
-            "url": "https://arxiv.org/abs/2512.21583",
+            "title": "SciEvalKit: An Open-source Evaluation Toolkit for Scientific General Intelligence",
+            "summary": "arXiv:2512.22334v1 Announce Type: new Abstract: We introduce SciEvalKit, a unified benchmarking toolkit designed to evaluate AI models for science across a broad range of scientific disciplines and task capabilities. Unlike general-purpose evaluation platforms, SciEvalKit focuses on the core competencies of scientific intelligence, including Scientific Multimodal Perception, Scientific Multimodal Reasoning, Scientific Multimodal Understanding, Scientific Symbolic Reasoning, Scientific Code Gener",
+            "url": "https://arxiv.org/abs/2512.22334",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-72c754a7",
+            "id": "article-54ae5548",
             "type": "article",
-            "title": "AMS-IO-Bench and AMS-IO-Agent: Benchmarking and Structured Reasoning for Analog and Mixed-Signal Integrated Circuit Input/Output Design",
-            "summary": "arXiv:2512.21613v1 Announce Type: new Abstract: In this paper, we propose AMS-IO-Agent, a domain-specialized LLM-based agent for structure-aware input/output (I/O) subsystem generation in analog and mixed-signal (AMS) integrated circuits (ICs). The central contribution of this work is a framework that connects natural language design intent with industrial-level AMS IC design deliverables. AMS-IO-Agent integrates two key capabilities: (1) a structured domain knowledge base that captures reusable",
-            "url": "https://arxiv.org/abs/2512.21613",
+            "title": "Agent2World: Learning to Generate Symbolic World Models via Adaptive Multi-Agent Feedback",
+            "summary": "arXiv:2512.22336v1 Announce Type: new Abstract: Symbolic world models (e.g., PDDL domains or executable simulators) are central to model-based planning, but training LLMs to generate such world models is limited by the lack of large-scale verifiable supervision. Current approaches rely primarily on static validation methods that fail to catch behavior-level errors arising from interactive execution. In this paper, we propose Agent2World, a tool-augmented multi-agent framework that achieves stron",
+            "url": "https://arxiv.org/abs/2512.22336",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-2c19e507",
+            "id": "article-1e72a948",
             "type": "article",
-            "title": "Democratizing Drug Discovery with an Orchestrated, Knowledge-Driven Multi-Agent Team for User-Guided Therapeutic Design",
-            "summary": "arXiv:2512.21623v1 Announce Type: new Abstract: Therapeutic discovery remains a formidable challenge, impeded by the fragmentation of specialized domains and the execution gap between computational design and physiological validation. Although generative AI offers promise, current models often function as passive assistants rather than as autonomous executors. Here, we introduce OrchestRA, a human-in-the-loop multi-agent platform that unifies biology, chemistry, and pharmacology into an autonomo",
-            "url": "https://arxiv.org/abs/2512.21623",
+            "title": "Subgoaling Relaxation-based Heuristics for Numeric Planning with Infinite Actions",
+            "summary": "arXiv:2512.22367v1 Announce Type: new Abstract: Numeric planning with control parameters extends the standard numeric planning model by introducing action parameters as free numeric variables that must be instantiated during planning. This results in a potentially infinite number of applicable actions in a state. In this setting, off-the-shelf numeric heuristics that leverage the action structure are not feasible. In this paper, we identify a tractable subset of these problems--namely, controlla",
+            "url": "https://arxiv.org/abs/2512.22367",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-1f199372",
+            "id": "article-40f27718",
             "type": "article",
-            "title": "Multiple-play Stochastic Bandits with Prioritized Arm Capacity Sharing",
-            "summary": "arXiv:2512.21626v1 Announce Type: new Abstract: This paper proposes a variant of multiple-play stochastic bandits tailored to resource allocation problems arising from LLM applications, edge intelligence, etc. The model is composed of $M$ arms and $K$ plays. Each arm has a stochastic number of capacities, and each unit of capacity is associated with a reward function. Each play is associated with a priority weight. When multiple plays compete for the arm capacity, the arm capacity is allocated i",
-            "url": "https://arxiv.org/abs/2512.21626",
+            "title": "HalluMat: Detecting Hallucinations in LLM-Generated Materials Science Content Through Multi-Stage Verification",
+            "summary": "arXiv:2512.22396v1 Announce Type: new Abstract: Artificial Intelligence (AI), particularly Large Language Models (LLMs), is transforming scientific discovery, enabling rapid knowledge generation and hypothesis formulation. However, a critical challenge is hallucination, where LLMs generate factually incorrect or misleading information, compromising research integrity. To address this, we introduce HalluMatData, a benchmark dataset for evaluating hallucination detection methods, factual consisten",
+            "url": "https://arxiv.org/abs/2512.22396",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-be5a294e",
+            "id": "article-a474701a",
             "type": "article",
-            "title": "Towards Responsible and Explainable AI Agents with Consensus-Driven Reasoning",
-            "summary": "arXiv:2512.21699v1 Announce Type: new Abstract: Agentic AI represents a major shift in how autonomous systems reason, plan, and execute multi-step tasks through the coordination of Large Language Models (LLMs), Vision Language Models (VLMs), tools, and external services. While these systems enable powerful new capabilities, increasing autonomy introduces critical challenges related to explainability, accountability, robustness, and governance, especially when agent outputs influence downstream a",
-            "url": "https://arxiv.org/abs/2512.21699",
+            "title": "Lightweight Inference-Time Personalization for Frozen Knowledge Graph Embeddings",
+            "summary": "arXiv:2512.22398v1 Announce Type: new Abstract: Foundation models for knowledge graphs (KGs) achieve strong cohort-level performance in link prediction, yet fail to capture individual user preferences; a key disconnect between general relational reasoning and personalized ranking. We propose GatedBias, a lightweight inference-time personalization framework that adapts frozen KG embeddings to individual user contexts without retraining or compromising global accuracy. Our approach introduces stru",
+            "url": "https://arxiv.org/abs/2512.22398",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-af3d6446",
+            "id": "article-3ff16ade",
             "type": "article",
-            "title": "Compliance Rating Scheme: A Data Provenance Framework for Generative AI Datasets",
-            "summary": "arXiv:2512.21775v1 Announce Type: new Abstract: Generative Artificial Intelligence (GAI) has experienced exponential growth in recent years, partly facilitated by the abundance of large-scale open-source datasets. These datasets are often built using unrestricted and opaque data collection practices. While most literature focuses on the development and applications of GAI models, the ethical and legal considerations surrounding the creation of these datasets are often neglected. In addition, as ",
-            "url": "https://arxiv.org/abs/2512.21775",
+            "title": "Monadic Context Engineering",
+            "summary": "arXiv:2512.22431v1 Announce Type: new Abstract: The proliferation of Large Language Models (LLMs) has catalyzed a shift towards autonomous agents capable of complex reasoning and tool use. However, current agent architectures are frequently constructed using imperative, ad hoc patterns. This results in brittle systems plagued by difficulties in state management, error handling, and concurrency. This paper introduces Monadic Context Engineering (MCE), a novel architectural paradigm leveraging the",
+            "url": "https://arxiv.org/abs/2512.22431",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-8149c1ea",
+            "id": "article-1612dc48",
             "type": "article",
-            "title": "Accelerating Scientific Discovery with Autonomous Goal-evolving Agents",
-            "summary": "arXiv:2512.21782v1 Announce Type: new Abstract: There has been unprecedented interest in developing agents that expand the boundary of scientific discovery, primarily by optimizing quantitative objective functions specified by scientists. However, for grand challenges in science , these objectives are only imperfect proxies. We argue that automating objective function design is a central, yet unmet requirement for scientific discovery agents. In this work, we introduce the Scientific Autonomous ",
-            "url": "https://arxiv.org/abs/2512.21782",
+            "title": "DarkPatterns-LLM: A Multi-Layer Benchmark for Detecting Manipulative and Harmful AI Behavior",
+            "summary": "arXiv:2512.22470v1 Announce Type: new Abstract: The proliferation of Large Language Models (LLMs) has intensified concerns about manipulative or deceptive behaviors that can undermine user autonomy, trust, and well-being. Existing safety benchmarks predominantly rely on coarse binary labels and fail to capture the nuanced psychological and social mechanisms constituting manipulation. We introduce \\textbf{DarkPatterns-LLM}, a comprehensive benchmark dataset and diagnostic framework for fine-grain",
+            "url": "https://arxiv.org/abs/2512.22470",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-6b102d7d",
+            "id": "article-a29751c5",
             "type": "article",
-            "title": "SpatialBench: Can Agents Analyze Real-World Spatial Biology Data?",
-            "summary": "arXiv:2512.21907v1 Announce Type: new Abstract: Spatial transcriptomics assays are rapidly increasing in scale and complexity, making computational analysis a major bottleneck in biological discovery. Although frontier AI agents have improved dramatically at software engineering and general data analysis, it remains unclear whether they can extract biological insight from messy, real-world spatial datasets. We introduce SpatialBench, a benchmark of 146 verifiable problems derived from practical ",
-            "url": "https://arxiv.org/abs/2512.21907",
+            "title": "Multi-AI Agent Framework Reveals the \"Oxide Gatekeeper\" in Aluminum Nanoparticle Oxidation",
+            "summary": "arXiv:2512.22529v1 Announce Type: new Abstract: Aluminum nanoparticles (ANPs) are among the most energy-dense solid fuels, yet the atomic mechanisms governing their transition from passivated particles to explosive reactants remain elusive. This stems from a fundamental computational bottleneck: ab initio methods offer quantum accuracy but are restricted to small spatiotemporal scales (< 500 atoms, picoseconds), while empirical force fields lack the reactive fidelity required for complex combust",
+            "url": "https://arxiv.org/abs/2512.22529",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-50610216",
+            "id": "article-f3885695",
             "type": "article",
-            "title": "Pruning as a Game: Equilibrium-Driven Sparsification of Neural Networks",
-            "summary": "arXiv:2512.22106v1 Announce Type: new Abstract: Neural network pruning is widely used to reduce model size and computational cost. Yet, most existing methods treat sparsity as an externally imposed constraint, enforced through heuristic importance scores or training-time regularization. In this work, we propose a fundamentally different perspective: pruning as an equilibrium outcome of strategic interaction among model components. We model parameter groups such as weights, neurons, or filters as",
-            "url": "https://arxiv.org/abs/2512.22106",
+            "title": "Lessons from Neuroscience for AI: How integrating Actions, Compositional Structure and Episodic Memory could enable Safe, Interpretable and Human-Like AI",
+            "summary": "arXiv:2512.22568v1 Announce Type: new Abstract: The phenomenal advances in large language models (LLMs) and other foundation models over the past few years have been based on optimizing large-scale transformer models on the surprisingly simple objective of minimizing next-token prediction loss, a form of predictive coding that is also the backbone of an increasingly popular model of brain function in neuroscience and cognitive science. However, current foundation models ignore three other import",
+            "url": "https://arxiv.org/abs/2512.22568",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-95bd0782",
+            "id": "article-ee0745d8",
             "type": "article",
-            "title": "From Questions to Clinical Recommendations: Large Language Models Driving Evidence-Based Clinical Decision Making",
-            "summary": "arXiv:2505.10282v1 Announce Type: cross Abstract: Clinical evidence, derived from rigorous research and data analysis, provides healthcare professionals with reliable scientific foundations for informed decision-making. Integrating clinical evidence into real-time practice is challenging due to the enormous workload, complex professional processes, and time constraints. This highlights the need for tools that automate evidence synthesis to support more efficient and accurate decision making in c",
-            "url": "https://arxiv.org/abs/2505.10282",
+            "title": "SANet: A Semantic-aware Agentic AI Networking Framework for Cross-layer Optimization in 6G",
+            "summary": "arXiv:2512.22579v1 Announce Type: new Abstract: Agentic AI networking (AgentNet) is a novel AI-native networking paradigm in which a large number of specialized AI agents collaborate to perform autonomous decision-making, dynamic environmental adaptation, and complex missions. It has the potential to facilitate real-time network management and optimization functions, including self-configuration, self-optimization, and self-adaptation across diverse and complex environments. This paper proposes ",
+            "url": "https://arxiv.org/abs/2512.22579",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-a33e42a1",
+            "id": "article-ae149c78",
             "type": "article",
-            "title": "EcoNet: Multiagent Planning and Control Of Household Energy Resources Using Active Inference",
-            "summary": "arXiv:2512.21343v1 Announce Type: cross Abstract: Advances in automated systems afford new opportunities for intelligent management of energy at household, local area, and utility scales. Home Energy Management Systems (HEMS) can play a role by optimizing the schedule and use of household energy devices and resources. One challenge is that the goals of a household can be complex and conflicting. For example, a household might wish to reduce energy costs and grid-associated greenhouse gas emissio",
-            "url": "https://arxiv.org/abs/2512.21343",
+            "title": "Tyee: A Unified, Modular, and Fully-Integrated Configurable Toolkit for Intelligent Physiological Health Care",
+            "summary": "arXiv:2512.22601v1 Announce Type: new Abstract: Deep learning has shown great promise in physiological signal analysis, yet its progress is hindered by heterogeneous data formats, inconsistent preprocessing strategies, fragmented model pipelines, and non-reproducible experimental setups. To address these limitations, we present Tyee, a unified, modular, and fully-integrated configurable toolkit designed for intelligent physiological healthcare. Tyee introduces three key innovations: (1) a unifie",
+            "url": "https://arxiv.org/abs/2512.22601",
             "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-6b02f69e",
+            "id": "article-35882a40",
             "type": "article",
-            "title": "Atomistic Simulation Guided Convolutional Neural Networks for Thermal Modeling of Friction Stir Welding",
-            "summary": "arXiv:2512.21344v1 Announce Type: cross Abstract: Accurate prediction of temperature evolution is essential for understanding thermomechanical behavior in friction stir welding. In this study, molecular dynamics simulations were performed using LAMMPS to model aluminum friction stir welding at the atomic scale, capturing material flow, plastic deformation, and heat generation during tool plunge, traverse, and retraction. Atomic positions and velocities were extracted from simulation trajectories",
-            "url": "https://arxiv.org/abs/2512.21344",
+            "title": "Learning Multi-Modal Mobility Dynamics for Generalized Next Location Recommendation",
+            "summary": "arXiv:2512.22605v1 Announce Type: new Abstract: The precise prediction of human mobility has produced significant socioeconomic impacts, such as location recommendations and evacuation suggestions. However, existing methods suffer from limited generalization capability: unimodal approaches are constrained by data sparsity and inherent biases, while multi-modal methods struggle to effectively capture mobility dynamics caused by the semantic gap between static multi-modal representation and spatia",
+            "url": "https://arxiv.org/abs/2512.22605",
             "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-392f1815",
-            "type": "article",
-            "title": "Pruning Graphs by Adversarial Robustness Evaluation to Strengthen GNN Defenses",
-            "summary": "arXiv:2512.22128v1 Announce Type: new Abstract: Graph Neural Networks (GNNs) have emerged as a dominant paradigm for learning on graph-structured data, thanks to their ability to jointly exploit node features and relational information encoded in the graph topology. This joint modeling, however, also introduces a critical weakness: perturbations or noise in either the structure or the features can be amplified through message passing, making GNNs highly vulnerable to adversarial attacks and spur",
-            "url": "https://arxiv.org/abs/2512.22128",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-51ff1c04",
-            "type": "article",
-            "title": "Towards Unsupervised Causal Representation Learning via Latent Additive Noise Model Causal Autoencoders",
-            "summary": "arXiv:2512.22150v1 Announce Type: new Abstract: Unsupervised representation learning seeks to recover latent generative factors, yet standard methods relying on statistical independence often fail to capture causal dependencies. A central challenge is identifiability: as established in disentangled representation learning and nonlinear ICA literature, disentangling causal variables from observational data is impossible without supervision, auxiliary signals, or strong inductive biases. In this w",
-            "url": "https://arxiv.org/abs/2512.22150",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-708fe446",
-            "type": "article",
-            "title": "SoliReward: Mitigating Susceptibility to Reward Hacking and Annotation Noise in Video Generation Reward Models",
-            "summary": "arXiv:2512.22170v1 Announce Type: new Abstract: Post-training alignment of video generation models with human preferences is a critical goal. Developing effective Reward Models (RMs) for this process faces significant methodological hurdles. Current data collection paradigms, reliant on in-prompt pairwise annotations, suffer from labeling noise. Concurrently, the architectural design of VLM-based RMs, particularly their output mechanisms, remains underexplored. Furthermore, RM is susceptible to ",
-            "url": "https://arxiv.org/abs/2512.22170",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-0e5cea42",
-            "type": "article",
-            "title": "Wireless Traffic Prediction with Large Language Model",
-            "summary": "arXiv:2512.22178v1 Announce Type: new Abstract: The growing demand for intelligent, adaptive resource management in next-generation wireless networks has underscored the importance of accurate and scalable wireless traffic prediction. While recent advancements in deep learning and foundation models such as large language models (LLMs) have demonstrated promising forecasting capabilities, they largely overlook the spatial dependencies inherent in city-scale traffic dynamics. In this paper, we pro",
-            "url": "https://arxiv.org/abs/2512.22178",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-9c3919fc",
-            "type": "article",
-            "title": "Latent Sculpting for Zero-Shot Generalization: A Manifold Learning Approach to Out-of-Distribution Anomaly Detection",
-            "summary": "arXiv:2512.22179v1 Announce Type: new Abstract: A fundamental limitation of supervised deep learning in high-dimensional tabular domains is \"Generalization Collapse\": models learn precise decision boundaries for known distributions but fail catastrophically when facing Out-of-Distribution (OOD) data. We hypothesize that this failure stems from the lack of topological constraints in the latent space, resulting in diffuse manifolds where novel anomalies remain statistically indistinguishable from ",
-            "url": "https://arxiv.org/abs/2512.22179",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-b4a3efa6",
-            "type": "article",
-            "title": "Learning Tennis Strategy Through Curriculum-Based Dueling Double Deep Q-Networks",
-            "summary": "arXiv:2512.22186v1 Announce Type: new Abstract: Tennis strategy optimization is a challenging sequential decision-making problem involving hierarchical scoring, stochastic outcomes, long-horizon credit assignment, physical fatigue, and adaptation to opponent skill. I present a reinforcement learning framework that integrates a custom tennis simulation environment with a Dueling Double Deep Q-Network(DDQN) trained using curriculum learning. The environment models complete tennis scoring at the le",
-            "url": "https://arxiv.org/abs/2512.22186",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-71f797da",
-            "type": "article",
-            "title": "Physics-Informed Machine Learning for Transformer Condition Monitoring -- Part II: Physics-Informed Neural Networks and Uncertainty Quantification",
-            "summary": "arXiv:2512.22189v1 Announce Type: new Abstract: The integration of physics-based knowledge with machine learning models is increasingly shaping the monitoring, diagnostics, and prognostics of electrical transformers. In this two-part series, the first paper introduced the foundations of Neural Networks (NNs) and their variants for health assessment tasks. This second paper focuses on integrating physics and uncertainty into the learning process. We begin with the fundamentals of Physics-Informed",
-            "url": "https://arxiv.org/abs/2512.22189",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-389ad448",
-            "type": "article",
-            "title": "Physics-Informed Machine Learning for Transformer Condition Monitoring -- Part I: Basic Concepts, Neural Networks, and Variants",
-            "summary": "arXiv:2512.22190v1 Announce Type: new Abstract: Power transformers are critical assets in power networks, whose reliability directly impacts grid resilience and stability. Traditional condition monitoring approaches, often rule-based or purely physics-based, struggle with uncertainty, limited data availability, and the complexity of modern operating conditions. Recent advances in machine learning (ML) provide powerful tools to complement and extend these methods, enabling more accurate diagnosti",
-            "url": "https://arxiv.org/abs/2512.22190",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-a3d6804d",
-            "type": "article",
-            "title": "Frequency Regularization: Unveiling the Spectral Inductive Bias of Deep Neural Networks",
-            "summary": "arXiv:2512.22192v1 Announce Type: new Abstract: Regularization techniques such as L2 regularization (Weight Decay) and Dropout are fundamental to training deep neural networks, yet their underlying physical mechanisms regarding feature frequency selection remain poorly understood. In this work, we investigate the Spectral Bias of modern Convolutional Neural Networks (CNNs). We introduce a Visual Diagnostic Framework to track the dynamic evolution of weight frequencies during training and propose",
-            "url": "https://arxiv.org/abs/2512.22192",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-d9e9a550",
-            "type": "article",
-            "title": "Emotion-Inspired Learning Signals (EILS): A Homeostatic Framework for Adaptive Autonomous Agents",
-            "summary": "arXiv:2512.22200v1 Announce Type: new Abstract: The ruling method in modern Artificial Intelligence spanning from Deep Reinforcement Learning (DRL) to Large Language Models (LLMs) relies on a surge of static, externally defined reward functions. While this \"extrinsic maximization\" approach has rendered superhuman performance in closed, stationary fields, it produces agents that are fragile in open-ended, real-world environments. Standard agents lack internal autonomy: they struggle to explore wi",
-            "url": "https://arxiv.org/abs/2512.22200",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-19cdfe5a",
-            "type": "article",
-            "title": "Transformer Reconstructed with Dynamic Value Attention",
-            "summary": "arXiv:2512.22212v1 Announce Type: new Abstract: Since transformer was firstly published in 2017, several works have been proposed to optimize it. However, the major structure of transformer remains unchanged, ignoring one of its main intrinsic limitations, which is the same static value is used for every query in a head. Transformer itself tries to solve this problem by implementing multi-head attentions, yet the number of heads is limited by complexity. I propose a method to decide a value for ",
-            "url": "https://arxiv.org/abs/2512.22212",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-3da48657",
-            "type": "article",
-            "title": "On the Existence and Behaviour of Secondary Attention Sinks",
-            "summary": "arXiv:2512.22213v1 Announce Type: new Abstract: Attention sinks are tokens, often the beginning-of-sequence (BOS) token, that receive disproportionately high attention despite limited semantic relevance. In this work, we identify a class of attention sinks, which we term secondary sinks, that differ fundamentally from the sinks studied in prior works, which we term primary sinks. While prior works have identified that tokens other than BOS can sometimes become sinks, they were found to exhibit p",
-            "url": "https://arxiv.org/abs/2512.22213",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-b17b611a",
-            "type": "article",
-            "title": "Interpretable and Adaptive Node Classification on Heterophilic Graphs via Combinatorial Scoring and Hybrid Learning",
-            "summary": "arXiv:2512.22221v1 Announce Type: new Abstract: Graph neural networks (GNNs) achieve strong performance on homophilic graphs but often struggle under heterophily, where adjacent nodes frequently belong to different classes. We propose an interpretable and adaptive framework for semi-supervised node classification based on explicit combinatorial inference rather than deep message passing. Our method assigns labels using a confidence-ordered greedy procedure driven by an additive scoring function ",
-            "url": "https://arxiv.org/abs/2512.22221",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-6abad5cf",
-            "type": "article",
-            "title": "M\\\"untz-Sz\\'asz Networks: Neural Architectures with Learnable Power-Law Bases",
-            "summary": "arXiv:2512.22222v1 Announce Type: new Abstract: Standard neural network architectures employ fixed activation functions (ReLU, tanh, sigmoid) that are poorly suited for approximating functions with singular or fractional power behavior, a structure that arises ubiquitously in physics, including boundary layers, fracture mechanics, and corner singularities. We introduce M\\\"untz-Sz\\'asz Networks (MSN), a novel architecture that replaces fixed smooth activations with learnable fractional power base",
-            "url": "https://arxiv.org/abs/2512.22222",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-bd4cdd32",
-            "type": "article",
-            "title": "ReGAIN: Retrieval-Grounded AI Framework for Network Traffic Analysis",
-            "summary": "arXiv:2512.22223v1 Announce Type: new Abstract: Modern networks generate vast, heterogeneous traffic that must be continuously analyzed for security and performance. Traditional network traffic analysis systems, whether rule-based or machine learning-driven, often suffer from high false positives and lack interpretability, limiting analyst trust. In this paper, we present ReGAIN, a multi-stage framework that combines traffic summarization, retrieval-augmented generation (RAG), and Large Language",
-            "url": "https://arxiv.org/abs/2512.22223",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-218a447e",
-            "type": "article",
-            "title": "DiRL: An Efficient Post-Training Framework for Diffusion Language Models",
-            "summary": "arXiv:2512.22234v1 Announce Type: new Abstract: Diffusion Language Models (dLLMs) have emerged as promising alternatives to Auto-Regressive (AR) models. While recent efforts have validated their pre-training potential and accelerated inference speeds, the post-training landscape for dLLMs remains underdeveloped. Existing methods suffer from computational inefficiency and objective mismatches between training and inference, severely limiting performance on complex reasoning tasks such as mathemat",
-            "url": "https://arxiv.org/abs/2512.22234",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-2011cdc9",
-            "type": "article",
-            "title": "Masking Teacher and Reinforcing Student for Distilling Vision-Language Models",
-            "summary": "arXiv:2512.22238v1 Announce Type: new Abstract: Large-scale vision-language models (VLMs) have recently achieved remarkable multimodal understanding, but their massive size makes them impractical for deployment on mobile or edge devices. This raises the need for compact yet capable VLMs that can efficiently learn from powerful large teachers. However, distilling knowledge from a large teacher to a small student remains challenging due to their large size gap: the student often fails to reproduce",
-            "url": "https://arxiv.org/abs/2512.22238",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-fe0cdabe",
-            "type": "article",
-            "title": "EvoXplain: When Machine Learning Models Agree on Predictions but Disagree on Why -- Measuring Mechanistic Multiplicity Across Training Runs",
-            "summary": "arXiv:2512.22240v1 Announce Type: new Abstract: Machine learning models are primarily judged by predictive performance, especially in applied settings. Once a model reaches high accuracy, its explanation is often assumed to be correct and trustworthy. However, this assumption raises an overlooked question: when two models achieve high accuracy, do they rely on the same internal logic, or do they reach the same outcome via different -- and potentially competing -- mechanisms? We introduce EvoXpla",
-            "url": "https://arxiv.org/abs/2512.22240",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-f9ec34d0",
-            "type": "article",
-            "title": "Enhanced geometry prediction in laser directed energy deposition using meta-learning",
-            "summary": "arXiv:2512.22241v1 Announce Type: new Abstract: Accurate bead geometry prediction in laser-directed energy deposition (L-DED) is often hindered by the scarcity and heterogeneity of experimental datasets collected under different materials, machine configurations, and process parameters. To address this challenge, a cross-dataset knowledge transfer model based on meta-learning for predicting deposited track geometry in L-DED is proposed. Specifically, two gradient-based meta-learning algorithms, ",
-            "url": "https://arxiv.org/abs/2512.22241",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-71eafaf5",
-            "type": "article",
-            "title": "Fairness Evaluation of Risk Estimation Models for Lung Cancer Screening",
-            "summary": "arXiv:2512.22242v1 Announce Type: new Abstract: Lung cancer is the leading cause of cancer-related mortality in adults worldwide. Screening high-risk individuals with annual low-dose CT (LDCT) can support earlier detection and reduce deaths, but widespread implementation may strain the already limited radiology workforce. AI models have shown potential in estimating lung cancer risk from LDCT scans. However, high-risk populations for lung cancer are diverse, and these models' performance across ",
-            "url": "https://arxiv.org/abs/2512.22242",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-f86e0100",
-            "type": "article",
-            "title": "Open-Source Multimodal Moxin Models with Moxin-VLM and Moxin-VLA",
-            "summary": "arXiv:2512.22208v1 Announce Type: new Abstract: Recently, Large Language Models (LLMs) have undergone a significant transformation, marked by a rapid rise in both their popularity and capabilities. Leading this evolution are proprietary LLMs like GPT-4 and GPT-o1, which have captured widespread attention in the AI community due to their remarkable performance and versatility. Simultaneously, open-source LLMs, such as LLaMA and Mistral, have made great contributions to the ever-increasing popular",
-            "url": "https://arxiv.org/abs/2512.22208",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-92cb940c",
-            "type": "article",
-            "title": "Hierarchical Geometry of Cognitive States in Transformer Embedding Spaces",
-            "summary": "arXiv:2512.22227v1 Announce Type: new Abstract: Recent work has shown that transformer-based language models learn rich geometric structure in their embedding spaces, yet the presence of higher-level cognitive organization within these representations remains underexplored. In this work, we investigate whether sentence embeddings encode a graded, hierarchical structure aligned with human-interpretable cognitive or psychological attributes. We construct a dataset of 480 natural-language sentences",
-            "url": "https://arxiv.org/abs/2512.22227",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-3e305b12",
-            "type": "article",
-            "title": "SmartSnap: Proactive Evidence Seeking for Self-Verifying Agents",
-            "summary": "arXiv:2512.22322v1 Announce Type: new Abstract: Agentic reinforcement learning (RL) holds great promise for the development of autonomous agents under complex GUI tasks, but its scalability remains severely hampered by the verification of task completion. Existing task verification is treated as a passive, post-hoc process: a verifier (i.e., rule-based scoring script, reward or critic model, and LLM-as-a-Judge) analyzes the agent's entire interaction trajectory to determine if the agent succeeds",
-            "url": "https://arxiv.org/abs/2512.22322",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-fe0b7f8b",
-            "type": "article",
-            "title": "The Syntax of qulk-clauses in Yemeni Ibbi Arabic: A Minimalist Approach",
-            "summary": "arXiv:2512.22376v1 Announce Type: new Abstract: This study investigates the syntax of qulk-clauses in Yemeni Ibbi Arabic (YIA) within the Minimalist Program. The construction qulk-clause, a morphologically fused form meaning 'I said,' introduces embedded declarative interrogative, and imperative clauses, often eithout complementizer. The central proposal of this paper is that qulk-clauses are biclausal structures in which qulk functions a clause-embedding predicate sec;ecting a dull CP complemen",
-            "url": "https://arxiv.org/abs/2512.22376",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-91686879",
-            "type": "article",
-            "title": "Towards Efficient Post-Training via Fourier-Driven Adapter Architectures",
-            "summary": "arXiv:2512.22378v1 Announce Type: new Abstract: We propose a novel framework, termed Fourier-Activated Adapter (FAA), for parameter-efficient fine-tuning of large pre-trained language models. By incorporating random Fourier features into lightweight adapter modules, FAA decomposes intermediate representations into complementary low- and high-frequency components, enabling frequency-aware modulation of semantic information. This design allows the model to selectively emphasize informative frequen",
-            "url": "https://arxiv.org/abs/2512.22378",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-767b7c46",
-            "type": "article",
-            "title": "LLM-Guided Exemplar Selection for Few-Shot Wearable-Sensor Human Activity Recognition",
-            "summary": "arXiv:2512.22385v1 Announce Type: new Abstract: In this paper, we propose an LLM-Guided Exemplar Selection framework to address a key limitation in state-of-the-art Human Activity Recognition (HAR) methods: their reliance on large labeled datasets and purely geometric exemplar selection, which often fail to distinguish similar weara-ble sensor activities such as walking, walking upstairs, and walking downstairs. Our method incorporates semantic reasoning via an LLM-generated knowledge prior that",
-            "url": "https://arxiv.org/abs/2512.22385",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-d628fcb9",
-            "type": "article",
-            "title": "Hallucination Detection and Evaluation of Large Language Model",
-            "summary": "arXiv:2512.22416v1 Announce Type: new Abstract: Hallucinations in Large Language Models (LLMs) pose a significant challenge, generating misleading or unverifiable content that undermines trust and reliability. Existing evaluation methods, such as KnowHalu, employ multi-stage verification but suffer from high computational costs. To address this, we integrate the Hughes Hallucination Evaluation Model (HHEM), a lightweight classification-based framework that operates independently of LLM-based jud",
-            "url": "https://arxiv.org/abs/2512.22416",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-acb4028e",
-            "type": "article",
-            "title": "HiFi-RAG: Hierarchical Content Filtering and Two-Pass Generation for Open-Domain RAG",
-            "summary": "arXiv:2512.22442v1 Announce Type: new Abstract: Retrieval-Augmented Generation (RAG) in open-domain settings faces significant challenges regarding irrelevant information in retrieved documents and the alignment of generated answers with user intent. We present HiFi-RAG (Hierarchical Filtering RAG), the winning closed-source system in the Text-to-Text static evaluation of the MMU-RAGent NeurIPS 2025 Competition. Our approach moves beyond standard embedding-based retrieval via a multi-stage pipel",
-            "url": "https://arxiv.org/abs/2512.22442",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-f3e0ba5f",
-            "type": "article",
-            "title": "Exploring the Vertical-Domain Reasoning Capabilities of Large Language Models",
-            "summary": "arXiv:2512.22443v1 Announce Type: new Abstract: Large Language Models (LLMs) are reshaping learning paradigms, cognitive processes, and research methodologies across a wide range of domains. Integrating LLMs with professional fields and redefining the relationship between LLMs and domain-specific applications has become a critical challenge for promoting enterprise digital transformation and broader social development. To effectively integrate LLMs into the accounting domain, it is essential to ",
-            "url": "https://arxiv.org/abs/2512.22443",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-96839f9e",
-            "type": "article",
-            "title": "Constituency Structure over Eojeol in Korean Treebanks",
-            "summary": "arXiv:2512.22487v1 Announce Type: new Abstract: The design of Korean constituency treebanks raises a fundamental representational question concerning the choice of terminal units. Although Korean words are morphologically complex, treating morphemes as constituency terminals conflates word internal morphology with phrase level syntactic structure and creates mismatches with eojeol based dependency resources. This paper argues for an eojeol based constituency representation, with morphological se",
-            "url": "https://arxiv.org/abs/2512.22487",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-c9266825",
-            "type": "article",
-            "title": "ManchuTTS: Towards High-Quality Manchu Speech Synthesis via Flow Matching and Hierarchical Text Representation",
-            "summary": "arXiv:2512.22491v1 Announce Type: new Abstract: As an endangered language, Manchu presents unique challenges for speech synthesis, including severe data scarcity and strong phonological agglutination. This paper proposes ManchuTTS(Manchu Text to Speech), a novel approach tailored to Manchu's linguistic characteristics. To handle agglutination, this method designs a three-tier text representation (phoneme, syllable, prosodic) and a cross-modal hierarchical attention mechanism for multi-granular a",
-            "url": "https://arxiv.org/abs/2512.22491",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-38304500",
-            "type": "article",
-            "title": "Learning When Not to Attend Globally",
-            "summary": "arXiv:2512.22562v1 Announce Type: new Abstract: When reading books, humans focus primarily on the current page, flipping back to recap prior context only when necessary. Similarly, we demonstrate that Large Language Models (LLMs) can learn to dynamically determine when to attend to global context. We propose All-or-Here Attention (AHA), which utilizes a binary router per attention head to dynamically toggle between full attention and local sliding window attention for each token. Our results ind",
-            "url": "https://arxiv.org/abs/2512.22562",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-15f3b767",
-            "type": "article",
-            "title": "Structured Prompting and LLM Ensembling for Multimodal Conversational Aspect-based Sentiment Analysis",
-            "summary": "arXiv:2512.22603v1 Announce Type: new Abstract: Understanding sentiment in multimodal conversations is a complex yet crucial challenge toward building emotionally intelligent AI systems. The Multimodal Conversational Aspect-based Sentiment Analysis (MCABSA) Challenge invited participants to tackle two demanding subtasks: (1) extracting a comprehensive sentiment sextuple, including holder, target, aspect, opinion, sentiment, and rationale from multi-speaker dialogues, and (2) detecting sentiment ",
-            "url": "https://arxiv.org/abs/2512.22603",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-bbd25431",
-            "type": "article",
-            "title": "Chain-of-thought Reviewing and Correction for Time Series Question Answering",
-            "summary": "arXiv:2512.22627v1 Announce Type: new Abstract: With the advancement of large language models (LLMs), diverse time series analysis tasks are reformulated as time series question answering (TSQA) through a unified natural language interface. However, existing LLM-based approaches largely adopt general natural language processing techniques and are prone to reasoning errors when handling complex numerical sequences. Different from purely textual tasks, time series data are inherently verifiable, e",
-            "url": "https://arxiv.org/abs/2512.22627",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-473b0a37",
-            "type": "article",
-            "title": "M2G-Eval: Enhancing and Evaluating Multi-granularity Multilingual Code Generation",
-            "summary": "arXiv:2512.22628v1 Announce Type: new Abstract: The rapid advancement of code large language models (LLMs) has sparked significant research interest in systematically evaluating their code generation capabilities, yet existing benchmarks predominantly assess models at a single structural granularity and focus on limited programming languages, obscuring fine-grained capability variations across different code scopes and multilingual scenarios. We introduce M2G-Eval, a multi-granularity, multiling",
-            "url": "https://arxiv.org/abs/2512.22628",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-3ff8043f",
-            "type": "article",
-            "title": "On the Role of Discreteness in Diffusion LLMs",
-            "summary": "arXiv:2512.22630v1 Announce Type: new Abstract: Diffusion models offer appealing properties for language generation, such as parallel decoding and iterative refinement, but the discrete and highly structured nature of text challenges the direct application of diffusion principles. In this paper, we revisit diffusion language modeling from the view of diffusion process and language modeling, and outline five properties that separate diffusion mechanics from language-specific requirements. We firs",
-            "url": "https://arxiv.org/abs/2512.22630",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-ac4900b7",
-            "type": "article",
-            "title": "Evaluating GRPO and DPO for Faithful Chain-of-Thought Reasoning in LLMs",
-            "summary": "arXiv:2512.22631v1 Announce Type: new Abstract: Chain-of-thought (CoT) reasoning has emerged as a powerful technique for improving the problem-solving capabilities of large language models (LLMs), particularly for tasks requiring multi-step reasoning. However, recent studies show that CoT explanations often fail to reflect the model's actual reasoning process, as models may produce coherent yet misleading justifications or modify answers without acknowledging external cues. Such discrepancies un",
-            "url": "https://arxiv.org/abs/2512.22631",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-05e524a4",
-            "type": "article",
-            "title": "Fragile Knowledge, Robust Instruction-Following: The Width Pruning Dichotomy in Llama-3.2",
-            "summary": "arXiv:2512.22671v1 Announce Type: new Abstract: Structured width pruning of GLU-MLP layers, guided by the Maximum Absolute Weight (MAW) criterion, reveals a systematic dichotomy in how reducing the expansion ratio affects different model capabilities. While performance on tasks relying on parametric knowledge (e.g., MMLU, GSM8K) and perplexity metrics degrades predictably, instruction-following capabilities improve substantially (+46% to +75% in IFEval for Llama-3.2-1B and 3B models), and multi-",
-            "url": "https://arxiv.org/abs/2512.22671",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-14127480",
-            "type": "article",
-            "title": "Conformal Prediction Sets for Next-Token Prediction in Large Language Models: Balancing Coverage Guarantees with Set Efficiency",
-            "summary": "arXiv:2512.22682v1 Announce Type: new Abstract: Deploying large language models (LLMs) in high-stakes domains requires rigorous uncertainty quantification, yet standard softmax probabilities are often poorly calibrated. We present a systematic study of Adaptive Prediction Sets (APS) applied to next-token prediction in transformer-based models with large vocabularies (greater than 250,000 tokens). Our central contribution is the identification of a coverage-efficiency tradeoff: while naive confor",
-            "url": "https://arxiv.org/abs/2512.22682",
-            "source": "arxiv",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-83bacc2a",
-            "type": "article",
-            "title": "GHaLIB: A Multilingual Framework for Hope Speech Detection in Low-Resource Languages",
-            "summary": "arXiv:2512.22705v1 Announce Type: new Abstract: Hope speech has been relatively underrepresented in Natural Language Processing (NLP). Current studies are largely focused on English, which has resulted in a lack of resources for low-resource languages such as Urdu. As a result, the creation of tools that facilitate positive online communication remains limited. Although transformer-based architectures have proven to be effective in detecting hate and offensive speech, little has been done to app",
-            "url": "https://arxiv.org/abs/2512.22705",
-            "source": "arxiv",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
@@ -627,23 +227,13 @@ const AIChronicleData = {
             "trendingScore": 50
         },
         {
-            "id": "article-acc80ee6",
+            "id": "article-e4a7bbc2",
             "type": "article",
-            "title": "Google's year in review: 8 areas with research breakthroughs in 2025",
-            "summary": "The image depicts a visual collage or mosaic of multiple different images, with one image in the center that is black and displays the text \"Gemini 3\".",
-            "url": "https://blog.google/technology/ai/2025-research-breakthroughs/",
+            "title": "The ascent of the AI therapist",
+            "summary": "We\u2019re in the midst of a global mental-\u00adhealth crisis. More than a billion people worldwide suffer from a mental-health condition, according to the World Health Organization. The prevalence of anxiety and depression is growing in many demographics, particularly young people, and suicide is claiming hundreds of thousands of lives globally each year. Given the clear&#8230;",
+            "url": "https://www.technologyreview.com/2025/12/30/1129392/book-reviews-ai-therapy-mental-health/",
             "source": "blogs",
-            "date": "2025-12-23",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-5e3e72b2",
-            "type": "article",
-            "title": "AprielGuard: A Guardrail for Safety and Adversarial Robustness in Modern LLM Systems",
-            "summary": "",
-            "url": "https://huggingface.co/blog/ServiceNow-AI/aprielguard",
-            "source": "blogs",
-            "date": "2025-12-23",
+            "date": "2025-12-30",
             "trendingScore": 50
         },
         {
@@ -657,303 +247,323 @@ const AIChronicleData = {
             "trendingScore": 50
         },
         {
-            "id": "article-7ff0f39e",
+            "id": "article-23dfe732",
             "type": "article",
-            "title": "How social media encourages the worst of AI boosterism",
-            "summary": "Demis Hassabis, CEO of Google DeepMind, summed it up in three words: \u201cThis is embarrassing.\u201d&#160;&#160; Hassabis was replying on X to an overexcited post by S\u00e9bastien Bubeck, a research scientist at the rival firm OpenAI, announcing that two mathematicians had used OpenAI\u2019s latest large language model, GPT-5, to find solutions to 10 unsolved problems in&#8230;",
-            "url": "https://www.technologyreview.com/2025/12/23/1130393/how-social-media-encourages-the-worst-of-ai-boosterism/",
-            "source": "blogs",
-            "date": "2025-12-23",
+            "title": "AI data centers are forcing dirty 'peaker' power plants back into service",
+            "summary": "",
+            "url": "https://www.reuters.com/business/energy/ai-data-centers-are-forcing-obsolete-peaker-power-plants-back-into-service-2025-12-23/",
+            "source": "hackernews",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-a432b8e7",
+            "id": "article-dda4682b",
             "type": "article",
-            "title": "Show HN: DevBox \u2013 An execution contract to end AI agent instruction fatigue",
+            "title": "Ask HN: How do you keep track of developments in the AI space?",
             "summary": "",
-            "url": "https://github.com/danieljhkim/DevBox",
+            "url": "https://news.ycombinator.com/item?id=46441927",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-985364d3",
+            "type": "article",
+            "title": "Microsoft's Nadella overhauls leadership as he plots AI strategy beyond OpenAI",
+            "summary": "",
+            "url": "https://www.ft.com/content/255dbecc-5c57-4928-824f-b3f2d764f635",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-e7a14751",
+            "type": "article",
+            "title": "Build Your Own ML Framework",
+            "summary": "",
+            "url": "https://mlsysbook.ai/tinytorch/intro.html",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-85091fd6",
+            "type": "article",
+            "title": "Observations on safety friction and misclassification in conversational AI",
+            "summary": "",
+            "url": "https://news.ycombinator.com/item?id=46441373",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-fab037b6",
+            "type": "article",
+            "title": "What to Expect from the AI Engineering World in 2026",
+            "summary": "",
+            "url": "https://sarthakai.substack.com/p/what-to-expect-from-the-ai-engineering",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-b4b52dec",
+            "type": "article",
+            "title": "Poland urges Brussels to probe TikTok over AI-generated content",
+            "summary": "",
+            "url": "https://www.reuters.com/world/china/poland-urges-brussels-probe-tiktok-over-ai-generated-content-2025-12-30/",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-16b89569",
+            "type": "article",
+            "title": "OpenAI Is Paying Employees More Than Any Major Tech Startup in History",
+            "summary": "",
+            "url": "https://www.wsj.com/tech/ai/openai-is-paying-employees-more-than-any-major-tech-startup-in-history-23472527",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-d2a126cf",
+            "type": "article",
+            "title": "Bengio: AI shows signs of self-preservation and we should be ready to pull plug",
+            "summary": "",
+            "url": "https://www.theguardian.com/technology/2025/dec/30/ai-pull-plug-pioneer-technology-rights",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-871d6871",
+            "type": "article",
+            "title": "AI-powered skin analysis platform",
+            "summary": "",
+            "url": "https://skinadvisor.ai/en",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-c68c3c89",
+            "type": "article",
+            "title": "LLVM AI tool policy: human in the loop",
+            "summary": "",
+            "url": "https://discourse.llvm.org/t/rfc-llvm-ai-tool-policy-human-in-the-loop/89159",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 66
+        },
+        {
+            "id": "article-08675c1d",
+            "type": "article",
+            "title": "I hope generative AI does away with SEO",
+            "summary": "",
+            "url": "https://www.pcloadletter.dev/blog/ai-and-seo/",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-c7110857",
+            "type": "article",
+            "title": "Using AI generated images to get refunds",
+            "summary": "",
+            "url": "https://www.wired.com/story/scammers-in-china-are-using-ai-generated-images-to-get-refunds/",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-a425d274",
+            "type": "article",
+            "title": "Show HN: Client-side encrypted AI detector using model ensembling",
+            "summary": "",
+            "url": "https://veredictlabs.com",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-b23217b0",
+            "type": "article",
+            "title": "Can AI Recognize Its Own Reflection?",
+            "summary": "",
+            "url": "https://arxiv.org/abs/2512.23587",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-5a34c097",
+            "type": "article",
+            "title": "The Window for Local-First AI (Before the Defaults Ship)",
+            "summary": "",
+            "url": "https://www.localghost.ai/inflection",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-33813dd7",
+            "type": "article",
+            "title": "Show HN: Perfetto2LLM - A tool to pass system traces to an LLM",
+            "summary": "",
+            "url": "https://perfetto-to-llm.vercel.app/",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-9705a66b",
+            "type": "article",
+            "title": "A personal recap of 2025: on running, LLMs, family, coffee, work",
+            "summary": "",
+            "url": "https://dimitarmisev.com/blog/2025-recap",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-e673d867",
+            "type": "article",
+            "title": "Show HN: LLMRouter \u2013 first LLM routing library with 300 stars in 24h",
+            "summary": "",
+            "url": "https://github.com/ulab-uiuc/LLMRouter",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-32a877aa",
+            "type": "article",
+            "title": "The State of LLMs 2025: Progress, Progress, and Predictions",
+            "summary": "",
+            "url": "https://magazine.sebastianraschka.com/p/state-of-llms-2025",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-d15e5618",
+            "type": "article",
+            "title": "The Gemini AI Studio \"Context Tax\": How a 10-word prompt cost me \u00a3121",
+            "summary": "",
+            "url": "https://news.ycombinator.com/item?id=46440008",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-20e9472f",
+            "type": "article",
+            "title": "LLMs for Medical Practice: Look Out",
+            "summary": "",
+            "url": "https://www.science.org/content/blog-post/llms-medical-practice-look-out",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-1d803a66",
+            "type": "article",
+            "title": "Updated LLM Benchmark (Gemini 3 Flash)",
+            "summary": "",
+            "url": "https://entropicthoughts.com/updated-llm-benchmark",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
         },
         {
-            "id": "article-7d701ab2",
+            "id": "article-8c6efbcc",
             "type": "article",
-            "title": "Ex-WSJ reporter who exposed Theranos fraud sues AI giants",
+            "title": "ReCollab: Retrieval-Augmented LLMs for Cooperative Ad-Hoc Teammate Modeling",
             "summary": "",
-            "url": "https://nypost.com/2025/12/24/business/ex-wsj-reporter-who-exposed-theranos-fraud-sues-ai-giants-over-alleged-book-piracy/",
+            "url": "https://arxiv.org/abs/2512.22129",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
         },
         {
-            "id": "article-470009d1",
+            "id": "article-af8f357f",
             "type": "article",
-            "title": "Meta to Acquire Startup Manus, Adding Agents to Bolster AI Bet",
+            "title": "Show HN: Mafia Arena \u2013 LLMs play social deduction games against each other",
             "summary": "",
-            "url": "https://www.bloomberg.com/news/articles/2025-12-29/meta-acquires-startup-manus-to-bolster-ai-business",
+            "url": "https://mafia-arena.com",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
         },
         {
-            "id": "article-9033a999",
+            "id": "article-d70ab28e",
             "type": "article",
-            "title": "Show HN: ADK-Studio \u2013 a visual builder for creating AI agent workflows with Rust",
+            "title": "Show HN: Llmcc \u2013 Multi-depth architecture graphs for code understanding",
             "summary": "",
-            "url": "https://news.ycombinator.com/item?id=46430090",
+            "url": "https://news.ycombinator.com/item?id=46437912",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
         },
         {
-            "id": "article-4e3f1171",
+            "id": "article-027ba5d7",
             "type": "article",
-            "title": "PowerMem \u2013 Persistent memory layer for AI agents",
+            "title": "Boogiebench: LLM Music Composition with Strudel",
             "summary": "",
-            "url": "https://github.com/oceanbase/powermem",
+            "url": "https://www.boogiebench.com/",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
         },
         {
-            "id": "article-c468f4de",
+            "id": "article-32449d6f",
             "type": "article",
-            "title": "Scale AI After Meta",
+            "title": "Show HN: Interactive Terminal for AI \u2013 Let LLMs Drive TTYs",
             "summary": "",
-            "url": "https://www.businessinsider.com/pay-cuts-poaching-pivoting-inside-scale-ai-meta-2025-12",
+            "url": "https://github.com/mstsirkin/interminai",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
         },
         {
-            "id": "article-2b8e5ca1",
+            "id": "article-b1b5b2ae",
             "type": "article",
-            "title": "New Article: Patents and AI",
+            "title": "Show HN: Sessy \u2013 Open-source email observability for AWS SES",
             "summary": "",
-            "url": "https://idea2patentai.com/articles/provisional-patent-guide-ai",
+            "url": "https://github.com/marckohlbrugge/sessy",
             "source": "hackernews",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-1db9d742",
+            "id": "article-20814115",
             "type": "article",
-            "title": "Ask HN: With so many AI models, how do you quickly choose the right one?",
+            "title": "Show HN: Magic CSV \u2013 Transform CSVs with plain English, no formulas",
             "summary": "",
-            "url": "https://news.ycombinator.com/item?id=46429868",
+            "url": "https://magiccsv.app/",
             "source": "hackernews",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
-            "id": "article-0cb3a06b",
+            "id": "article-432c4a13",
             "type": "article",
-            "title": "AI Video Generation Made Easier with Wan 2.6",
+            "title": "Show HN: real-time usage monitor for Claude \u2013 see cost without leaving workflow",
             "summary": "",
-            "url": "https://www.wan26.info/wan/wan-2-6",
+            "url": "https://github.com/SrivathsanSivakumar/simple-usage-monitor",
             "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-6622a540",
-            "type": "article",
-            "title": "How Buttondown uses your content to power generative AI",
-            "summary": "",
-            "url": "https://buttondown.com/blog/generative-ai",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-2e09689d",
-            "type": "article",
-            "title": "Meta Buys AI Startup Manus, Adding Paying Users",
-            "summary": "",
-            "url": "https://www.wsj.com/tech/ai/meta-buys-ai-startup-manus-adding-millions-of-paying-users-f1dc7ef8",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-c6295305",
-            "type": "article",
-            "title": "Show HN: Cascade \u2013 AI agent that optimizes your ads across channels",
-            "summary": "",
-            "url": "https://cascaded.ai/en/",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-05270831",
-            "type": "article",
-            "title": "How I made a tech support AI Agent that troubleshoots tickets using the Grok API",
-            "summary": "",
-            "url": "https://www.youtube.com/watch?v=ZK-R9LbOHhI",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-820c2e6d",
-            "type": "article",
-            "title": "Meta Superintelligence Labs acquires Manus AI for \u2013$4B, 9 months after launch",
-            "summary": "",
-            "url": "https://news.smol.ai/issues/25-12-29-meta-manus/",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-38db15bf",
-            "type": "article",
-            "title": "My 2025 AI Developer Year in Review",
-            "summary": "",
-            "url": "https://scottw.com/2025-ai-developer-year/",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-35d247c5",
-            "type": "article",
-            "title": "Chinese AI 'tiger' Zhipu edges towards Hong Kong listing expected to raise $300M",
-            "summary": "",
-            "url": "https://www.scmp.com/business/article/3337171/chinese-ai-tiger-zhipu-edges-towards-hong-kong-listing-expected-raise-us300-million",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-87d768b0",
-            "type": "article",
-            "title": "Meta to acquire Chinese startup Manus to boost advanced AI features",
-            "summary": "",
-            "url": "https://www.reuters.com/world/china/meta-acquire-chinese-startup-manus-boost-advanced-ai-features-2025-12-29/",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-9615b45f",
-            "type": "article",
-            "title": "Reflections on a Year of Prolog and LLMs",
-            "summary": "",
-            "url": "https://deepclause.substack.com/p/coming-soon",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-3fc0d608",
-            "type": "article",
-            "title": "Why Enterprises Cannot Disclaim Consumer Harm Caused by LLM \"Optimization\"",
-            "summary": "",
-            "url": "https://zenodo.org/records/18091942",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-b442e5fe",
-            "type": "article",
-            "title": "Show HN: Cover letter generator with Ollama/local LLMs (Open source)",
-            "summary": "",
-            "url": "https://www.coverlettermaker.co",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 51
-        },
-        {
-            "id": "article-9c28bef2",
-            "type": "article",
-            "title": "Show HN: ARES Dashboard \u2013 Open-Source AI Red-Teaming and Governance Platform",
-            "summary": "",
-            "url": "https://github.com/Arnoldlarry15/ARES-Dashboard",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-f86136d8",
-            "type": "article",
-            "title": "Merriam-Webster: LLM [video]",
-            "summary": "",
-            "url": "https://www.youtube.com/watch?v=RvQnl3O0D3c",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-1e5b458b",
-            "type": "article",
-            "title": "Show HN: SAFi, a Governance Engine for LLMs",
-            "summary": "",
-            "url": "https://safi.selfalignmentframework.com",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-aa13d007",
-            "type": "article",
-            "title": "Show HN: Incident management for Slack with AI-generated postmortems",
-            "summary": "",
-            "url": "https://www.incidentops.io/",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-05c35d06",
-            "type": "article",
-            "title": "The Emerging Market for Intelligence: Pricing, Supply, and Demand for LLMs",
-            "summary": "",
-            "url": "https://www.nber.org/papers/w34608",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-1c133092",
-            "type": "article",
-            "title": "You are absolutely right? \u2013 LLM workflows and thoughts about the future",
-            "summary": "",
-            "url": "https://cpojer.net/posts/you-are-absolutely-right",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-2358be22",
-            "type": "article",
-            "title": "End-to-End Test-Time Training for Long Context [pdf]",
-            "summary": "",
-            "url": "https://test-time-training.github.io/e2e.pdf",
-            "source": "hackernews",
-            "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-a8acf0d9",
-            "type": "article",
-            "title": "Show HN: Self Hosted Claude Code Runner",
-            "summary": "",
-            "url": "https://github.com/ericvtheg/claude-code-runner",
-            "source": "hackernews",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
             "id": "article-a48840aa",
             "type": "article",
-            "title": "Show HN: I built an MCP server to trade Robinhood through Claude Code",
+            "title": "MCP to trade Robinhood through Claude Code",
             "summary": "",
             "url": "https://github.com/trayders/trayd-mcp",
             "source": "hackernews",
-            "date": "2025-12-30",
+            "date": "2025-12-31",
             "trendingScore": 50
         },
         {
@@ -974,16 +584,6 @@ const AIChronicleData = {
             "url": "https://github.com/kwakubiney/wordwright.ai",
             "source": "hackernews",
             "date": "2025-12-26",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-cbc1b6d3",
-            "type": "article",
-            "title": "Bubble and Build: The 2025 Mad (Machine Learning, AI and Data) Landscape",
-            "summary": "",
-            "url": "https://www.mattturck.com/mad2025",
-            "source": "hackernews",
-            "date": "2025-12-23",
             "trendingScore": 50
         },
         {
@@ -1057,11 +657,171 @@ const AIChronicleData = {
             "trendingScore": 50
         },
         {
-            "id": "article-e995b869",
+            "id": "article-99e9a366",
             "type": "article",
-            "title": "Cursor-Mem Now Available Claude-Mem 8.5.0",
+            "title": "Ask HN: What to do when Claude Code is writing code?",
             "summary": "",
-            "url": "https://twitter.com/Claude_Memory/status/2005856998919700833",
+            "url": "https://news.ycombinator.com/item?id=46441467",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-23d1ac33",
+            "type": "article",
+            "title": "I used Claude to revive an NPM package with 760K downloads/wk last updated 2019",
+            "summary": "",
+            "url": "https://github.com/greenstevester/license-checker-evergreen",
+            "source": "hackernews",
+            "date": "2025-12-31",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-de97b210",
+            "type": "article",
+            "title": "Show HN: Claude Cognitive \u2013 Working memory for Claude Code",
+            "summary": "",
+            "url": "https://github.com/GMaN1911/claude-cognitive",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-924547b5",
+            "type": "article",
+            "title": "Building a 64-Bit OS from Scratch with Claude Code",
+            "summary": "",
+            "url": "https://isene.org/2025/11/SimplicityOS.html",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-f854855a",
+            "type": "article",
+            "title": "I had Claude build an automated generative art gallery to test my custom skills",
+            "summary": "",
+            "url": "https://josh-gree.github.io/gen-art-gallery/",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-62f87d34",
+            "type": "article",
+            "title": "Building Tetris Time with Claude Code",
+            "summary": "",
+            "url": "https://koenvangilst.nl/lab/tetris-time",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-8a4891d7",
+            "type": "article",
+            "title": "Show HN: Emergence (I asked Claude to impress me)",
+            "summary": "",
+            "url": "https://dwyer.co.za/static/claude.html",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-50599cfc",
+            "type": "article",
+            "title": "Peacock Code (or: why Claude made my codebase worse)",
+            "summary": "",
+            "url": "https://ivelinkozarev.substack.com/p/peacock-code-or-why-claude-made-my",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-912df219",
+            "type": "article",
+            "title": "Show HN: I got tired of Googling in thrift stores, so I built an AI pricing tool",
+            "summary": "",
+            "url": "https://underpricedai.com",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-43dcc1f4",
+            "type": "article",
+            "title": "Show HN: Solo trader built algo trading platform via AI \u2013 no dev experience",
+            "summary": "",
+            "url": "https://www.depthsight.pro/",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-5197b0de",
+            "type": "article",
+            "title": "Show HN: Image Gen \u2013 10 AI image providers unified in one Claude Code plugin",
+            "summary": "",
+            "url": "https://shipdeckai.github.io/image-gen/",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-44a0f35d",
+            "type": "article",
+            "title": "Show HN: Cck ClaudeCode file change tracking and auto Claude.md",
+            "summary": "",
+            "url": "https://news.ycombinator.com/item?id=46435083",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-c8bbe2ff",
+            "type": "article",
+            "title": "Show HN: Minimal Second Brain \u2013 An AI-native Obsidian vault template",
+            "summary": "",
+            "url": "https://github.com/gokhanarkan/minimal-second-brain",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-6ba88e77",
+            "type": "article",
+            "title": "Using Perplexity, Firecrawl and Gemini Flash to analyze 305 Links for 12.70 USD",
+            "summary": "",
+            "url": "https://vibegui.com/article/shipping-vibegui-bookmarks-v1-architecture-costs-and-lessons",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-1d1ba536",
+            "type": "article",
+            "title": "Show HN: A Multi-agent system where LLMs challenge each other's answers",
+            "summary": "",
+            "url": "https://news.ycombinator.com/item?id=46435835",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-a28357f5",
+            "type": "article",
+            "title": "Show HN: Novel Novel Generator. Recursive Gemini pl wrote 97p coherent nerdy pdf",
+            "summary": "",
+            "url": "https://github.com/mike-cramblett/novel-novel-generator",
+            "source": "hackernews",
+            "date": "2025-12-30",
+            "trendingScore": 50
+        },
+        {
+            "id": "article-b6a64a96",
+            "type": "article",
+            "title": "Show HN: Spraff \u2013 Voice and text AI chat, self-hostable, no data retention",
+            "summary": "",
+            "url": "https://github.com/martinpllu/spraff",
             "source": "hackernews",
             "date": "2025-12-30",
             "trendingScore": 50
@@ -1077,33 +837,13 @@ const AIChronicleData = {
             "trendingScore": 50
         },
         {
-            "id": "article-4d69fabf",
+            "id": "article-d3a023ea",
             "type": "article",
-            "title": "I gave Claude Code the ability to run its own radio show 24/7",
+            "title": "Show HN: Giselle \u2013 open-source visual editor for building AI workflows",
             "summary": "",
-            "url": "https://www.khaledeltokhy.com/claude-show",
+            "url": "https://github.com/giselles-ai/giselle",
             "source": "hackernews",
             "date": "2025-12-30",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-5b4da778",
-            "type": "article",
-            "title": "Show HN: Stop Claude Code from forgetting everything",
-            "summary": "",
-            "url": "https://github.com/mutable-state-inc/ensue-skill",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 61
-        },
-        {
-            "id": "article-be4acb00",
-            "type": "article",
-            "title": "Claude's Incidental Obsession with Dancing",
-            "summary": "",
-            "url": "https://modul8r.com/words/claude-dance.html",
-            "source": "hackernews",
-            "date": "2025-12-29",
             "trendingScore": 50
         },
         {
@@ -1124,66 +864,6 @@ const AIChronicleData = {
             "url": "https://github.com/lanegrid/agtrace",
             "source": "hackernews",
             "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-bf0815b5",
-            "type": "article",
-            "title": "Show HN: Interactive plan annotation and sharing for Claude Code",
-            "summary": "",
-            "url": "https://github.com/backnotprop/plannotator",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-6df5e538",
-            "type": "article",
-            "title": "Everything That Can Be Deterministic, Should Be: My Claude Code Setup",
-            "summary": "",
-            "url": "https://vexjoy.com/posts/everything-that-can-be-deterministic-should-be-my-claude-code-setup/",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-d19309c5",
-            "type": "article",
-            "title": "Why Claude Code Skills Are Broken (and How to Fix Them)",
-            "summary": "",
-            "url": "https://enact.tools/blog/why-skills-break/",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-c3f9f449",
-            "type": "article",
-            "title": "Show HN: MCP-Reddit \u2013 Reddit scraper for Claude, no API keys needed",
-            "summary": "",
-            "url": "https://pypi.org/project/mcp-reddit/",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-96f7a0c6",
-            "type": "article",
-            "title": "Everyone at the company should be using Claude Code and GitHub",
-            "summary": "",
-            "url": "https://twitter.com/obie/status/2005689332976271459",
-            "source": "hackernews",
-            "date": "2025-12-29",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-d3a023ea",
-            "type": "article",
-            "title": "Show HN: Giselle \u2013 open-source visual editor for building AI workflows",
-            "summary": "",
-            "url": "https://github.com/giselles-ai/giselle",
-            "source": "hackernews",
-            "date": "2025-12-30",
             "trendingScore": 50
         },
         {
@@ -1244,7 +924,7 @@ const AIChronicleData = {
             "url": "https://teodordyakov.github.io/brainfuck-agi/",
             "source": "hackernews",
             "date": "2025-12-29",
-            "trendingScore": 60
+            "trendingScore": 62
         },
         {
             "id": "article-59eec668",
@@ -1257,155 +937,108 @@ const AIChronicleData = {
             "trendingScore": 50
         },
         {
-            "id": "article-158c2d58",
-            "type": "article",
-            "title": "Show HN: I built Ctrl+F for YouTube videos using Gemini's multimodal AI",
-            "summary": "",
-            "url": "https://momentclip.com",
-            "source": "hackernews",
-            "date": "2025-12-28",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-70e19f40",
-            "type": "article",
-            "title": "Show HN: Gemini Watermark Remover \u2013 A web tool using reverse alpha blending",
-            "summary": "",
-            "url": "https://re.easynote.cc/",
-            "source": "hackernews",
-            "date": "2025-12-28",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-16dea119",
-            "type": "article",
-            "title": "Ask HN: Are LLMs becoming a real discovery channel for ecommerce?",
-            "summary": "",
-            "url": "https://news.ycombinator.com/item?id=46408793",
-            "source": "hackernews",
-            "date": "2025-12-28",
-            "trendingScore": 50
-        },
-        {
-            "id": "article-86a96c3c",
-            "type": "article",
-            "title": "Ask HN: Why I can't enable Chrome Gemini Nano on my MacBook with M1?",
-            "summary": "",
-            "url": "https://news.ycombinator.com/item?id=46407160",
-            "source": "hackernews",
-            "date": "2025-12-28",
-            "trendingScore": 50
-        },
-        {
             "id": "topic-large-language-models",
             "type": "topic",
             "title": "Large Language Models",
             "summary": "Foundation models trained on massive text corpora that can generate and understand natural language.",
-            "connectionCount": 41
-        },
-        {
-            "id": "topic-multimodal-ai",
-            "type": "topic",
-            "title": "Multimodal AI",
-            "summary": "Systems that process and understand multiple types of input including text, images, audio, and video.",
-            "connectionCount": 8
-        },
-        {
-            "id": "topic-ai-agents",
-            "type": "topic",
-            "title": "AI Agents",
-            "summary": "Autonomous AI systems that can plan, use tools, and take actions to accomplish goals.",
-            "connectionCount": 20
-        },
-        {
-            "id": "topic-nlp",
-            "type": "topic",
-            "title": "NLP",
-            "summary": "Natural Language Processing: AI techniques for understanding and generating human language.",
-            "connectionCount": 36
-        },
-        {
-            "id": "topic-reinforcement-learning",
-            "type": "topic",
-            "title": "Reinforcement Learning",
-            "summary": "Training AI through rewards and penalties to learn optimal behaviors.",
-            "connectionCount": 20
-        },
-        {
-            "id": "topic-ai-reasoning",
-            "type": "topic",
-            "title": "AI Reasoning",
-            "summary": "Methods to improve logical reasoning, mathematical problem-solving, and multi-step thinking in AI systems.",
-            "connectionCount": 18
+            "connectionCount": 23
         },
         {
             "id": "topic-rag",
             "type": "topic",
             "title": "RAG",
             "summary": "Retrieval-Augmented Generation: combining LLMs with external knowledge retrieval for more accurate responses.",
-            "connectionCount": 9
+            "connectionCount": 6
         },
         {
-            "id": "topic-fine-tuning",
+            "id": "topic-nlp",
             "type": "topic",
-            "title": "Fine-tuning",
-            "summary": "Adapting pre-trained models to specific tasks or domains.",
-            "connectionCount": 2
-        },
-        {
-            "id": "topic-ai-safety",
-            "type": "topic",
-            "title": "AI Safety",
-            "summary": "Research focused on making AI systems safe, aligned with human values, and beneficial.",
-            "connectionCount": 4
-        },
-        {
-            "id": "topic-computer-vision",
-            "type": "topic",
-            "title": "Computer Vision",
-            "summary": "AI systems for understanding and processing visual information from images and video.",
-            "connectionCount": 9
-        },
-        {
-            "id": "topic-model-efficiency",
-            "type": "topic",
-            "title": "Model Efficiency",
-            "summary": "Techniques to reduce computational costs and improve inference speed of AI models.",
-            "connectionCount": 5
+            "title": "NLP",
+            "summary": "Natural Language Processing: AI techniques for understanding and generating human language.",
+            "connectionCount": 21
         },
         {
             "id": "topic-prompt-engineering",
             "type": "topic",
             "title": "Prompt Engineering",
             "summary": "Methods for crafting effective prompts to guide AI model behavior and outputs.",
-            "connectionCount": 4
+            "connectionCount": 3
         },
         {
-            "id": "topic-diffusion-models",
+            "id": "topic-ai-reasoning",
             "type": "topic",
-            "title": "Diffusion Models",
-            "summary": "Generative models that create content by iteratively denoising random noise into structured outputs.",
+            "title": "AI Reasoning",
+            "summary": "Methods to improve logical reasoning, mathematical problem-solving, and multi-step thinking in AI systems.",
+            "connectionCount": 8
+        },
+        {
+            "id": "topic-multimodal-ai",
+            "type": "topic",
+            "title": "Multimodal AI",
+            "summary": "Systems that process and understand multiple types of input including text, images, audio, and video.",
             "connectionCount": 2
         },
         {
-            "id": "org-nvidia",
+            "id": "topic-computer-vision",
+            "type": "topic",
+            "title": "Computer Vision",
+            "summary": "AI systems for understanding and processing visual information from images and video.",
+            "connectionCount": 5
+        },
+        {
+            "id": "topic-ai-agents",
+            "type": "topic",
+            "title": "AI Agents",
+            "summary": "Autonomous AI systems that can plan, use tools, and take actions to accomplish goals.",
+            "connectionCount": 7
+        },
+        {
+            "id": "topic-reinforcement-learning",
+            "type": "topic",
+            "title": "Reinforcement Learning",
+            "summary": "Training AI through rewards and penalties to learn optimal behaviors.",
+            "connectionCount": 7
+        },
+        {
+            "id": "topic-ai-safety",
+            "type": "topic",
+            "title": "AI Safety",
+            "summary": "Research focused on making AI systems safe, aligned with human values, and beneficial.",
+            "connectionCount": 2
+        },
+        {
+            "id": "org-google",
             "type": "organization",
-            "title": "NVIDIA",
-            "summary": "NVIDIA - AI research and development.",
-            "connectionCount": 1
+            "title": "Google",
+            "summary": "Google - AI research and development.",
+            "connectionCount": 3
         },
         {
             "id": "org-meta",
             "type": "organization",
             "title": "Meta",
             "summary": "Meta - AI research and development.",
-            "connectionCount": 7
+            "connectionCount": 1
         },
         {
-            "id": "org-mistral",
+            "id": "org-openai",
             "type": "organization",
-            "title": "Mistral",
-            "summary": "Mistral - AI research and development.",
+            "title": "OpenAI",
+            "summary": "OpenAI - AI research and development.",
+            "connectionCount": 2
+        },
+        {
+            "id": "org-microsoft",
+            "type": "organization",
+            "title": "Microsoft",
+            "summary": "Microsoft - AI research and development.",
+            "connectionCount": 1
+        },
+        {
+            "id": "org-aws",
+            "type": "organization",
+            "title": "AWS",
+            "summary": "AWS - AI research and development.",
             "connectionCount": 1
         },
         {
@@ -1416,52 +1049,10 @@ const AIChronicleData = {
             "connectionCount": 1
         },
         {
-            "id": "org-google",
-            "type": "organization",
-            "title": "Google",
-            "summary": "Google - AI research and development.",
-            "connectionCount": 5
-        },
-        {
-            "id": "org-openai",
-            "type": "organization",
-            "title": "OpenAI",
-            "summary": "OpenAI - AI research and development.",
-            "connectionCount": 1
-        },
-        {
-            "id": "org-google-deepmind",
-            "type": "organization",
-            "title": "Google DeepMind",
-            "summary": "Google DeepMind - AI research and development.",
-            "connectionCount": 1
-        },
-        {
-            "id": "org-deepmind",
-            "type": "organization",
-            "title": "DeepMind",
-            "summary": "DeepMind - AI research and development.",
-            "connectionCount": 1
-        },
-        {
-            "id": "model-gpt-4",
+            "id": "model-midjourney",
             "type": "model",
-            "title": "GPT-4",
-            "summary": "GPT-4 AI model.",
-            "connectionCount": 1
-        },
-        {
-            "id": "model-llama",
-            "type": "model",
-            "title": "Llama",
-            "summary": "Llama AI model.",
-            "connectionCount": 3
-        },
-        {
-            "id": "model-mistral",
-            "type": "model",
-            "title": "Mistral",
-            "summary": "Mistral AI model.",
+            "title": "Midjourney",
+            "summary": "Midjourney AI model.",
             "connectionCount": 1
         },
         {
@@ -1472,775 +1063,271 @@ const AIChronicleData = {
             "connectionCount": 11
         },
         {
-            "id": "model-gpt-5",
-            "type": "model",
-            "title": "GPT-5",
-            "summary": "GPT-5 AI model.",
-            "connectionCount": 1
-        },
-        {
-            "id": "model-grok",
-            "type": "model",
-            "title": "Grok",
-            "summary": "Grok AI model.",
-            "connectionCount": 1
-        },
-        {
             "id": "model-claude",
             "type": "model",
             "title": "Claude",
             "summary": "Claude AI model.",
-            "connectionCount": 12
+            "connectionCount": 13
         }
     ],
     "edges": [
         {
-            "source": "article-e984b0a8",
+            "source": "article-6102cd3c",
             "target": "topic-large-language-models",
             "relationship": "COVERS"
         },
         {
-            "source": "article-e984b0a8",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-e984b0a8",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-e984b0a8",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-93ed60f7",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-23e9a3ac",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-23e9a3ac",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-5ea44042",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-5ea44042",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-5ea44042",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-4563197f",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-4563197f",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-4563197f",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f7af5835",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f7af5835",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f7af5835",
+            "source": "article-6102cd3c",
             "target": "topic-rag",
             "relationship": "COVERS"
         },
         {
-            "source": "article-f7af5835",
+            "source": "article-6102cd3c",
             "target": "topic-nlp",
             "relationship": "COVERS"
         },
         {
-            "source": "article-f7af5835",
-            "target": "topic-fine-tuning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f7af5835",
-            "target": "org-nvidia",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-5b4d73e5",
+            "source": "article-e986e33e",
             "target": "topic-large-language-models",
             "relationship": "COVERS"
         },
         {
-            "source": "article-5b4d73e5",
+            "source": "article-e986e33e",
+            "target": "topic-prompt-engineering",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-e986e33e",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-7ec27f4b",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-7ec27f4b",
             "target": "topic-ai-reasoning",
             "relationship": "COVERS"
         },
         {
-            "source": "article-5b4d73e5",
+            "source": "article-7ec27f4b",
             "target": "topic-multimodal-ai",
             "relationship": "COVERS"
         },
         {
-            "source": "article-5b4d73e5",
+            "source": "article-7ec27f4b",
+            "target": "topic-computer-vision",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-f62b7bb9",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-2dd51200",
+            "target": "topic-ai-agents",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-2dd51200",
+            "target": "topic-reinforcement-learning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-527dfe41",
+            "target": "topic-computer-vision",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-527dfe41",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-527dfe41",
+            "target": "model-midjourney",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-4000b47b",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-4000b47b",
+            "target": "topic-ai-reasoning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-14740ebd",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-14740ebd",
+            "target": "topic-ai-reasoning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-14740ebd",
+            "target": "topic-prompt-engineering",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-14740ebd",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-40433063",
+            "target": "topic-ai-reasoning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-40433063",
+            "target": "topic-multimodal-ai",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-40433063",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-54ae5548",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-54ae5548",
+            "target": "topic-ai-agents",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-54ae5548",
+            "target": "topic-computer-vision",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-54ae5548",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-54ae5548",
+            "target": "topic-reinforcement-learning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-1e72a948",
+            "target": "topic-rag",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-40f27718",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-40f27718",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-40f27718",
+            "target": "topic-reinforcement-learning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-a474701a",
+            "target": "topic-ai-reasoning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-a474701a",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-3ff16ade",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-3ff16ade",
+            "target": "topic-ai-reasoning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-3ff16ade",
+            "target": "topic-ai-agents",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-3ff16ade",
+            "target": "topic-rag",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-3ff16ade",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-1612dc48",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-1612dc48",
+            "target": "topic-ai-reasoning",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-1612dc48",
             "target": "topic-ai-safety",
             "relationship": "COVERS"
         },
         {
-            "source": "article-5b4d73e5",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-5b4d73e5",
+            "source": "article-1612dc48",
             "target": "topic-nlp",
             "relationship": "COVERS"
         },
         {
-            "source": "article-72c754a7",
+            "source": "article-a29751c5",
+            "target": "topic-ai-agents",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-a29751c5",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-f3885695",
             "target": "topic-large-language-models",
             "relationship": "COVERS"
         },
         {
-            "source": "article-72c754a7",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-72c754a7",
+            "source": "article-ee0745d8",
             "target": "topic-ai-agents",
             "relationship": "COVERS"
         },
         {
-            "source": "article-72c754a7",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-2c19e507",
+            "source": "article-ae149c78",
             "target": "topic-ai-reasoning",
             "relationship": "COVERS"
         },
         {
-            "source": "article-2c19e507",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-2c19e507",
+            "source": "article-ae149c78",
             "target": "topic-rag",
             "relationship": "COVERS"
         },
         {
-            "source": "article-2c19e507",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-1f199372",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-1f199372",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-be5a294e",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-be5a294e",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-be5a294e",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-be5a294e",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-be5a294e",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-af3d6446",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-8149c1ea",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6b102d7d",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6b102d7d",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6b102d7d",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6b102d7d",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-50610216",
-            "target": "topic-model-efficiency",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-95bd0782",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-a33e42a1",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-a33e42a1",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6b02f69e",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-392f1815",
-            "target": "topic-model-efficiency",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-392f1815",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-51ff1c04",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-51ff1c04",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-ai-safety",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-prompt-engineering",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-708fe446",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-0e5cea42",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-0e5cea42",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-0e5cea42",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-9c3919fc",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-9c3919fc",
-            "target": "topic-prompt-engineering",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-9c3919fc",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-b4a3efa6",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-71f797da",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-389ad448",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-a3d6804d",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-d9e9a550",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-d9e9a550",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-d9e9a550",
-            "target": "topic-rag",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-d9e9a550",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-19cdfe5a",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6abad5cf",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-6abad5cf",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-bd4cdd32",
-            "target": "topic-rag",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-bd4cdd32",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-218a447e",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-218a447e",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-218a447e",
-            "target": "topic-diffusion-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-218a447e",
-            "target": "topic-model-efficiency",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-218a447e",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-2011cdc9",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-2011cdc9",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-2011cdc9",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-fe0cdabe",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f9ec34d0",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f9ec34d0",
-            "target": "org-meta",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-71eafaf5",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f86e0100",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f86e0100",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f86e0100",
-            "target": "org-mistral",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-f86e0100",
-            "target": "model-gpt-4",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-f86e0100",
-            "target": "model-llama",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-f86e0100",
-            "target": "model-mistral",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-92cb940c",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-92cb940c",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3e305b12",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3e305b12",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3e305b12",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-fe0b7f8b",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-91686879",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-91686879",
-            "target": "topic-fine-tuning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-767b7c46",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-767b7c46",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-767b7c46",
-            "target": "topic-prompt-engineering",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-767b7c46",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-d628fcb9",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-d628fcb9",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-acb4028e",
-            "target": "topic-ai-agents",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-acb4028e",
-            "target": "topic-ai-safety",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-acb4028e",
-            "target": "topic-rag",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-acb4028e",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f3e0ba5f",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f3e0ba5f",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-96839f9e",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-c9266825",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-c9266825",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-38304500",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-38304500",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-38304500",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-15f3b767",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-15f3b767",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-15f3b767",
-            "target": "topic-prompt-engineering",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-15f3b767",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-bbd25431",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-bbd25431",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-bbd25431",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-473b0a37",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-473b0a37",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3ff8043f",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3ff8043f",
-            "target": "topic-diffusion-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3ff8043f",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-ac4900b7",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-ac4900b7",
-            "target": "topic-ai-reasoning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-ac4900b7",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-ac4900b7",
-            "target": "org-cohere",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-05e524a4",
-            "target": "topic-rag",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-05e524a4",
-            "target": "topic-model-efficiency",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-05e524a4",
-            "target": "model-llama",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-14127480",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-14127480",
-            "target": "topic-rag",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-14127480",
-            "target": "topic-model-efficiency",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-14127480",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-83bacc2a",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-83bacc2a",
+            "source": "article-35882a40",
             "target": "topic-nlp",
             "relationship": "COVERS"
         },
@@ -2255,33 +1342,8 @@ const AIChronicleData = {
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-acc80ee6",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-acc80ee6",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-acc80ee6",
-            "target": "org-google",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-acc80ee6",
-            "target": "model-gemini",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-5e3e72b2",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-5e3e72b2",
-            "target": "topic-ai-safety",
+            "source": "article-e4a7bbc2",
+            "target": "topic-reinforcement-learning",
             "relationship": "COVERS"
         },
         {
@@ -2290,182 +1352,142 @@ const AIChronicleData = {
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-7ff0f39e",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-7ff0f39e",
-            "target": "topic-rag",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-7ff0f39e",
+            "source": "article-985364d3",
             "target": "org-openai",
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-7ff0f39e",
-            "target": "org-google",
+            "source": "article-985364d3",
+            "target": "org-microsoft",
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-7ff0f39e",
-            "target": "org-google-deepmind",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-7ff0f39e",
-            "target": "org-deepmind",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-7ff0f39e",
-            "target": "model-gpt-5",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-a432b8e7",
-            "target": "topic-ai-agents",
+            "source": "article-85091fd6",
+            "target": "topic-ai-safety",
             "relationship": "COVERS"
         },
         {
-            "source": "article-470009d1",
-            "target": "topic-ai-agents",
+            "source": "article-fab037b6",
+            "target": "topic-reinforcement-learning",
             "relationship": "COVERS"
         },
         {
-            "source": "article-470009d1",
-            "target": "org-meta",
+            "source": "article-b4b52dec",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-16b89569",
+            "target": "org-openai",
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-9033a999",
-            "target": "topic-ai-agents",
+            "source": "article-c68c3c89",
+            "target": "topic-reinforcement-learning",
             "relationship": "COVERS"
         },
         {
-            "source": "article-4e3f1171",
-            "target": "topic-ai-agents",
+            "source": "article-08675c1d",
+            "target": "topic-nlp",
             "relationship": "COVERS"
         },
         {
-            "source": "article-c468f4de",
-            "target": "org-meta",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-0cb3a06b",
+            "source": "article-c7110857",
             "target": "topic-computer-vision",
             "relationship": "COVERS"
         },
         {
-            "source": "article-0cb3a06b",
+            "source": "article-c7110857",
             "target": "topic-nlp",
             "relationship": "COVERS"
         },
         {
-            "source": "article-6622a540",
+            "source": "article-33813dd7",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-9705a66b",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-e673d867",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-32a877aa",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-d15e5618",
+            "target": "topic-prompt-engineering",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-d15e5618",
             "target": "topic-nlp",
             "relationship": "COVERS"
         },
         {
-            "source": "article-2e09689d",
-            "target": "org-meta",
+            "source": "article-d15e5618",
+            "target": "model-gemini",
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-c6295305",
-            "target": "topic-ai-agents",
+            "source": "article-20e9472f",
+            "target": "topic-large-language-models",
             "relationship": "COVERS"
         },
         {
-            "source": "article-05270831",
-            "target": "topic-ai-agents",
+            "source": "article-1d803a66",
+            "target": "topic-large-language-models",
             "relationship": "COVERS"
         },
         {
-            "source": "article-05270831",
-            "target": "model-grok",
+            "source": "article-1d803a66",
+            "target": "model-gemini",
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-820c2e6d",
-            "target": "org-meta",
+            "source": "article-8c6efbcc",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-8c6efbcc",
+            "target": "topic-rag",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-af8f357f",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-d70ab28e",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-027ba5d7",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-32449d6f",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-b1b5b2ae",
+            "target": "org-aws",
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-87d768b0",
-            "target": "org-meta",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-9615b45f",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-3fc0d608",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-b442e5fe",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-b442e5fe",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-b442e5fe",
-            "target": "model-llama",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-f86136d8",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-f86136d8",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-1e5b458b",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-aa13d007",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-05c35d06",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-1c133092",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-2358be22",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-a8acf0d9",
-            "target": "topic-nlp",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-a8acf0d9",
+            "source": "article-432c4a13",
             "target": "model-claude",
             "relationship": "MENTIONS"
         },
@@ -2475,9 +1497,99 @@ const AIChronicleData = {
             "relationship": "MENTIONS"
         },
         {
-            "source": "article-e995b869",
+            "source": "article-99e9a366",
             "target": "model-claude",
             "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-23d1ac33",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-de97b210",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-924547b5",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-f854855a",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-f854855a",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-62f87d34",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-8a4891d7",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-50599cfc",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-5197b0de",
+            "target": "topic-computer-vision",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-5197b0de",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-44a0f35d",
+            "target": "model-claude",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-6ba88e77",
+            "target": "model-gemini",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-1d1ba536",
+            "target": "topic-large-language-models",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-1d1ba536",
+            "target": "topic-ai-agents",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-a28357f5",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
+        },
+        {
+            "source": "article-a28357f5",
+            "target": "org-cohere",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-a28357f5",
+            "target": "model-gemini",
+            "relationship": "MENTIONS"
+        },
+        {
+            "source": "article-b6a64a96",
+            "target": "topic-nlp",
+            "relationship": "COVERS"
         },
         {
             "source": "article-334fd289",
@@ -2487,21 +1599,6 @@ const AIChronicleData = {
         {
             "source": "article-334fd289",
             "target": "model-gemini",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-4d69fabf",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-5b4da778",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-be4acb00",
-            "target": "model-claude",
             "relationship": "MENTIONS"
         },
         {
@@ -2518,31 +1615,6 @@ const AIChronicleData = {
             "source": "article-437a5264",
             "target": "topic-ai-agents",
             "relationship": "COVERS"
-        },
-        {
-            "source": "article-bf0815b5",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-6df5e538",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-d19309c5",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-c3f9f449",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-96f7a0c6",
-            "target": "model-claude",
-            "relationship": "MENTIONS"
         },
         {
             "source": "article-f62ba7ef",
@@ -2590,41 +1662,6 @@ const AIChronicleData = {
             "relationship": "COVERS"
         },
         {
-            "source": "article-158c2d58",
-            "target": "topic-multimodal-ai",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-158c2d58",
-            "target": "topic-computer-vision",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-158c2d58",
-            "target": "topic-reinforcement-learning",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-158c2d58",
-            "target": "model-gemini",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-70e19f40",
-            "target": "model-gemini",
-            "relationship": "MENTIONS"
-        },
-        {
-            "source": "article-16dea119",
-            "target": "topic-large-language-models",
-            "relationship": "COVERS"
-        },
-        {
-            "source": "article-86a96c3c",
-            "target": "model-gemini",
-            "relationship": "MENTIONS"
-        },
-        {
             "source": "topic-large-language-models",
             "target": "topic-ai-reasoning",
             "relationship": "RELATED_TO"
@@ -2647,11 +1684,6 @@ const AIChronicleData = {
         {
             "source": "topic-ai-agents",
             "target": "topic-prompt-engineering",
-            "relationship": "RELATED_TO"
-        },
-        {
-            "source": "topic-model-efficiency",
-            "target": "topic-large-language-models",
             "relationship": "RELATED_TO"
         },
         {
