@@ -887,6 +887,11 @@
             color: var(--amarillo-sol);
         }
 
+        /* Mobile Navigation - hidden on desktop */
+        .mobile-nav {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             header { padding: 0.6rem 1rem; }
@@ -897,6 +902,50 @@
             .projects-grid { grid-template-columns: 1fr; }
             .skills-grid { grid-template-columns: 1fr; }
             .contact-section { padding: 2rem 1rem; }
+
+            /* Mobile Navigation */
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--crema);
+                border-top: 1px solid rgba(26, 75, 140, 0.1);
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+                z-index: 100;
+                padding: 0.5rem 0;
+                justify-content: space-around;
+            }
+
+            .mobile-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: var(--ink-light);
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                padding: 0.25rem 0.5rem;
+                transition: color 0.2s;
+            }
+
+            .mobile-nav-item:hover,
+            .mobile-nav-item:active {
+                color: var(--azul-cobalto);
+            }
+
+            .mobile-nav-icon {
+                font-size: 1.1rem;
+                margin-bottom: 0.15rem;
+                color: var(--terracotta);
+            }
+
+            /* Add bottom padding so content isn't hidden behind nav */
+            main {
+                padding-bottom: 70px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -954,6 +1003,26 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <a href="#projects" class="mobile-nav-item">
+            <span class="mobile-nav-icon">&#9672;</span>
+            <span>Projects</span>
+        </a>
+        <a href="#skills" class="mobile-nav-item">
+            <span class="mobile-nav-icon">&#9671;</span>
+            <span>Skills</span>
+        </a>
+        <a href="#experience" class="mobile-nav-item">
+            <span class="mobile-nav-icon">&#9670;</span>
+            <span>Background</span>
+        </a>
+        <a href="#contact" class="mobile-nav-item">
+            <span class="mobile-nav-icon">&#10022;</span>
+            <span>Contact</span>
+        </a>
+    </nav>
 
     <main>
         <section class="hero">
@@ -1335,10 +1404,10 @@
             <div class="contact-corner-br"></div>
             <div class="contact-inner">
                 <h2>Get in Touch</h2>
-                <p class="contact-title">Let's build something <span class="accent">beautiful</span></p>
+                <p class="contact-title">Let's build something <span class="accent">together</span></p>
                 <p class="contact-tagline">
                     <span class="status-dot"></span>
-                    Looking for my next production environment
+                    Available for new projects
                 </p>
                 <div class="contact-links">
                     <a href="mailto:v-ruiz@outlook.com" class="contact-link">Email</a>
