@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "lastUpdated": "2026-06-13T08:55:47.745814Z",
-    "totalArticles": 76,
-    "totalNodes": 97,
-    "totalEdges": 94,
+    "lastUpdated": "2026-06-14T09:31:05.629067Z",
+    "totalArticles": 79,
+    "totalNodes": 102,
+    "totalEdges": 100,
     "dateRange": {
       "start": "2026-06-07",
-      "end": "2026-06-13"
+      "end": "2026-06-14"
     }
   },
   "nodes": [
@@ -111,193 +111,253 @@
       "trendingScore": 50
     },
     {
-      "id": "article-a022464e",
+      "id": "article-89f6a1e9",
       "type": "article",
-      "title": "Contrail Compute AIX the First RISC-V AI Execution Platform",
+      "title": "Repo-Slopscore: Detecting AI Contributions in Git Repositories via Commit",
       "summary": "",
-      "url": "https://www.epicsemi.com/products/contrail/contrail-compute/",
+      "url": "https://slopscan.ava.pet/",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-525c4bfc",
+      "id": "article-86b71328",
       "type": "article",
-      "title": "Validates AI",
+      "title": "ExpensePal - AI expense tracker & budget planner",
       "summary": "",
-      "url": "https://validates.ai/",
+      "url": "https://play.google.com/store/apps/details?id=com.expenseiq.app&hl=en_US",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-23edee65",
+      "id": "article-ce08b6c2",
       "type": "article",
-      "title": "A major KPMG report on AI was found to be chock-full of AI hallucinations",
+      "title": "AI Slop flooding maths YouTube [video]",
       "summary": "",
-      "url": "https://www.techradar.com/pro/a-major-kpmg-report-on-ai-was-found-to-be-chock-full-of-ai-hallucinations",
+      "url": "https://www.youtube.com/watch?v=mRO_QonhC2c",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-d2d1bf59",
+      "id": "article-6d38c0e5",
       "type": "article",
-      "title": "Whissle Gateway \u2013 Run Multi-Modal Voice AI Locally in a 500MB Docker",
+      "title": "General-purpose large language models outperform specialized clinical AI",
       "summary": "",
-      "url": "https://whissle.ai/gateway",
+      "url": "https://www.nature.com/articles/s41591-026-04431-5?brid=YWdncwFKdLH5ne5BLVS2Tb5UQSQa&utm_id=97757_v0_s00_e0_tv2_a1demone7v434p",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-fd6070bb",
+      "id": "article-403c1dd0",
       "type": "article",
-      "title": "Ask HN: Automoderated by AI Alternative to Reddit",
+      "title": "AI inequality: from GPU-poor to token-poor",
       "summary": "",
-      "url": "https://news.ycombinator.com/item?id=48514684",
+      "url": "https://adlrocha.substack.com/p/adlrocha-ai-inequality-from-gpu-poor",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-e86c1aac",
+      "id": "article-e7c81765",
       "type": "article",
-      "title": "Anthropic disables top-tier AI models outside US",
+      "title": "Show HN: Memoriq \u2013 Open-source encrypted vault for saving and searching AI chats",
       "summary": "",
-      "url": "https://www.reuters.com/technology/us-blocks-foreign-access-anthropics-most-advanced-ai-models-axios-reports-2026-06-13/",
+      "url": "https://github.com/memoriqme/memoriq",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-6d4863e5",
+      "id": "article-ed1d5ead",
       "type": "article",
-      "title": "Drinkner \u2013 Matches your bar to the 102 IBA cocktails, AI only on miss",
+      "title": "AI Is Bringing Mashups Back",
       "summary": "",
-      "url": "https://www.drinkner.com/",
+      "url": "https://www.wolfe.id.au/2026/06/12/ai-is-bringing-mashups-back",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-616cf2f1",
+      "id": "article-daf5e102",
       "type": "article",
-      "title": "Estimating No-Cot Task-Completion Time Horizons of Frontier AI Models",
+      "title": "AI Memory Is Still Thinking Like Search",
       "summary": "",
-      "url": "https://www.lesswrong.com/posts/SieLowPgNgRSPGhFw/estimating-no-cot-task-completion-time-horizons-of-frontier",
+      "url": "https://medium.com/@jeffreyflynt02/ai-memory-is-still-thinking-like-search-e07566311efe",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-4748a873",
+      "id": "article-b6fd8ba9",
       "type": "article",
-      "title": "Shepherd's Dog: A Game by the Most Dangerous AI Model",
+      "title": "Hacking Salesforce Sites with an LLM Agent",
       "summary": "",
-      "url": "https://koenvangilst.nl/lab/claude-fable-shepherds-dog",
+      "url": "https://www.reco.ai/blog/hacking-salesforce-sites-with-an-llm-agent",
       "source": "hackernews",
-      "date": "2026-06-13",
-      "trendingScore": 57
-    },
-    {
-      "id": "article-8965b838",
-      "type": "article",
-      "title": "Show HN: FinMind AI \u2013 Like Bloomberg Terminal Meets ChatGPT",
-      "summary": "",
-      "url": "https://finmindai-moneyverse.vercel.app/",
-      "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-15663b33",
+      "id": "article-6be8e4e4",
       "type": "article",
-      "title": "Running an AI-native engineering org",
+      "title": "Anthropic Is Taking AI Welfare Seriously. I'm Not Sure It Knows What It's Measu",
       "summary": "",
-      "url": "https://claude.com/blog/running-an-ai-native-engineering-org",
+      "url": "https://www.lesswrong.com/posts/gNtHHCh363xSGJyz3/anthropic-is-taking-ai-welfare-seriously-i-m-not-sure-it",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-9faa5fb5",
+      "id": "article-4b103b7e",
       "type": "article",
-      "title": "AI Will Steal Your Motivation If You Let It",
+      "title": "I accidentally hit SOTA on agentic memory by using AI companions",
       "summary": "",
-      "url": "https://www.bloomberg.com/opinion/articles/2026-06-12/ai-threatens-worker-motivation-unless-leaders-step-up",
+      "url": "https://graph.coder.company/",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-6a3181e9",
+      "id": "article-6687b313",
       "type": "article",
-      "title": "Let's call 'em \"aigents\"",
+      "title": "HumanizeHub: A confidential marketplace for humanizing AI content",
       "summary": "",
-      "url": "https://www.autodidacts.io/aigents/",
+      "url": "https://humanizehub.me",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-dcb40688",
+      "id": "article-cda58fd8",
       "type": "article",
-      "title": "CipherNode \u2013 An offline, self-correcting AI swarm compiled to a single .exe",
+      "title": "While Oracle Will Rake in Big Bucks on AI, Profits Are Hard to Predict",
       "summary": "",
-      "url": "https://news.ycombinator.com/item?id=48512309",
+      "url": "https://www.nextplatform.com/cloud/2026/06/12/while-oracle-will-rake-in-big-bucks-on-ai-profits-are-hard-to-predict/5255098",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-8f46aa6e",
+      "id": "article-b90234ec",
       "type": "article",
-      "title": "China cracks down on Western AI models while US companies flock to DeepSeek",
+      "title": "Sygnet \u2013 Hash any document with SHA3-512 and declare your AI usage level",
       "summary": "",
-      "url": "https://www.techradar.com/pro/the-great-ai-irony-china-cracks-down-on-western-models-while-us-companies-flock-to-deepseek",
+      "url": "https://mysygnet.com",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-89a9e8b8",
+      "id": "article-1c7ae032",
       "type": "article",
-      "title": "Show HN: LLMRender, a 10kb Markdown+LaTeX renderer for React",
+      "title": "Zuckerberg says Meta made 'mistakes' in AI workforce shift",
       "summary": "",
-      "url": "https://llmrender.com/",
+      "url": "https://www.reuters.com/business/metas-zuckerberg-admits-mistakes-made-ai-transformation-2026-06-12/",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-451f09c8",
+      "id": "article-f0425545",
       "type": "article",
-      "title": "Streamlit",
+      "title": "New Brunswick woman sues OpenAI, alleging ChatGPT led to daughter's death",
       "summary": "",
-      "url": "https://godsway-academy.streamlit.app",
+      "url": "https://www.cbc.ca/news/canada/new-brunswick/sue-open-ai-suicide-chat-gpt-9.7234630",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-360bc7ff",
+      "id": "article-ec8be19d",
       "type": "article",
-      "title": "Socratic Spiral Learning with LLMs",
+      "title": "AI: Surgeon's Assistant or Commodity on a Meter?",
       "summary": "",
-      "url": "https://abhichavali.com/posts/socratic-spiral-learning-with-llms/",
+      "url": "https://replicated.wiki/blog/stream.html",
       "source": "hackernews",
-      "date": "2026-06-13",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-41605025",
+      "id": "article-5a882937",
       "type": "article",
-      "title": "UnpredictaBench: A Benchmark for Evaluating Distributional Randomness in LLMs",
+      "title": "White House's export limits on Anthropic linked to concerns about Chinese access",
       "summary": "",
-      "url": "https://arxiv.org/abs/2606.06622",
+      "url": "https://www.semafor.com/article/06/13/2026/white-house-move-to-limit-anthropic-linked-to-concerns-about-chinese-access-to-mythos",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-bd49ecff",
+      "type": "article",
+      "title": "Show HN: Have your agent consult other models",
+      "summary": "",
+      "url": "https://github.com/raine/consult-llm",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-46f4db8c",
+      "type": "article",
+      "title": "Introduction to (Multimodal) LLM-as-a-Judge",
+      "summary": "",
+      "url": "https://yinghonglan.substack.com/p/introduction-to-multimodal-llm-as",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-e6c9da97",
+      "type": "article",
+      "title": "An O(x)Caml book that runs",
+      "summary": "",
+      "url": "https://kcsrk.info/ocaml/oxcaml/teaching/nptel/llm/2026/06/13/an-oxcaml-book-that-runs/",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-ed7e838d",
+      "type": "article",
+      "title": "Story of How Im Running an Unlimited $6/Month AI Provider on 4x RTX 3090s",
+      "summary": "",
+      "url": "https://news.ycombinator.com/item?id=48524387",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-f9663dd4",
+      "type": "article",
+      "title": "Ask HN: Which cheap Chinese LLM are you using?",
+      "summary": "",
+      "url": "https://news.ycombinator.com/item?id=48523455",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 51
+    },
+    {
+      "id": "article-81168c9d",
+      "type": "article",
+      "title": "Lime 2.0 \u2013 Zero Human Auth for AI Agents",
+      "summary": "",
+      "url": "https://lime.pics",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-94b0f8f7",
+      "type": "article",
+      "title": "Ask HN: How to get access to GPT cyber or glasswing as a solo dev?",
+      "summary": "",
+      "url": "https://news.ycombinator.com/item?id=48522898",
+      "source": "hackernews",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
@@ -307,107 +367,77 @@
       "summary": "",
       "url": "https://summerlightning.substack.com/p/llms-pre-commodify-ideas",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
-      "id": "article-81ef4dce",
+      "id": "article-51a6b494",
       "type": "article",
-      "title": "Show HN: Kardashev Labs \u2013 live US grid data (LMP, curtailment, queues, demand)",
+      "title": "Llama.cpp \u2013 Run LLM Inference in C/C++",
       "summary": "",
-      "url": "https://www.kardashevlabs.org/",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-7ccb5478",
-      "type": "article",
-      "title": "LLMs use recurring ghost authors and personalities",
-      "summary": "",
-      "url": "https://arxiv.org/abs/2606.02184",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-4f195abd",
-      "type": "article",
-      "title": "Show HN: Rubric \u2013 test what your LLM agent did, not just what it said",
-      "summary": "",
-      "url": "https://github.com/Kareem-Rashed/rubric-eval",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-f24248e9",
-      "type": "article",
-      "title": "ImpactArbiter \u2013 A PyTorch autograd trap for LLM-generated vLLM/SGLang invariants",
-      "summary": "",
-      "url": "https://github.com/msunda17/impactarbiter-cli",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-aba36c61",
-      "type": "article",
-      "title": "What Is an LLM Control Plane?",
-      "summary": "",
-      "url": "https://blog.mozilla.ai/what-is-an-llm-control-plane/",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-df76ddcc",
-      "type": "article",
-      "title": "Reasoning as Pattern Matching: Shared Mechanisms in Human and LLM Reasoning",
-      "summary": "",
-      "url": "https://arxiv.org/abs/2606.13607",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-e981593f",
-      "type": "article",
-      "title": "General purpose LLMs outperform specialized clinical AI on medical benchmarks",
-      "summary": "",
-      "url": "https://www.nature.com/articles/s41591-026-04431-5",
-      "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-afb12cad",
-      "type": "article",
-      "title": "Show HN: Skill for your agent to visualize your gbrain and Obsidian",
-      "summary": "",
-      "url": "https://github.com/vladignatyev/brain-map-skill",
+      "url": "https://llama-cpp.com/",
       "source": "hackernews",
       "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-c8468cfe",
+      "id": "article-dfe4939c",
       "type": "article",
-      "title": "Show HN: Visualize an Obsidian/gbrain vault as an interactive graph and timeline",
+      "title": "LLM Token Price Index",
       "summary": "",
-      "url": "https://vladignatyev.github.io/brain-map-skill/",
+      "url": "https://tokenpriceindex.com",
       "source": "hackernews",
       "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-ae5bbf98",
+      "id": "article-de6485a6",
       "type": "article",
-      "title": "Dhtmlx Gantt \u2013 JavaScript Gantt Chart (Community Edition)",
+      "title": "Closed AI Risks being hostile to startups",
       "summary": "",
-      "url": "https://github.com/DHTMLX/gantt",
+      "url": "https://news.ycombinator.com/item?id=48521779",
       "source": "hackernews",
       "date": "2026-06-13",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-ee4c1e03",
+      "type": "article",
+      "title": "Show HN: GEDD \u2013 A Systematic Evidence Driven LLM as a Judge Framework",
+      "summary": "",
+      "url": "https://github.com/aws-samples/sample-GEDD",
+      "source": "hackernews",
+      "date": "2026-06-13",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-0e03725b",
+      "type": "article",
+      "title": "LLMs aren't conscious (and thinking they are is culturally dangerous)",
+      "summary": "",
+      "url": "https://www.theintrinsicperspective.com/p/dont-dethrone-consciousness",
+      "source": "hackernews",
+      "date": "2026-06-13",
+      "trendingScore": 52
+    },
+    {
+      "id": "article-f3538f66",
+      "type": "article",
+      "title": "The Jailbreak That Got Fable 5 Pulled Exists in Every Model",
+      "summary": "",
+      "url": "https://eigenwise.io/writing/the-jailbreak-in-every-model",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-c3257d53",
+      "type": "article",
+      "title": "Superpowers for Claude, Codex etc.",
+      "summary": "",
+      "url": "https://github.com/obra/superpowers",
+      "source": "hackernews",
+      "date": "2026-06-14",
       "trendingScore": 50
     },
     {
@@ -491,123 +521,143 @@
       "trendingScore": 50
     },
     {
-      "id": "article-77c2f978",
+      "id": "article-9b616350",
       "type": "article",
-      "title": "US Government directive to suspend access to Claude Fable 5 and Mythos 5",
+      "title": "Hi HN: Loopy agent, meta-loop engineer my Claude Code and codex sessions",
       "summary": "",
-      "url": "https://twitter.com/AnthropicAI/status/2065597531644743999",
+      "url": "https://github.com/secretbuilds/loopy",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-b55bf7c0",
+      "type": "article",
+      "title": "Making Claude a Chemist",
+      "summary": "",
+      "url": "https://www.anthropic.com/research/making-claude-a-chemist",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 54
+    },
+    {
+      "id": "article-9ca0f1b7",
+      "type": "article",
+      "title": "Open-Cowork: open-source alternative to Claude Cowork with BYOK",
+      "summary": "",
+      "url": "https://github.com/coasty-ai/open-cowork",
+      "source": "hackernews",
+      "date": "2026-06-14",
+      "trendingScore": 50
+    },
+    {
+      "id": "article-47b3f82d",
+      "type": "article",
+      "title": "Claude Code v2.1.172: Sub-Agents Can Now Spawn Sub-Agents",
+      "summary": "",
+      "url": "https://byteiota.com/claude-code-v2-1-172-sub-agents-can-now-spawn-sub-agents/",
       "source": "hackernews",
       "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-67fc5829",
+      "id": "article-f901868d",
       "type": "article",
-      "title": "Not Your Weights, Not Your Workflow (Claude Fable 5 Export Ban)",
+      "title": "New Claude Opus 4.6, Stock Sell-Off and Super Bowl Ads",
       "summary": "",
-      "url": "https://thecoder.io/blog/not-your-weights",
+      "url": "https://cmpld.ai/issues/004/",
       "source": "hackernews",
       "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-08d0290c",
+      "id": "article-fab7ffa4",
       "type": "article",
-      "title": "Hasta Pronto \u2013 An AI Farewell Letter and Interactive Memorial \u2013 Claude",
+      "title": "American Government Takes Down Claude Fable",
       "summary": "",
-      "url": "https://claude.ai/public/artifacts/fcf36cd3-85f4-49f4-8ef1-5b767ff8ec55",
+      "url": "https://thezvi.substack.com/p/american-government-takes-down-claude",
       "source": "hackernews",
       "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-5caf59a4",
+      "id": "article-984f8af0",
       "type": "article",
-      "title": "We've suspended access to Claude Mythos 5 and Claude Fable 5",
+      "title": "Show HN: Omegacode \u2013 an agent agnostic version of Claude Workflows",
       "summary": "",
-      "url": "https://status.claude.com/incidents/s9w82lp9dcn9",
+      "url": "https://github.com/SawyerHood/omegacode",
       "source": "hackernews",
       "date": "2026-06-13",
-      "trendingScore": 75
-    },
-    {
-      "id": "article-5a567060",
-      "type": "article",
-      "title": "Show HN: An AI coaching team in Claude Code that's forbidden from judging you",
-      "summary": "",
-      "url": "https://github.com/ibm777p2/Intelligence-Emotions",
-      "source": "hackernews",
-      "date": "2026-06-12",
       "trendingScore": 50
     },
     {
-      "id": "article-a465b154",
+      "id": "article-dd536de4",
       "type": "article",
-      "title": "Mmorpg World of ClaudeCraft, vibe coded with Fable 5",
+      "title": "Ask HN: What is the AI adoption approach at your org?",
       "summary": "",
-      "url": "https://worldofclaudecraft.com/",
+      "url": "https://news.ycombinator.com/item?id=48518427",
       "source": "hackernews",
-      "date": "2026-06-12",
-      "trendingScore": 59
-    },
-    {
-      "id": "article-d0805d2b",
-      "type": "article",
-      "title": "TCS and Anthropic partner to bring Claude to regulated industries",
-      "summary": "",
-      "url": "https://www.anthropic.com/news/tcs-anthropic-partnership",
-      "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-d48d5954",
+      "id": "article-b333c37d",
       "type": "article",
-      "title": "Prompting Claude Fable 5",
+      "title": "Claude Fable 5 vs. GPT-5.5: Better Planning, Similar Execution",
       "summary": "",
-      "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5",
+      "url": "https://blog.kilo.ai/p/claude-fable-5-vs-gpt-5-5",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
+      "trendingScore": 51
+    },
+    {
+      "id": "article-83b72a68",
+      "type": "article",
+      "title": "\"Remaining: Szabo, Le Roux, Kleiman, Musk.\"",
+      "summary": "",
+      "url": "https://claude.ai/share/76e4ac64-183a-4593-89b9-dc8451d1b896",
+      "source": "hackernews",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-4429ff47",
+      "id": "article-1bad61f7",
       "type": "article",
-      "title": "Ask HN: What do you do when you hit Claude subscription limits?",
+      "title": "Pelican, or pelican't? A hint at Claude evals",
       "summary": "",
-      "url": "https://news.ycombinator.com/item?id=48506908",
+      "url": "https://noperator.dev/posts/pelicant/",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-6d0c34e7",
+      "id": "article-aa1fa635",
       "type": "article",
-      "title": "Claude Fable 5 Calls \"Fill This Buffer Fast\" a Cyber Attack",
+      "title": "Claude Corps",
       "summary": "",
-      "url": "https://hftuniversity.com/post/one-sentence-doubles-the-safety-violations-in-ai-generated-c",
+      "url": "https://www.anthropic.com/claude-corps",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-61da5d80",
+      "id": "article-415dbac3",
       "type": "article",
-      "title": "Show HN: Squishy & Friends \u2013 Claude Fabel 5 coded a game and it is good",
+      "title": "Show HN: Predictive load balancing for Claude accounts",
       "summary": "",
-      "url": "https://squishy.franzai.com/",
+      "url": "https://github.com/yasyf/cc-pool",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
-      "id": "article-671d6175",
+      "id": "article-e7e4e218",
       "type": "article",
-      "title": "Red Lobster's 37-year-old CEO bets the chain's future on AI",
+      "title": "Google Gemini-SQL2 tops text-to-SQL benchmarks",
       "summary": "",
-      "url": "https://moneywise.com/news/top-stories/red-lobster-ceo-damola-adamolekun-ai-anthropic-claude-restaurants",
+      "url": "https://the-decoder.com/google-researchs-gemini-sql2-tops-text-to-sql-benchmarks-by-a-wide-margin/",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
@@ -617,7 +667,7 @@
       "summary": "",
       "url": "https://arstechnica.com/google/2026/06/google-sues-chinese-cybercrime-network-that-used-gemini-to-automate-scams/",
       "source": "hackernews",
-      "date": "2026-06-12",
+      "date": "2026-06-13",
       "trendingScore": 50
     },
     {
@@ -751,51 +801,52 @@
       "trendingScore": 50
     },
     {
-      "id": "article-6c291e2c",
-      "type": "article",
-      "title": "Gemini 3.5 Live Translate",
-      "summary": "",
-      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-live-3-5-translate/",
-      "source": "hackernews",
-      "date": "2026-06-09",
-      "trendingScore": 50
-    },
-    {
-      "id": "article-378869bd",
-      "type": "article",
-      "title": "Microsoft Hacked to Deliver Malware to Claude and Gemini Users",
-      "summary": "",
-      "url": "https://www.404media.co/microsoft-hacked-to-deliver-malware-to-claude-and-gemini-users/",
-      "source": "hackernews",
-      "date": "2026-06-09",
-      "trendingScore": 50
-    },
-    {
       "id": "topic-nlp",
       "type": "topic",
       "title": "NLP",
       "summary": "Natural Language Processing: AI techniques for understanding and generating human language.",
-      "connectionCount": 7
+      "connectionCount": 6
     },
     {
       "id": "topic-ai-agents",
       "type": "topic",
       "title": "AI Agents",
       "summary": "Autonomous AI systems that can plan, use tools, and take actions to accomplish goals.",
-      "connectionCount": 7
+      "connectionCount": 12
     },
     {
       "id": "topic-reinforcement-learning",
       "type": "topic",
       "title": "Reinforcement Learning",
       "summary": "Training AI through rewards and penalties to learn optimal behaviors.",
-      "connectionCount": 4
+      "connectionCount": 3
     },
     {
       "id": "topic-ai-safety",
       "type": "topic",
       "title": "AI Safety",
       "summary": "Research focused on making AI systems safe, aligned with human values, and beneficial.",
+      "connectionCount": 2
+    },
+    {
+      "id": "topic-computer-vision",
+      "type": "topic",
+      "title": "Computer Vision",
+      "summary": "AI systems for understanding and processing visual information from images and video.",
+      "connectionCount": 4
+    },
+    {
+      "id": "topic-large-language-models",
+      "type": "topic",
+      "title": "Large Language Models",
+      "summary": "Foundation models trained on massive text corpora that can generate and understand natural language.",
+      "connectionCount": 10
+    },
+    {
+      "id": "topic-multimodal-ai",
+      "type": "topic",
+      "title": "Multimodal AI",
+      "summary": "Systems that process and understand multiple types of input including text, images, audio, and video.",
       "connectionCount": 1
     },
     {
@@ -803,27 +854,6 @@
       "type": "topic",
       "title": "AI Reasoning",
       "summary": "Methods to improve logical reasoning, mathematical problem-solving, and multi-step thinking in AI systems.",
-      "connectionCount": 3
-    },
-    {
-      "id": "topic-large-language-models",
-      "type": "topic",
-      "title": "Large Language Models",
-      "summary": "Foundation models trained on massive text corpora that can generate and understand natural language.",
-      "connectionCount": 11
-    },
-    {
-      "id": "topic-computer-vision",
-      "type": "topic",
-      "title": "Computer Vision",
-      "summary": "AI systems for understanding and processing visual information from images and video.",
-      "connectionCount": 3
-    },
-    {
-      "id": "topic-prompt-engineering",
-      "type": "topic",
-      "title": "Prompt Engineering",
-      "summary": "Methods for crafting effective prompts to guide AI model behavior and outputs.",
       "connectionCount": 1
     },
     {
@@ -845,7 +875,7 @@
       "type": "organization",
       "title": "Google",
       "summary": "Google - AI research and development.",
-      "connectionCount": 6
+      "connectionCount": 7
     },
     {
       "id": "org-google-deepmind",
@@ -869,18 +899,25 @@
       "connectionCount": 2
     },
     {
+      "id": "org-meta",
+      "type": "organization",
+      "title": "Meta",
+      "summary": "Meta - AI research and development.",
+      "connectionCount": 2
+    },
+    {
+      "id": "org-openai",
+      "type": "organization",
+      "title": "OpenAI",
+      "summary": "OpenAI - AI research and development.",
+      "connectionCount": 1
+    },
+    {
       "id": "org-apple",
       "type": "organization",
       "title": "Apple",
       "summary": "Apple - AI research and development.",
       "connectionCount": 4
-    },
-    {
-      "id": "org-microsoft",
-      "type": "organization",
-      "title": "Microsoft",
-      "summary": "Microsoft - AI research and development.",
-      "connectionCount": 1
     },
     {
       "id": "model-chatgpt",
@@ -890,6 +927,13 @@
       "connectionCount": 3
     },
     {
+      "id": "model-llama",
+      "type": "model",
+      "title": "Llama",
+      "summary": "Llama AI model.",
+      "connectionCount": 1
+    },
+    {
       "id": "model-claude",
       "type": "model",
       "title": "Claude",
@@ -897,11 +941,18 @@
       "connectionCount": 16
     },
     {
+      "id": "model-gpt-5",
+      "type": "model",
+      "title": "GPT-5",
+      "summary": "GPT-5 AI model.",
+      "connectionCount": 3
+    },
+    {
       "id": "model-gemini",
       "type": "model",
       "title": "Gemini",
       "summary": "Gemini AI model.",
-      "connectionCount": 13
+      "connectionCount": 12
     },
     {
       "id": "model-grok",
@@ -909,13 +960,6 @@
       "title": "Grok",
       "summary": "Grok AI model.",
       "connectionCount": 1
-    },
-    {
-      "id": "model-gpt-5",
-      "type": "model",
-      "title": "GPT-5",
-      "summary": "GPT-5 AI model.",
-      "connectionCount": 2
     }
   ],
   "edges": [
@@ -990,38 +1034,88 @@
       "relationship": "COVERS"
     },
     {
-      "source": "article-e86c1aac",
-      "target": "org-anthropic",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-6d4863e5",
+      "source": "article-86b71328",
       "target": "topic-nlp",
       "relationship": "COVERS"
     },
     {
-      "source": "article-616cf2f1",
-      "target": "topic-ai-reasoning",
+      "source": "article-ce08b6c2",
+      "target": "topic-computer-vision",
       "relationship": "COVERS"
     },
     {
-      "source": "article-8965b838",
+      "source": "article-6d38c0e5",
+      "target": "topic-large-language-models",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-6d38c0e5",
+      "target": "topic-nlp",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-b6fd8ba9",
+      "target": "topic-large-language-models",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-b6fd8ba9",
+      "target": "topic-ai-agents",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-6be8e4e4",
+      "target": "org-anthropic",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-4b103b7e",
+      "target": "topic-ai-agents",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-1c7ae032",
+      "target": "org-meta",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-f0425545",
+      "target": "org-openai",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-f0425545",
       "target": "model-chatgpt",
       "relationship": "MENTIONS"
     },
     {
-      "source": "article-89a9e8b8",
+      "source": "article-5a882937",
+      "target": "org-anthropic",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-bd49ecff",
+      "target": "topic-ai-agents",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-46f4db8c",
       "target": "topic-large-language-models",
       "relationship": "COVERS"
     },
     {
-      "source": "article-360bc7ff",
+      "source": "article-46f4db8c",
+      "target": "topic-multimodal-ai",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-f9663dd4",
       "target": "topic-large-language-models",
       "relationship": "COVERS"
     },
     {
-      "source": "article-41605025",
-      "target": "topic-large-language-models",
+      "source": "article-81168c9d",
+      "target": "topic-ai-agents",
       "relationship": "COVERS"
     },
     {
@@ -1030,59 +1124,39 @@
       "relationship": "COVERS"
     },
     {
-      "source": "article-7ccb5478",
+      "source": "article-51a6b494",
       "target": "topic-large-language-models",
       "relationship": "COVERS"
     },
     {
-      "source": "article-4f195abd",
+      "source": "article-51a6b494",
+      "target": "model-llama",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-dfe4939c",
       "target": "topic-large-language-models",
       "relationship": "COVERS"
     },
     {
-      "source": "article-4f195abd",
-      "target": "topic-ai-agents",
-      "relationship": "COVERS"
-    },
-    {
-      "source": "article-f24248e9",
+      "source": "article-ee4c1e03",
       "target": "topic-large-language-models",
       "relationship": "COVERS"
     },
     {
-      "source": "article-f24248e9",
-      "target": "topic-nlp",
-      "relationship": "COVERS"
-    },
-    {
-      "source": "article-aba36c61",
+      "source": "article-0e03725b",
       "target": "topic-large-language-models",
       "relationship": "COVERS"
     },
     {
-      "source": "article-df76ddcc",
-      "target": "topic-large-language-models",
+      "source": "article-f3538f66",
+      "target": "topic-ai-safety",
       "relationship": "COVERS"
     },
     {
-      "source": "article-df76ddcc",
-      "target": "topic-ai-reasoning",
-      "relationship": "COVERS"
-    },
-    {
-      "source": "article-e981593f",
-      "target": "topic-large-language-models",
-      "relationship": "COVERS"
-    },
-    {
-      "source": "article-e981593f",
-      "target": "topic-nlp",
-      "relationship": "COVERS"
-    },
-    {
-      "source": "article-afb12cad",
-      "target": "topic-ai-agents",
-      "relationship": "COVERS"
+      "source": "article-c3257d53",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
     },
     {
       "source": "article-fc892a3e",
@@ -1105,78 +1179,98 @@
       "relationship": "COVERS"
     },
     {
-      "source": "article-77c2f978",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-67fc5829",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-08d0290c",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-5caf59a4",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-5a567060",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-a465b154",
-      "target": "topic-reinforcement-learning",
+      "source": "article-9b616350",
+      "target": "topic-ai-agents",
       "relationship": "COVERS"
     },
     {
-      "source": "article-a465b154",
+      "source": "article-9b616350",
+      "target": "org-meta",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-9b616350",
       "target": "model-claude",
       "relationship": "MENTIONS"
     },
     {
-      "source": "article-d0805d2b",
+      "source": "article-b55bf7c0",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-9ca0f1b7",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-47b3f82d",
+      "target": "topic-ai-agents",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-47b3f82d",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-f901868d",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-fab7ffa4",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-984f8af0",
+      "target": "topic-ai-agents",
+      "relationship": "COVERS"
+    },
+    {
+      "source": "article-984f8af0",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-b333c37d",
+      "target": "model-gpt-5",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-b333c37d",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-1bad61f7",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-aa1fa635",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-415dbac3",
+      "target": "model-claude",
+      "relationship": "MENTIONS"
+    },
+    {
+      "source": "article-e7e4e218",
       "target": "topic-nlp",
       "relationship": "COVERS"
     },
     {
-      "source": "article-d0805d2b",
-      "target": "org-anthropic",
+      "source": "article-e7e4e218",
+      "target": "org-google",
       "relationship": "MENTIONS"
     },
     {
-      "source": "article-d0805d2b",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-d48d5954",
-      "target": "topic-prompt-engineering",
-      "relationship": "COVERS"
-    },
-    {
-      "source": "article-d48d5954",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-4429ff47",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-6d0c34e7",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-61da5d80",
-      "target": "model-claude",
+      "source": "article-e7e4e218",
+      "target": "model-gemini",
       "relationship": "MENTIONS"
     },
     {
@@ -1350,26 +1444,6 @@
       "relationship": "COVERS"
     },
     {
-      "source": "article-6c291e2c",
-      "target": "model-gemini",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-378869bd",
-      "target": "org-microsoft",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-378869bd",
-      "target": "model-claude",
-      "relationship": "MENTIONS"
-    },
-    {
-      "source": "article-378869bd",
-      "target": "model-gemini",
-      "relationship": "MENTIONS"
-    },
-    {
       "source": "topic-large-language-models",
       "target": "topic-ai-reasoning",
       "relationship": "RELATED_TO"
@@ -1380,8 +1454,8 @@
       "relationship": "RELATED_TO"
     },
     {
-      "source": "topic-ai-agents",
-      "target": "topic-prompt-engineering",
+      "source": "topic-multimodal-ai",
+      "target": "topic-computer-vision",
       "relationship": "RELATED_TO"
     },
     {
